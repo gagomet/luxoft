@@ -1,7 +1,7 @@
-package BankApplication.bank;
+package BankApplication.model;
 
-import BankApplication.bank.listeners.IClientRegistrationListener;
-import BankApplication.client.Client;
+import BankApplication.listeners.IClientRegistrationListener;
+import BankApplication.model.client.Client;
 
 import java.util.ArrayList;
 import java.util.Date;

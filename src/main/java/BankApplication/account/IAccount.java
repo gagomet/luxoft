@@ -1,7 +1,6 @@
 package BankApplication.account;
 
-import BankApplication.client.IReport;
-import BankApplication.exceptions.NotEnoughFunds;
+import BankApplication.model.client.IReport;
 import BankApplication.exceptions.OverdraftLimitReached;
 
 /**

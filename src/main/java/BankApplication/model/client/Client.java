@@ -1,4 +1,4 @@
-package BankApplication.client;
+package BankApplication.model.client;
 
 import BankApplication.account.IAccount;
 import BankApplication.account.impl.AbstractAccount;

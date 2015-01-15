@@ -1,6 +1,7 @@
-package BankApplication.bank.listeners;
+package BankApplication.listeners;
 
-import BankApplication.client.Client;
+import BankApplication.BankApplication;
+import BankApplication.model.client.Client;
 
 /**
  * Created by Kir Kolesnikov on 14.01.2015.

@@ -1,9 +1,8 @@
-package BankApplication.bank.service;
+package BankApplication.service;
 
-import BankApplication.account.IAccount;
 import BankApplication.account.impl.AbstractAccount;
-import BankApplication.bank.Bank;
-import BankApplication.client.Client;
+import BankApplication.model.Bank;
+import BankApplication.model.client.Client;
 
 /**
  * Created by Kir Kolesnikov on 14.01.2015.

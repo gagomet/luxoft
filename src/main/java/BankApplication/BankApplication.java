@@ -1,10 +1,10 @@
 package BankApplication;
 
-import BankApplication.bank.Bank;
-import BankApplication.bank.listeners.IClientRegistrationListener;
-import BankApplication.bank.service.impl.BankServiceImpl;
-import BankApplication.bank.service.IBankService;
-import BankApplication.client.Client;
+import BankApplication.listeners.IClientRegistrationListener;
+import BankApplication.model.Bank;
+import BankApplication.service.impl.BankServiceImpl;
+import BankApplication.service.IBankService;
+import BankApplication.model.client.Client;
 import BankApplication.exceptions.OverdraftLimitReached;
 import BankApplication.type.Gender;
 

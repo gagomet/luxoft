@@ -1,4 +1,4 @@
-package BankApplication.client;
+package BankApplication.model.client;
 
 /**
  * Created by Kir Kolesnikov on 14.01.2015.

@@ -1,10 +1,10 @@
-package BankApplication.bank.service.impl;
+package BankApplication.service.impl;
 
 import BankApplication.account.impl.AbstractAccount;
-import BankApplication.bank.Bank;
-import BankApplication.bank.listeners.IClientRegistrationListener;
-import BankApplication.bank.service.IBankService;
-import BankApplication.client.Client;
+import BankApplication.model.Bank;
+import BankApplication.listeners.IClientRegistrationListener;
+import BankApplication.service.IBankService;
+import BankApplication.model.client.Client;
 
 import java.util.List;
 
