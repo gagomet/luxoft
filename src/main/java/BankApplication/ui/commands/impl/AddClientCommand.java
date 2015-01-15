@@ -50,8 +50,36 @@ public class AddClientCommand extends AbstractCommand {
         }
     }
 
+    private String validateClientsName(String input) throws IllegalArgumentException {
+        if(isEmail(input)){
+            return input;
+        } else{
+            throw new IllegalArgumentException("Not valid gender");
+        }
+    }
+
+    private String validateClientsEmail(String input) throws IllegalArgumentException {
+        if(isEmail(input)){
+            return input;
+        } else{
+            throw new IllegalArgumentException("Not valid gender");
+        }
+    }
+
+    private String validateClientsPhone(String input) throws IllegalArgumentException {
+        if(isEmail(input)){
+            return input;
+        } else{
+            throw new IllegalArgumentException("Not valid gender");
+        }
+    }
+
     private boolean isName(String name){
         return name.matches("[A-Za-z ]+");
+    }
+
+    private boolean isPhone(String phone){
+        return phone.matches("[0-9]+");
     }
 
     private boolean isEmail(String email) {
