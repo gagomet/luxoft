@@ -2,6 +2,8 @@ package BankApplication.model.client;
 
 import BankApplication.account.IAccount;
 import BankApplication.account.impl.AbstractAccount;
+import BankApplication.exceptions.*;
+import BankApplication.exceptions.IllegalArgumentException;
 import BankApplication.type.AccountType;
 import BankApplication.type.Gender;
 
@@ -18,16 +20,18 @@ public class Client implements IReport {
     private AbstractAccount activeAccount;
     private float initialOverdraft;
     private Gender sex;
+    private String email;
+    private String phone;
     private static ResourceBundle bundle = ResourceBundle.getBundle("strings");
 
-    public Client(Gender sex) {
+    public Client(Gender sex) throws BankApplication.exceptions.IllegalArgumentException {
         this.sex = sex;
         activeAccount = AccountType.SAVING.create(0); // magic numbers ((( TODO fix the magic numbers
         accountsList.add(activeAccount);
         setActiveAccount(activeAccount);
     }
 
-    public Client(float initialOverdraft, Gender sex) {
+    public Client(float initialOverdraft, Gender sex) throws IllegalArgumentException {
         this.sex = sex;
         this.initialOverdraft = initialOverdraft;
         activeAccount = AccountType.CHECKING.create(initialOverdraft);
@@ -39,7 +43,7 @@ public class Client implements IReport {
         this.activeAccount = activeAccount;
     }
 
-    public IAccount getActiveAccount() {
+    public AbstractAccount getActiveAccount() {
         return activeAccount;
     }
 
@@ -57,11 +61,22 @@ public class Client implements IReport {
 
     @Override
     public void printReport() {
-        System.out.println(bundle.getString("clientName") + this.sex.getGenderPrefix() + this.name);
-        for (IAccount account : accountsList) {
-            account.printReport();
-        }
+        System.out.println(this.toString());
+    }
 
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
+        builder.append(bundle.getString("clientName"));
+        builder.append(" ");
+        builder.append(sex.getGenderPrefix());
+        builder.append(getName());
+        builder.append(" ");
+        for(IAccount account : accountsList) {
+            builder.append(account.toString());
+            builder.append("\n");
+        }
+        return builder.toString();
     }
 
     public void setName(String name) {
@@ -72,16 +87,34 @@ public class Client implements IReport {
         return name;
     }
 
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (!(o instanceof Client)) return false;
 
         Client client = (Client) o;
 
         if (Float.compare(client.initialOverdraft, initialOverdraft) != 0) return false;
         if (!accountsList.equals(client.accountsList)) return false;
+        if (email != null ? !email.equals(client.email) : client.email != null) return false;
         if (!name.equals(client.name)) return false;
+        if (phone != null ? !phone.equals(client.phone) : client.phone != null) return false;
         if (sex != client.sex) return false;
 
         return true;
@@ -93,6 +126,8 @@ public class Client implements IReport {
         result = 31 * result + accountsList.hashCode();
         result = 31 * result + (initialOverdraft != +0.0f ? Float.floatToIntBits(initialOverdraft) : 0);
         result = 31 * result + sex.hashCode();
+        result = 31 * result + (email != null ? email.hashCode() : 0);
+        result = 31 * result + (phone != null ? phone.hashCode() : 0);
         return result;
     }
 }

@@ -6,13 +6,18 @@ import BankApplication.model.client.Client;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.ResourceBundle;
 
 /**
  * Created by Kir Kolesnikov on 14.01.2015.
  */
 public class Bank {
     private List<Client> clientsList = new ArrayList<Client>();
-    List<IClientRegistrationListener> listeners = new ArrayList<IClientRegistrationListener>();
+    private List<IClientRegistrationListener> listeners = new ArrayList<IClientRegistrationListener>();
+
+    public Bank(){
+
+    }
 
     public Bank (List<IClientRegistrationListener> listenerList){
         this.listeners=listenerList;
@@ -40,9 +45,20 @@ public class Bank {
     }
 
     public void printReport() {
+//        for (Client client : clientsList) {
+//            client.printReport();
+//        }
+        System.out.println(toString());
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
         for (Client client : clientsList) {
-            client.printReport();
+            builder.append(client.toString());
+            builder.append("\n");
         }
+        return builder.toString();
     }
 
     public static class PrintClientListener implements IClientRegistrationListener{

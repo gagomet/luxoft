@@ -4,6 +4,8 @@ import BankApplication.account.IAccount;
 import BankApplication.account.impl.AbstractAccount;
 import BankApplication.account.impl.CheckingAccount;
 import BankApplication.account.impl.SavingAccount;
+import BankApplication.exceptions.*;
+import BankApplication.exceptions.IllegalArgumentException;
 
 /**
  * Created by Kir Kolesnikov on 14.01.2015.
@@ -11,7 +13,7 @@ import BankApplication.account.impl.SavingAccount;
 public enum AccountType {
     CHECKING {
         @Override
-        public AbstractAccount create(float summ) {
+        public AbstractAccount create(float summ) throws BankApplication.exceptions.IllegalArgumentException {
             return new CheckingAccount(summ);
         }
     },
@@ -22,7 +24,7 @@ public enum AccountType {
         }
     };
 
-    public abstract AbstractAccount create(float summ);
+    public abstract AbstractAccount create(float summ) throws IllegalArgumentException;
 
 
 }
