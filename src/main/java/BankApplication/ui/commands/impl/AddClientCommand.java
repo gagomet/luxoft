@@ -1,32 +1,32 @@
 package BankApplication.ui.commands.impl;
 
 import BankApplication.exceptions.IllegalArgumentException;
+import BankApplication.model.client.Client;
 import BankApplication.type.Gender;
+import BankApplication.ui.commander.BankCommander;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
+import java.util.List;
 
 /**
  * Created by Kir Kolesnikov on 15.01.2015.
  */
 public class AddClientCommand extends AbstractCommand {
-    @Override
-    public void execute() throws IllegalArgumentException{
-        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
+    String newClientsName;
+    Gender newClientSex;
+    Float newClientOverdraft;
+    String newClientPhone;
+    String newClientEmail;
 
+    @Override
+    public void execute() throws IllegalArgumentException {
         try {
-            System.out.print(bundle.getString("addClientsName"));
-            String clientsName = bufferedReader.readLine();
-            System.out.print(bundle.getString("addClientsOverdraft"));
-            Float overdraft = Float.parseFloat(bufferedReader.readLine());
-            System.out.print(bundle.getString("addClientsSex"));
-            Gender sex = validateClientsSex(bufferedReader.readLine());
-            System.out.print(bundle.getString("addClientsSex"));
-            Gender sex = validateClientsSex(bufferedReader.readLine());
-            System.out.print(bundle.getString("addClientsSex"));
-            Gender sex = validateClientsSex(bufferedReader.readLine());
-            //TODO end this method
+            newClientsName = validateClientsName(console.consoleResponse(bundle.getString("addClientsName")));
+            newClientSex = validateClientsSex(console.consoleResponse(bundle.getString("addClientsSex")));
+            newClientOverdraft = validateClientsOverdraft(console.consoleResponse(bundle.getString("addClientsOverdraft")));
+            newClientPhone = validateClientsPhone(console.consoleResponse(bundle.getString("addClientsPhone")));
+            newClientEmail = validateClientsEmail(console.consoleResponse(bundle.getString("addClientsEmail")));
+            //TODO end this method*/
 
         } catch (NumberFormatException e) {
             throw new IllegalArgumentException("Not valid entry :" + e.getMessage());
@@ -40,50 +40,24 @@ public class AddClientCommand extends AbstractCommand {
         System.out.println("Add client to Bank System");
     }
 
-    private Gender validateClientsSex(String input) throws IllegalArgumentException {
-        if(input.equalsIgnoreCase("M")){
-            return Gender.MALE;
-        } else if (input.equalsIgnoreCase("F")){
-            return Gender.FEMALE;
+    private void addClient(Float newClientOverdraft, Gender newClientGender) throws IllegalArgumentException {
+        Client newClient = null;
+        if (newClientOverdraft == 0.0f) {
+            newClient = new Client(newClientGender);
         } else {
-            throw new IllegalArgumentException("Not valid gender");
+            newClient = new Client(newClientOverdraft, newClientGender);
         }
-    }
-
-    private String validateClientsName(String input) throws IllegalArgumentException {
-        if(isEmail(input)){
-            return input;
-        } else{
-            throw new IllegalArgumentException("Not valid gender");
+        newClient.setName(newClientsName);
+        if (newClientPhone != null) {
+            newClient.setPhone(newClientPhone);
         }
-    }
-
-    private String validateClientsEmail(String input) throws IllegalArgumentException {
-        if(isEmail(input)){
-            return input;
-        } else{
-            throw new IllegalArgumentException("Not valid gender");
+        if (newClientEmail != null){
+            newClient.setEmail(newClientEmail);
         }
+
+        List<Client> clientList = BankCommander.currentBank.getClientsList();
+        clientList.add(newClient);
+        BankCommander.currentBank.setClientsList(clientList);
     }
 
-    private String validateClientsPhone(String input) throws IllegalArgumentException {
-        if(isEmail(input)){
-            return input;
-        } else{
-            throw new IllegalArgumentException("Not valid gender");
-        }
-    }
-
-    private boolean isName(String name){
-        return name.matches("[A-Za-z ]+");
-    }
-
-    private boolean isPhone(String phone){
-        return phone.matches("[0-9]+");
-    }
-
-    private boolean isEmail(String email) {
-        return email.matches(
-                "^[A-Za-z\\.-0-9]{2,}@[A-Za-z\\.-0-9]{2,}\\.[A-Za-z]{2,3}$");
-    }
 }

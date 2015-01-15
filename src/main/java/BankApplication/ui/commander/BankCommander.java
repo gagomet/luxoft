@@ -59,7 +59,7 @@ public class BankCommander {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            commands[commandNumber].execute();
+//            commands[commandNumber].execute();
         }
     }
 }
