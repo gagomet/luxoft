@@ -5,7 +5,7 @@ import BankApplication.ui.commands.ICommand;
 /**
  * Created by Kir Kolesnikov on 15.01.2015.
  */
-public class WithdrawCommand implements ICommand {
+public class WithdrawCommand extends  AbstractCommand {
     @Override
     public void execute() {
 
@@ -13,6 +13,6 @@ public class WithdrawCommand implements ICommand {
 
     @Override
     public void printCommandInfo() {
-
+        System.out.println(bundle.getString("withdrawCommand"));
     }
 }

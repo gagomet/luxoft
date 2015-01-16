@@ -1,6 +1,7 @@
 package BankApplication.ui.commander;
 
 import BankApplication.BankApplication;
+import BankApplication.exceptions.IllegalArgumentException;
 import BankApplication.model.Bank;
 import BankApplication.model.client.Client;
 import BankApplication.ui.commands.ICommand;
@@ -59,7 +60,11 @@ public class BankCommander {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-//            commands[commandNumber].execute();
+            try {
+                commands[commandNumber].execute();
+            } catch (IllegalArgumentException e) {
+                e.printStackTrace();
+            }
         }
     }
 }

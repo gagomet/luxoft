@@ -5,7 +5,7 @@ import BankApplication.ui.commands.ICommand;
 /**
  * Created by Kir Kolesnikov on 15.01.2015.
  */
-public class GetAccountCommand implements ICommand {
+public class GetAccountCommand extends AbstractCommand {
     @Override
     public void execute() {
 
@@ -13,6 +13,6 @@ public class GetAccountCommand implements ICommand {
 
     @Override
     public void printCommandInfo() {
-        System.out.println("Get an accounts of the client");
+        System.out.println(bundle.getString("getAccountCommand"));
     }
 }

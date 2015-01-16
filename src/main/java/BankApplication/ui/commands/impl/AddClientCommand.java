@@ -1,7 +1,9 @@
 package BankApplication.ui.commands.impl;
 
+import BankApplication.exceptions.ClientExceedsException;
 import BankApplication.exceptions.IllegalArgumentException;
 import BankApplication.model.client.Client;
+import BankApplication.service.BankServiceEnumSingletone;
 import BankApplication.type.Gender;
 import BankApplication.ui.commander.BankCommander;
 
@@ -23,24 +25,25 @@ public class AddClientCommand extends AbstractCommand {
         try {
             newClientsName = validateClientsName(console.consoleResponse(bundle.getString("addClientsName")));
             newClientSex = validateClientsSex(console.consoleResponse(bundle.getString("addClientsSex")));
-            newClientOverdraft = validateClientsOverdraft(console.consoleResponse(bundle.getString("addClientsOverdraft")));
+            newClientOverdraft = validateFloat(console.consoleResponse(bundle.getString("addClientsOverdraft")));
             newClientPhone = validateClientsPhone(console.consoleResponse(bundle.getString("addClientsPhone")));
             newClientEmail = validateClientsEmail(console.consoleResponse(bundle.getString("addClientsEmail")));
-            //TODO end this method*/
-
+            addClient(newClientOverdraft, newClientSex);
         } catch (NumberFormatException e) {
             throw new IllegalArgumentException("Not valid entry :" + e.getMessage());
         } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClientExceedsException e) {
             e.printStackTrace();
         }
     }
 
     @Override
     public void printCommandInfo() {
-        System.out.println("Add client to Bank System");
+        System.out.println(bundle.getString("addClientCommand"));
     }
 
-    private void addClient(Float newClientOverdraft, Gender newClientGender) throws IllegalArgumentException {
+    private void addClient(Float newClientOverdraft, Gender newClientGender) throws IllegalArgumentException, ClientExceedsException {
         Client newClient = null;
         if (newClientOverdraft == 0.0f) {
             newClient = new Client(newClientGender);
@@ -55,9 +58,7 @@ public class AddClientCommand extends AbstractCommand {
             newClient.setEmail(newClientEmail);
         }
 
-        List<Client> clientList = BankCommander.currentBank.getClientsList();
-        clientList.add(newClient);
-        BankCommander.currentBank.setClientsList(clientList);
+        BankServiceEnumSingletone.addClient(BankCommander.currentBank, newClient);
     }
 
 }
