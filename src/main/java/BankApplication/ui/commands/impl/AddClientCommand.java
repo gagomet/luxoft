@@ -8,7 +8,7 @@ import BankApplication.type.Gender;
 import BankApplication.ui.commander.BankCommander;
 
 import java.io.IOException;
-import java.util.List;
+import java.util.ResourceBundle;
 
 /**
  * Created by Kir Kolesnikov on 15.01.2015.
@@ -23,17 +23,67 @@ public class AddClientCommand extends AbstractCommand {
     @Override
     public void execute() throws IllegalArgumentException {
         try {
-            newClientsName = validateClientsName(console.consoleResponse(bundle.getString("addClientsName")));
-            newClientSex = validateClientsSex(console.consoleResponse(bundle.getString("addClientsSex")));
-            newClientOverdraft = validateFloat(console.consoleResponse(bundle.getString("addClientsOverdraft")));
-            newClientPhone = validateClientsPhone(console.consoleResponse(bundle.getString("addClientsPhone")));
-            newClientEmail = validateClientsEmail(console.consoleResponse(bundle.getString("addClientsEmail")));
+            while (true) {
+                try {
+                    newClientsName = validateClientsName(console.consoleResponse(bundle.getString("addClientsName")));
+                        break;
+                } catch (IllegalArgumentException e) {
+                    System.out.println(errorsBundle.getString("wrongClientsName"));
+                    continue;
+                }
+            }
+
+            while (true) {
+                try {
+                    newClientSex = validateClientsSex(console.consoleResponse(bundle.getString("addClientsSex")));
+                        break;
+                } catch (IllegalArgumentException e) {
+                    System.out.println(errorsBundle.getString("wrongGender"));
+                    continue;
+                }
+            }
+
+            while (true) {
+                try {
+                    newClientOverdraft = validateFunds(console.consoleResponse(bundle.getString("addClientsOverdraft")));
+                    break;
+                } catch (IllegalArgumentException e) {
+                    System.out.println(errorsBundle.getString("wrongNumber"));
+                    continue;
+                }
+            }
+
+            while (true) {
+                try {
+                    newClientPhone = validateClientsPhone(console.consoleResponse(bundle.getString("addClientsPhone")));
+                    break;
+
+                } catch (IllegalArgumentException e) {
+                    System.out.println(errorsBundle.getString("wrongPhone"));
+                    continue;
+                }
+            }
+
+
+            while (true) {
+                try {
+                    newClientEmail = validateClientsEmail(console.consoleResponse(bundle.getString("addClientsEmail")));
+                    break;
+
+                } catch (IllegalArgumentException e) {
+                    System.out.println(errorsBundle.getString("wrongEmail"));
+                    continue;
+                }
+            }
+
+
+
             addClient(newClientOverdraft, newClientSex);
         } catch (NumberFormatException e) {
             throw new IllegalArgumentException("Not valid entry :" + e.getMessage());
-        } catch (IOException e) {
-            e.printStackTrace();
         } catch (ClientExceedsException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
@@ -45,7 +95,7 @@ public class AddClientCommand extends AbstractCommand {
 
     private void addClient(Float newClientOverdraft, Gender newClientGender) throws IllegalArgumentException, ClientExceedsException {
         Client newClient = null;
-        if (newClientOverdraft == 0.0f) {
+        if (newClientOverdraft == null) {
             newClient = new Client(newClientGender);
         } else {
             newClient = new Client(newClientOverdraft, newClientGender);
@@ -54,11 +104,22 @@ public class AddClientCommand extends AbstractCommand {
         if (newClientPhone != null) {
             newClient.setPhone(newClientPhone);
         }
-        if (newClientEmail != null){
+        if (newClientEmail != null) {
             newClient.setEmail(newClientEmail);
         }
-
+        System.out.println(bundle.getString("separator"));
         BankServiceEnumSingletone.addClient(BankCommander.currentBank, newClient);
+        System.out.println(bundle.getString("clientAdded"));
+        System.out.println(bundle.getString("separator"));
+        newClient.printReport();
+        StringBuilder builder = new StringBuilder();
+        builder.append(bundle.getString("client"));
+        builder.append(" ");
+        builder.append(newClient.getName());
+        builder.append(" ");
+        builder.append(bundle.getString("active"));
+        System.out.println(bundle.getString("separator"));
+        System.out.println(builder.toString());
+        System.out.println(bundle.getString("separator"));
     }
-
 }

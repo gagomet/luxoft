@@ -5,7 +5,13 @@ import BankApplication.exceptions.IllegalArgumentException;
 import BankApplication.model.Bank;
 import BankApplication.model.client.Client;
 import BankApplication.ui.commands.ICommand;
-import BankApplication.ui.commands.impl.*;
+import BankApplication.ui.commands.impl.AddClientCommand;
+import BankApplication.ui.commands.impl.DepositCommand;
+import BankApplication.ui.commands.impl.FindClientCommand;
+import BankApplication.ui.commands.impl.GetAccountCommand;
+import BankApplication.ui.commands.impl.ShowHelpCommand;
+import BankApplication.ui.commands.impl.TransferCommand;
+import BankApplication.ui.commands.impl.WithdrawCommand;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -16,8 +22,7 @@ import java.io.InputStreamReader;
  */
 public class BankCommander {
     public static Bank currentBank = new Bank();
-    public static Client client1;
-    public static Client client2;
+    public static Client currentClient = null;
     public static BankApplication bankApplication = new BankApplication();
 
 
@@ -29,7 +34,8 @@ public class BankCommander {
             new DepositCommand(), //4
             new TransferCommand(), //5
             new AddClientCommand(), //6
-            new ICommand() { // 7 - Exit Command
+            new ShowHelpCommand(), //7
+            new ICommand() {
                 public void execute() {
                     System.exit(0);
                 }
@@ -40,12 +46,18 @@ public class BankCommander {
             }
     };
 
+    public static Client getCurrentClient() {
+        return currentClient;
+    }
+
+    public static void setCurrentClient(Client currentClient) {
+        BankCommander.currentClient = currentClient;
+    }
 
     public static void main(String args[]) {
         bankApplication.initialize();
         currentBank = bankApplication.getBank();
-        client1 = bankApplication.getClient1();
-        client2 = bankApplication.getClient2();
+        //initialization and retrieving of Bank class instance
 
         while (true) {
             for (int i = 0; i < commands.length; i++) { // show menu
@@ -55,6 +67,8 @@ public class BankCommander {
             int commandNumber = 0;
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
             try {
+                System.out.println("Enter number of your choice: ");
+
                 String commandString = bufferedReader.readLine();
                 commandNumber = Integer.parseInt(commandString);
             } catch (IOException e) {

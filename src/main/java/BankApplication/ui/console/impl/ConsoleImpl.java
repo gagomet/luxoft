@@ -16,4 +16,7 @@ public class ConsoleImpl implements IConsole {
         System.out.println(consoleRequest);
         return bufferedReader.readLine();
     }
+
+
+
 }

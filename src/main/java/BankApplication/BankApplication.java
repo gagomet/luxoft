@@ -38,12 +38,13 @@ public class BankApplication {
             client1 = new Client(Gender.FEMALE);
             client1.setName("princess");
             bankService.addClient(bank, client1);
+            bankService.depositeFunds(client1.getActiveAccount(), 1000);
             client2 = new Client(5000, Gender.MALE);
             client2.setName("beggar");
-            client3 = new Client(5000, Gender.MALE);
-            client3.setName("beggar");
+//            client3 = new Client(5000, Gender.MALE);
+//            client3.setName("beggar");
             bankService.addClient(bank, client2);
-            bankService.addClient(bank, client2);
+//            bankService.addClient(bank, client3);
         } catch (IllegalArgumentException e) {
             System.out.println(e.getMessage());
             e.printStackTrace();

@@ -1,0 +1,9 @@
+***Manual to use Bank Commander interactive interface***
+
+1) Find the client from client's base of your Bank OR add a new client to it
+    this makes the Client Active.
+2) If Client has more than 1 account set an active account by command "Set an active account"
+3) Make some operations with Active Client's account  )))
+4) Exit from the Bank Commander.
+
+

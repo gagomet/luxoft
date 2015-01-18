@@ -1,8 +1,8 @@
 package BankApplication.account.impl;
 
 import BankApplication.account.IAccount;
-import BankApplication.exceptions.*;
 import BankApplication.exceptions.IllegalArgumentException;
+import BankApplication.exceptions.NotEnoughFundsException;
 
 import java.util.ResourceBundle;
 
@@ -15,7 +15,7 @@ public abstract class AbstractAccount implements IAccount {
     protected float balance;
     final protected Long id;
 
-    public AbstractAccount(){
+    public AbstractAccount() {
         this.id = System.currentTimeMillis();
     }
 
@@ -27,8 +27,12 @@ public abstract class AbstractAccount implements IAccount {
         this.balance = balance;
     }
 
+    public Long getId() {
+        return id;
+    }
+
     public void deposit(float amount) throws IllegalArgumentException {
-        if(amount <= 0){
+        if (amount <= 0) {
             throw new IllegalArgumentException();
         }
         this.balance += amount;
@@ -37,11 +41,12 @@ public abstract class AbstractAccount implements IAccount {
     public void withdraw(float amount) throws NotEnoughFundsException {
         if (this.balance >= amount) {
             this.balance -= amount;
+        } else {
+            throw new NotEnoughFundsException(errorsBundle.getString("notEnoughFunds"));
         }
-        throw new NotEnoughFundsException(errorsBundle.getString("notEnoughFunds"));
     }
 
-    public void balanceDecimalValue(){
+    public void balanceDecimalValue() {
         System.out.println(Math.round(balance));
     }
 
@@ -51,7 +56,11 @@ public abstract class AbstractAccount implements IAccount {
         builder.append("ID: ");
         builder.append(id);
         builder.append(" ");
-        builder.append(bundle.getString("checkingAccount"));
+        if (this instanceof CheckingAccount) {
+            builder.append(bundle.getString("checkingAccount"));
+        } else {
+            builder.append(bundle.getString("savingAccount"));
+        }
         builder.append(" ");
         builder.append(this.getBalance());
         return builder.toString();

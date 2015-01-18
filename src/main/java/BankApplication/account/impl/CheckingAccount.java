@@ -47,8 +47,6 @@ public class CheckingAccount extends AbstractAccount {
 
     @Override
     public void printReport() {
-//        System.out.println(bundle.getString("checkingAccount") + " " + this.getBalance());
-//        System.out.println(bundle.getString("overdraft") + " " + this.getOverdraft());
         System.out.println(toString());
     }
 

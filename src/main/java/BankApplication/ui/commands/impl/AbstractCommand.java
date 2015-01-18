@@ -1,6 +1,5 @@
 package BankApplication.ui.commands.impl;
 
-import BankApplication.exceptions.*;
 import BankApplication.exceptions.IllegalArgumentException;
 import BankApplication.type.Gender;
 import BankApplication.ui.commands.ICommand;
@@ -16,7 +15,7 @@ public abstract class AbstractCommand implements ICommand {
     protected IConsole console = new ConsoleImpl();
     protected ResourceBundle bundle = ResourceBundle.getBundle("strings");
     protected ResourceBundle errorsBundle = ResourceBundle.getBundle("errors");
-    protected final String EMPTY_STRING = "";
+    private final String EMPTY_STRING = "";
 
     protected Gender validateClientsSex(String input) throws BankApplication.exceptions.IllegalArgumentException {
         if (input.equalsIgnoreCase("M")) {
@@ -30,9 +29,6 @@ public abstract class AbstractCommand implements ICommand {
 
     protected String validateClientsName(String input) throws IllegalArgumentException {
         if (isName(input)) {
-            if (EMPTY_STRING.equals(input)) {
-                return null;
-            }
             return input;
         } else {
             throw new IllegalArgumentException("Not valid name");
@@ -41,46 +37,72 @@ public abstract class AbstractCommand implements ICommand {
 
     protected String validateClientsEmail(String input) throws IllegalArgumentException {
         if (isEmail(input)) {
-            if (EMPTY_STRING.equals(input)) {
-                return null;
-            }
             return input;
+        } else if (EMPTY_STRING.equals(input)) {
+            return null;
         } else {
             throw new IllegalArgumentException("Not valid email");
         }
     }
 
+
     protected String validateClientsPhone(String input) throws IllegalArgumentException {
         if (isPhone(input)) {
-            if (EMPTY_STRING.equals(input)) {
-                return null;
-            }
             return input;
+        } else if (EMPTY_STRING.equals(input)) {
+            return null;
         } else {
             throw new IllegalArgumentException("Not valid phone");
         }
     }
 
-    protected float validateFloat(String input) throws NumberFormatException {
-        return Float.parseFloat(input);
+    protected Float validateFunds(String input) throws IllegalArgumentException {
+        if (isFunds(input)) {
+            Float result = Float.parseFloat(input);
+            if (result > 0) {
+                return result;
+            } else {
+                throw new IllegalArgumentException("Not valid funds");
+            }
+        } else if (EMPTY_STRING.equals(input)) {
+            return null;
+        } else {
+            throw new IllegalArgumentException("Not valid funds");
+        }
     }
 
-    protected long validateLong(String input) throws NumberFormatException {
-        return Long.parseLong(input);
+    protected Long validateId(String input) throws IllegalArgumentException {
+        if (isId(input)) {
+            Long result = Long.parseLong(input);
+            if (result > 0) {
+                return result;
+            } else {
+                throw new IllegalArgumentException("Not valid funds");
+            }
+        } else {
+            throw new IllegalArgumentException("Not valid funds");
+        }
     }
 
-//    protected boolean is
+
+    protected boolean isId(String id) {
+        return id.matches("[0-9]{12,15}");
+    }
 
     protected boolean isName(String name) {
         return name.matches("[A-Za-z ]+");
     }
 
     protected boolean isPhone(String phone) {
-        return phone.matches("[0-9]+");
+        return phone.matches("[0-9]{4,15}");
     }
 
     protected boolean isEmail(String email) {
         return email.matches(
                 "^[A-Za-z\\.-0-9]{2,}@[A-Za-z\\.-0-9]{2,}\\.[A-Za-z]{2,3}$");
+    }
+
+    protected boolean isFunds(String funds) {
+        return funds.matches("^[0-9]{1,7}([,.][0-9]{1,2})?$");
     }
 }

@@ -16,4 +16,6 @@ public interface IBankService {
     public void setActiveAccount(Client client, AbstractAccount account);
     public void depositeFunds(AbstractAccount account, float amount) throws IllegalArgumentException;
     public void withdrawFunds(AbstractAccount account, float amount) throws NotEnoughFundsException;
+    public Client getClientByName(Bank bank, String clientsName) throws ClientNotFoundException;
+    public AbstractAccount getAccountById(Client client, Long id) throws AccountNotFoundException;
 }
