@@ -1,0 +1,4 @@
+accounttype=c;balance=1000;overdraft=5000;name=Beggar;gender=m;\n
+accounttype=c;balance=1200;overdraft=5000;name=Princess;gender=f;\n
+accounttype=s;balance=100;overdraft=0;name=Anonymous;gender=m;\n
+accounttype=s;balance=10000;overdraft=0;name=Scroudge;gender=m;\n

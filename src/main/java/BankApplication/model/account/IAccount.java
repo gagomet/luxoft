@@ -1,4 +1,4 @@
-package BankApplication.account;
+package BankApplication.model.account;
 
 import BankApplication.exceptions.*;
 import BankApplication.exceptions.IllegalArgumentException;

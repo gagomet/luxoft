@@ -1,12 +1,20 @@
 package BankApplication.model;
 
-import BankApplication.exceptions.*;
+import BankApplication.exceptions.FeedException;
 import BankApplication.exceptions.IllegalArgumentException;
 import BankApplication.listeners.IClientRegistrationListener;
 import BankApplication.model.client.Client;
 import BankApplication.type.Gender;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.ResourceBundle;
+import java.util.Set;
+import java.util.TreeMap;
 
 /**
  * Created by Kir Kolesnikov on 14.01.2015.
@@ -67,10 +75,13 @@ public class Bank {
                 Gender clientsGender = getGenderFromFeed(feedMap.get(feedBundle.getString("gender")));
                 resultClient = new Client(clientsGender);
                 resultClient.setName(feedMap.get(feedBundle.getString("name")));
+                resultClient.setInitialOverdraft(Float.parseFloat(feedMap.get(feedBundle.getString("overdraft"))));
             } else {
                 resultClient = clientsNamesTable.get(feedBundle.getString("name"));
-                //TODO add overdrafts
             }
+        }
+        if (resultClient != null) {
+            resultClient.parseFeed(feedMap);
         }
         return resultClient;
     }

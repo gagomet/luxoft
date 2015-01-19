@@ -1,6 +1,6 @@
 package BankApplication.service.bankservice;
 
-import BankApplication.account.impl.AbstractAccount;
+import BankApplication.model.account.impl.AbstractAccount;
 import BankApplication.exceptions.AccountNotFoundException;
 import BankApplication.exceptions.ClientExceedsException;
 import BankApplication.exceptions.ClientNotFoundException;
@@ -11,7 +11,6 @@ import BankApplication.model.Bank;
 import BankApplication.model.client.Client;
 
 import java.util.Iterator;
-import java.util.List;
 import java.util.ResourceBundle;
 import java.util.Set;
 
@@ -79,7 +78,7 @@ public enum BankServiceEnumSingletone {
     public static AbstractAccount getAccountById(Client client, Long id) throws AccountNotFoundException {
         AbstractAccount searchResult = null;
         for (AbstractAccount account : client.getAccountsList()) {
-            if (id == account.getId()) {
+            if (id.equals(account.getId())) {
                 searchResult = account;
                 break;
             }

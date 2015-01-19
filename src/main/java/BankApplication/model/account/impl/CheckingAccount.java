@@ -1,7 +1,9 @@
-package BankApplication.account.impl;
+package BankApplication.model.account.impl;
 
 import BankApplication.exceptions.*;
 import BankApplication.exceptions.IllegalArgumentException;
+
+import java.util.Map;
 
 
 /**
@@ -9,6 +11,10 @@ import BankApplication.exceptions.IllegalArgumentException;
  */
 public class CheckingAccount extends AbstractAccount {
     private float overdraft;
+
+    public CheckingAccount(){
+
+    }
 
     public CheckingAccount(float overdraft) throws IllegalArgumentException {
         super();
@@ -36,13 +42,18 @@ public class CheckingAccount extends AbstractAccount {
             float difference = balance - amount;
             if (Math.abs(difference) <= overdraft + balance) {
                 balance -= amount;
-//                overdraft = overdraft + difference;
                 setBalance(balance);
-//                setOverdraft(overdraft);
             } else {
                 throw new OverdraftLimitExceedException(errorsBundle.getString("notEnoughFunds"), this, amount);
             }
         }
+    }
+
+    public void parseFeed(Map<String, String> feedMap){
+        Float balance = Float.parseFloat(feedMap.get(feedBundle.getString("balance")));
+        Float overdraft = Float.parseFloat(feedMap.get(feedBundle.getString("overdraft")));
+        setBalance(balance);
+        setOverdraft(overdraft);
     }
 
     @Override

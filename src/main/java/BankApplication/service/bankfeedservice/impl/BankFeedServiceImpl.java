@@ -2,7 +2,11 @@ package BankApplication.service.bankfeedservice.impl;
 
 import BankApplication.service.bankfeedservice.IBankFeedService;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -17,9 +21,10 @@ public class BankFeedServiceImpl implements IBankFeedService {
     public Map<String, String> parseFeed(String feed) {
         Map<String, String> result = new HashMap<>();
         String[] splittedStrings = feed.split(";");
-        for (String tempString : splittedStrings) {
-            String[] tempPair = tempString.split("=");
-            result.put(tempPair[0], tempPair[1]);  //magic numbers (((
+        for (int i = 0; i < splittedStrings.length - 1; i++) {
+            String[] tempPair = splittedStrings[i].split("=");
+            result.put(tempPair[0], tempPair[1]);
+            //magic numbers (((
         }
         return result;
     }
@@ -35,7 +40,7 @@ public class BankFeedServiceImpl implements IBankFeedService {
                 result.add(readFileLineByLine(tempFile));
             }
         }
-        return null;
+        return result;
     }
 
     private String[] readFileLineByLine(File incomingFile) {

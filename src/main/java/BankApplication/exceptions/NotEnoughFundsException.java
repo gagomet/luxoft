@@ -1,6 +1,6 @@
 package BankApplication.exceptions;
 
-import BankApplication.account.impl.AbstractAccount;
+import BankApplication.model.account.impl.AbstractAccount;
 
 /**
  * Created by Kir Kolesnikov on 14.01.2015.

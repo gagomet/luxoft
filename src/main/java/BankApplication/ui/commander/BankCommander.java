@@ -73,51 +73,41 @@ public class BankCommander {
             System.out.println("***");
             System.out.println(bankReport.getNumberOfClients(currentBank));
             System.out.println("***");
-            System.out.println(bankReport.getClientsByCity(currentBank));
+//            System.out.println(bankReport.getClientsByCity(currentBank));
         }
 
-        composeMapOfCommands();
+            composeMapOfCommands();
 
-        while (true) {
-            /*for (int i = 0; i < commands.length; i++) { // show menu
-                System.out.print(i + ") ");
-                commands[i].printCommandInfo();
-            }*/
-            Iterator iterator = commandsMap.entrySet().iterator();
-            while(iterator.hasNext()){
-                Map.Entry<String, ICommand> entry = (Map.Entry<String, ICommand>)iterator.next();
-                StringBuilder builder = new StringBuilder();
-                builder.append(entry.getKey());
-                builder.append("   -->    ");
-                System.out.print(builder.toString());
-                entry.getValue().printCommandInfo();
-            }
-//            int commandNumber = 0;
-            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
-            try {
-                System.out.println("Enter number of your choice: ");
+            while (true) {
+                Iterator iterator = commandsMap.entrySet().iterator();
+                while (iterator.hasNext()) {
+                    Map.Entry<String, ICommand> entry = (Map.Entry<String, ICommand>) iterator.next();
+                    StringBuilder builder = new StringBuilder();
+                    builder.append(entry.getKey());
+                    builder.append("   -->    ");
+                    System.out.print(builder.toString());
+                    entry.getValue().printCommandInfo();
+                }
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
+                try {
+                    System.out.println("Enter number of your choice: ");
 
-                String commandString = bufferedReader.readLine();
-//                commandNumber = Integer.parseInt(commandString);
-                commandsMap.get(commandString).execute();
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (IllegalArgumentException e) {
-                e.printStackTrace();
+                    String commandString = bufferedReader.readLine();
+                    commandsMap.get(commandString).execute();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (IllegalArgumentException e) {
+                    e.printStackTrace();
+                }
             }
-            /*try {
-                commands[commandNumber].execute();
-            } catch (IllegalArgumentException e) {
-                e.printStackTrace();
-            }*/
-        }
+
     }
 
-    public void registerCommand(String name, ICommand command){
+    public void registerCommand(String name, ICommand command) {
         commandsMap.put(name, command);
     }
 
-    public void removeCommand(String name){
+    public void removeCommand(String name) {
         commandsMap.remove(name);
 /*remove
 public V remove(Object key)

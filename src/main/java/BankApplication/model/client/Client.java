@@ -1,13 +1,17 @@
 package BankApplication.model.client;
 
-import BankApplication.account.IAccount;
-import BankApplication.account.impl.AbstractAccount;
-import BankApplication.exceptions.*;
 import BankApplication.exceptions.IllegalArgumentException;
-import BankApplication.type.AccountType;
+import BankApplication.model.account.IAccount;
+import BankApplication.model.account.impl.AbstractAccount;
+import BankApplication.model.account.impl.CheckingAccount;
+import BankApplication.model.account.impl.SavingAccount;
 import BankApplication.type.Gender;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.ResourceBundle;
+import java.util.Set;
 
 /**
  * Created by Kir Kolesnikov on 14.01.2015.
@@ -26,27 +30,40 @@ public class Client implements IReport {
 
     public Client(Gender sex) throws BankApplication.exceptions.IllegalArgumentException {
         this.sex = sex;
-        activeAccount = AccountType.SAVING.create(0); // magic numbers ((( TODO fix the magic numbers
-        accountsList.add(activeAccount);
-        setActiveAccount(activeAccount);
+//        activeAccount = AccountType.SAVING.create();
+//        accountsList.add(activeAccount);
+//        setActiveAccount(activeAccount);
     }
 
-    public Client(float initialOverdraft, Gender sex) throws IllegalArgumentException {
+    /*public Client(float initialOverdraft, Gender sex) throws IllegalArgumentException {
         this.sex = sex;
         this.initialOverdraft = initialOverdraft;
-        activeAccount = AccountType.CHECKING.create(initialOverdraft);
+        activeAccount = AccountType.CHECKING.create();
         accountsList.add(activeAccount);
         setActiveAccount(activeAccount);
-    }
+    }*/
 
-    public AbstractAccount parseFeed(Map<String, String> feedMap){
+    public AbstractAccount parseFeed(Map<String, String> feedMap) throws IllegalArgumentException {
         AbstractAccount resultAccount = null;
-        if(feedMap.get(feedBundle.getString("accountType")).equalsIgnoreCase(feedBundle.getString("checkedAccount"))){
-            //TODO finish this method
+        if (feedMap.get(feedBundle.getString("accountType")).equalsIgnoreCase(feedBundle.getString("checkedAccount"))) {
+            resultAccount = new CheckingAccount();
+        } else if (feedMap.get(feedBundle.getString("accountType")).equalsIgnoreCase(feedBundle.getString("savingAccount"))) {
+            resultAccount = new SavingAccount();
+        }
+        accountsList.add(resultAccount);
+        if (resultAccount != null) {
+            resultAccount.parseFeed(feedMap);
         }
         return resultAccount;
     }
 
+    public float getInitialOverdraft() {
+        return initialOverdraft;
+    }
+
+    public void setInitialOverdraft(float initialOverdraft) {
+        this.initialOverdraft = initialOverdraft;
+    }
 
     public void setActiveAccount(AbstractAccount activeAccount) {
         this.activeAccount = activeAccount;

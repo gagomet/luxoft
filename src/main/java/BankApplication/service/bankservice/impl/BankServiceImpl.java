@@ -1,6 +1,6 @@
 package BankApplication.service.bankservice.impl;
 
-import BankApplication.account.impl.AbstractAccount;
+import BankApplication.model.account.impl.AbstractAccount;
 import BankApplication.exceptions.AccountNotFoundException;
 import BankApplication.exceptions.ClientExceedsException;
 import BankApplication.exceptions.ClientNotFoundException;

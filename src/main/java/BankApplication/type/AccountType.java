@@ -1,10 +1,8 @@
 package BankApplication.type;
 
-import BankApplication.account.IAccount;
-import BankApplication.account.impl.AbstractAccount;
-import BankApplication.account.impl.CheckingAccount;
-import BankApplication.account.impl.SavingAccount;
-import BankApplication.exceptions.*;
+import BankApplication.model.account.impl.AbstractAccount;
+import BankApplication.model.account.impl.CheckingAccount;
+import BankApplication.model.account.impl.SavingAccount;
 import BankApplication.exceptions.IllegalArgumentException;
 
 /**
@@ -13,18 +11,18 @@ import BankApplication.exceptions.IllegalArgumentException;
 public enum AccountType {
     CHECKING {
         @Override
-        public AbstractAccount create(float summ) throws BankApplication.exceptions.IllegalArgumentException {
-            return new CheckingAccount(summ);
+        public AbstractAccount create() throws BankApplication.exceptions.IllegalArgumentException {
+            return new CheckingAccount();
         }
     },
     SAVING {
         @Override
-        public AbstractAccount create(float summ) {
-            return new SavingAccount(summ);
+        public AbstractAccount create() {
+            return new SavingAccount();
         }
     };
 
-    public abstract AbstractAccount create(float summ) throws IllegalArgumentException;
+    public abstract AbstractAccount create() throws IllegalArgumentException;
 
 
 }

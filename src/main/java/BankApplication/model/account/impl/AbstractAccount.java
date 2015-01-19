@@ -1,17 +1,19 @@
-package BankApplication.account.impl;
+package BankApplication.model.account.impl;
 
-import BankApplication.account.IAccount;
+import BankApplication.model.account.IAccount;
 import BankApplication.exceptions.IllegalArgumentException;
 import BankApplication.exceptions.NotEnoughFundsException;
 
+import java.util.Map;
 import java.util.ResourceBundle;
 
 /**
  * Created by Kir Kolesnikov on 14.01.2015.
  */
 public abstract class AbstractAccount implements IAccount {
-    protected ResourceBundle errorsBundle = ResourceBundle.getBundle("errors");
+    protected static ResourceBundle errorsBundle = ResourceBundle.getBundle("errors");
     protected static ResourceBundle bundle = ResourceBundle.getBundle("strings");
+    protected static ResourceBundle feedBundle = ResourceBundle.getBundle("feedfile");
     protected float balance;
     final protected Long id;
 
@@ -30,6 +32,8 @@ public abstract class AbstractAccount implements IAccount {
     public Long getId() {
         return id;
     }
+
+    public abstract void parseFeed(Map<String, String> feedMap);
 
     public void deposit(float amount) throws IllegalArgumentException {
         if (amount <= 0) {

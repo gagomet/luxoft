@@ -1,6 +1,6 @@
 package BankApplication.ui.commands.impl;
 
-import BankApplication.account.impl.AbstractAccount;
+import BankApplication.model.account.impl.AbstractAccount;
 import BankApplication.exceptions.ClientNotFoundException;
 import BankApplication.exceptions.IllegalArgumentException;
 import BankApplication.exceptions.NotEnoughFundsException;
@@ -84,7 +84,6 @@ public class TransferCommand extends AbstractCommand {
 
     }
 
-    //TODO complete method
     @Override
     public void printCommandInfo() {
         System.out.println(bundle.getString("transferCommand"));

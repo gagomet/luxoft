@@ -78,7 +78,7 @@ public class AddClientCommand extends AbstractCommand {
             }
 
 
-            addClient(newClientOverdraft, newClientSex);
+            addClient(/*newClientOverdraft,*/ newClientSex);
         } catch (NumberFormatException e) {
             throw new IllegalArgumentException("Not valid entry :" + e.getMessage());
         } catch (ClientExceedsException e) {
@@ -93,13 +93,14 @@ public class AddClientCommand extends AbstractCommand {
         System.out.println(bundle.getString("addClientCommand"));
     }
 
-    private void addClient(Float newClientOverdraft, Gender newClientGender) throws IllegalArgumentException, ClientExceedsException {
-        Client newClient = null;
+    private void addClient(/*Float newClientOverdraft,*/ Gender newClientGender) throws IllegalArgumentException, ClientExceedsException {
+        /*Client newClient = null;
         if (newClientOverdraft == null) {
             newClient = new Client(newClientGender);
         } else {
             newClient = new Client(newClientOverdraft, newClientGender);
-        }
+        }*/
+        Client newClient = new Client(newClientGender);
         newClient.setName(newClientsName);
         if (newClientPhone != null) {
             newClient.setPhone(newClientPhone);

@@ -1,17 +1,20 @@
 package BankApplication;
 
-import BankApplication.exceptions.*;
 import BankApplication.exceptions.IllegalArgumentException;
+import BankApplication.exceptions.NotEnoughFundsException;
+import BankApplication.exceptions.OverdraftLimitExceedException;
 import BankApplication.listeners.IClientRegistrationListener;
 import BankApplication.model.Bank;
 import BankApplication.model.BankReport;
-import BankApplication.service.bankservice.impl.BankServiceImpl;
-import BankApplication.service.bankservice.IBankService;
 import BankApplication.model.client.Client;
-import BankApplication.type.Gender;
+import BankApplication.service.bankfeedservice.IBankFeedService;
+import BankApplication.service.bankfeedservice.impl.BankFeedServiceImpl;
+import BankApplication.service.bankservice.IBankService;
+import BankApplication.service.bankservice.impl.BankServiceImpl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class BankApplication {
     static Bank bank = null;
@@ -19,14 +22,15 @@ public class BankApplication {
     static Client client2 = null;
     static Client client3 = null;
     static IBankService bankService = new BankServiceImpl();
+    private static final String FEED_FILES_FOLDER = "c:\\!toBankApplication\\";
 
     public static void main(String[] args) {
         BankReport bankReport = new BankReport();
 
         initialize();
         printBankReport();
-        System.out.println("modifying...");
-        modifyBank();
+//        System.out.println("modifying...");
+//        modifyBank();
         printBankReport();
 
         System.out.println("***");
@@ -46,7 +50,23 @@ public class BankApplication {
         listenersList.add(printListener);
         listenersList.add(emailListener);
         bank = new Bank(listenersList);
-        try {
+
+        //initialize from feed files
+        IBankFeedService feedService = new BankFeedServiceImpl();
+        List<String[]> feeds = feedService.loadFeeds(FEED_FILES_FOLDER);
+        for (String[] fileFeed : feeds) {
+            for (String tempFeedLine : fileFeed) {
+                Map<String, String> feedMap = feedService.parseFeed(tempFeedLine);
+                try {
+                    Client tempClient = bank.parseFeed(feedMap);
+                    bank.addClient(tempClient);
+                } catch (IllegalArgumentException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        /*try {
             client1 = new Client(Gender.FEMALE);
             client1.setName("princess");
             bankService.addClient(bank, client1);
@@ -66,7 +86,7 @@ public class BankApplication {
         } catch (ClientExceedsException e) {
             System.out.println(e.getMessage());
             e.printStackTrace();
-        }
+        }*/
 
 
     }
@@ -101,19 +121,4 @@ public class BankApplication {
         return bank;
     }
 
-    public static Client getClient1() {
-        return client1;
-    }
-
-    public static Client getClient2() {
-        return client2;
-    }
-
-    public static Client getClient3() {
-        return client3;
-    }
-
-    public static IBankService getBankService() {
-        return bankService;
-    }
 }

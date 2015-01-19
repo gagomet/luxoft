@@ -1,6 +1,6 @@
 package BankApplication.service.bankservice;
 
-import BankApplication.account.impl.AbstractAccount;
+import BankApplication.model.account.impl.AbstractAccount;
 import BankApplication.exceptions.*;
 import BankApplication.exceptions.IllegalArgumentException;
 import BankApplication.model.Bank;

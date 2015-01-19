@@ -1,6 +1,6 @@
 package BankApplication.ui.commands.impl;
 
-import BankApplication.account.impl.AbstractAccount;
+import BankApplication.model.account.impl.AbstractAccount;
 import BankApplication.exceptions.*;
 import BankApplication.model.client.Client;
 import BankApplication.service.bankservice.BankServiceEnumSingletone;
@@ -23,15 +23,11 @@ public class GetAccountCommand extends AbstractCommand {
             System.out.println(errorsBundle.getString("noActiveClient"));
             System.out.println(bundle.getString("separator"));
         } else {
-            if (currentClient.getAccountsList().size() == 1) {
-                System.out.println(bundle.getString("oneAccount"));
-            } else {
                 System.out.println(bundle.getString("accountsList"));
-                for (AbstractAccount account : currentClient.getAccountsList()) {
+                for (AbstractAccount tempAccount : currentClient.getAccountsList()) {
                     System.out.println(bundle.getString("separator"));
-                    account.printReport();
+                    tempAccount.printReport();
                     System.out.println(bundle.getString("separator"));
-                }
                 System.out.println(bundle.getString("selectAccount"));
 
                 try {
