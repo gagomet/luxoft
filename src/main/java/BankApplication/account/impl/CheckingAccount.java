@@ -34,11 +34,11 @@ public class CheckingAccount extends AbstractAccount {
             super.withdraw(amount);
         } else {
             float difference = balance - amount;
-            if (Math.abs(difference) < overdraft) {
+            if (Math.abs(difference) <= overdraft + balance) {
                 balance -= amount;
-                overdraft = overdraft + difference;
+//                overdraft = overdraft + difference;
                 setBalance(balance);
-                setOverdraft(overdraft);
+//                setOverdraft(overdraft);
             } else {
                 throw new OverdraftLimitExceedException(errorsBundle.getString("notEnoughFunds"), this, amount);
             }

@@ -1,4 +1,4 @@
-package BankApplication.service.impl;
+package BankApplication.service.bankservice.impl;
 
 import BankApplication.account.impl.AbstractAccount;
 import BankApplication.exceptions.AccountNotFoundException;
@@ -9,10 +9,11 @@ import BankApplication.exceptions.NotEnoughFundsException;
 import BankApplication.listeners.IClientRegistrationListener;
 import BankApplication.model.Bank;
 import BankApplication.model.client.Client;
-import BankApplication.service.IBankService;
+import BankApplication.service.bankservice.IBankService;
 
-import java.util.List;
+import java.util.Iterator;
 import java.util.ResourceBundle;
+import java.util.Set;
 
 /**
  * Created by Kir Kolesnikov on 14.01.2015.
@@ -22,36 +23,45 @@ public class BankServiceImpl implements IBankService {
 
     @Override
     public void addClient(Bank bank, Client client) throws ClientExceedsException {
-        List<Client> clientsList = bank.getClientsList();
+        Set<Client> clientsList = bank.getClientsList();
         //here must be DB selection :)
         for (Client tempClient : bank.getClientsList()) {
             if (client.equals(tempClient)) {
                 throw new ClientExceedsException(errorsBundle.getString("clientAlreadyExceeds"));
             }
         }
-        clientsList.add(client);
+        bank.addClient(client);
         for (IClientRegistrationListener listener : bank.getListeners()) {
             listener.onClientAdded(client);
         }
-        bank.setClientsList(clientsList);
     }
 
     @Override
     public void removeClient(Bank bank, Client client) {
-        List<Client> clientsList = bank.getClientsList();
+        Set<Client> clientsList = bank.getClientsList();
+        Iterator iterator = clientsList.iterator();
+        while (iterator.hasNext()) {
+            Client tempClient = (Client) iterator.next();
+            if (client.equals(tempClient)) {
+                System.out.println("removing " + tempClient.getName());
+                bank.removeClient(tempClient);
+                break;
+            }
+        }
+        /*List<Client> clientsList = bank.getClientsList();
         for (int i = 0; i < clientsList.size(); i++) {
             if (clientsList.get(i).equals(client)) {
                 System.out.println("removing " + clientsList.get(i).getName());
                 clientsList.remove(i);
                 break;
             }
-        }
+        }*/
         bank.setClientsList(clientsList);
     }
 
     @Override
     public void addAccount(Client client, AbstractAccount account) {
-        List<AbstractAccount> accounts = client.getAccountsList();
+        Set<AbstractAccount> accounts = client.getAccountsList();
         accounts.add(account);
         client.setAccountsList(accounts);
     }
@@ -89,7 +99,7 @@ public class BankServiceImpl implements IBankService {
     public AbstractAccount getAccountById(Client client, Long id) throws AccountNotFoundException {
         AbstractAccount searchResult = null;
         for (AbstractAccount account : client.getAccountsList()) {
-            if (id == account.getId()){
+            if (id == account.getId()) {
                 searchResult = account;
                 break;
             } else {

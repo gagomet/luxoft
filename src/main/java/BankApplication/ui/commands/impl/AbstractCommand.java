@@ -17,7 +17,7 @@ public abstract class AbstractCommand implements ICommand {
     protected ResourceBundle errorsBundle = ResourceBundle.getBundle("errors");
     private final String EMPTY_STRING = "";
 
-    protected Gender validateClientsSex(String input) throws BankApplication.exceptions.IllegalArgumentException {
+    protected Gender validateClientsSex(String input) throws IllegalArgumentException {
         if (input.equalsIgnoreCase("M")) {
             return Gender.MALE;
         } else if (input.equalsIgnoreCase("F")) {

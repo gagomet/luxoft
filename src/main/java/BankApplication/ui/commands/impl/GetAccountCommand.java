@@ -3,7 +3,7 @@ package BankApplication.ui.commands.impl;
 import BankApplication.account.impl.AbstractAccount;
 import BankApplication.exceptions.*;
 import BankApplication.model.client.Client;
-import BankApplication.service.BankServiceEnumSingletone;
+import BankApplication.service.bankservice.BankServiceEnumSingletone;
 import BankApplication.ui.commander.BankCommander;
 
 import java.io.IOException;
@@ -14,6 +14,7 @@ import java.io.IOException;
 public class GetAccountCommand extends AbstractCommand {
     Client currentClient = null;
     Long clientId;
+
     @Override
     public void execute() {
         currentClient = BankCommander.getCurrentClient();
@@ -22,11 +23,11 @@ public class GetAccountCommand extends AbstractCommand {
             System.out.println(errorsBundle.getString("noActiveClient"));
             System.out.println(bundle.getString("separator"));
         } else {
-            if (currentClient.getAccountsList().size() == 1){
+            if (currentClient.getAccountsList().size() == 1) {
                 System.out.println(bundle.getString("oneAccount"));
             } else {
                 System.out.println(bundle.getString("accountsList"));
-                for(AbstractAccount account : currentClient.getAccountsList()){
+                for (AbstractAccount account : currentClient.getAccountsList()) {
                     System.out.println(bundle.getString("separator"));
                     account.printReport();
                     System.out.println(bundle.getString("separator"));

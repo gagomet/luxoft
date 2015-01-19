@@ -5,7 +5,7 @@ package BankApplication.account.impl;
  */
 public class SavingAccount extends AbstractAccount {
 
-    public SavingAccount(float startAmount){
+    public SavingAccount(float startAmount) {
         super();
         setBalance(startAmount);
     }
@@ -15,7 +15,6 @@ public class SavingAccount extends AbstractAccount {
 //        System.out.println(bundle.getString("savingAccount") + " " + this.getBalance());
         System.out.println(super.toString());
     }
-
 
 
 }

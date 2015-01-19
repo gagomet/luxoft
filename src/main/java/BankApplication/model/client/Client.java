@@ -7,22 +7,22 @@ import BankApplication.exceptions.IllegalArgumentException;
 import BankApplication.type.AccountType;
 import BankApplication.type.Gender;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.ResourceBundle;
+import java.util.*;
 
 /**
  * Created by Kir Kolesnikov on 14.01.2015.
  */
 public class Client implements IReport {
     private String name;
-    private List<AbstractAccount> accountsList = new ArrayList<AbstractAccount>();
+    private Set<AbstractAccount> accountsList = new HashSet<>();
     private AbstractAccount activeAccount;
     private float initialOverdraft;
     private Gender sex;
+    private String city;
     private String email;
     private String phone;
     private static ResourceBundle bundle = ResourceBundle.getBundle("strings");
+    private static ResourceBundle feedBundle = ResourceBundle.getBundle("feedfile");
 
     public Client(Gender sex) throws BankApplication.exceptions.IllegalArgumentException {
         this.sex = sex;
@@ -39,6 +39,15 @@ public class Client implements IReport {
         setActiveAccount(activeAccount);
     }
 
+    public AbstractAccount parseFeed(Map<String, String> feedMap){
+        AbstractAccount resultAccount = null;
+        if(feedMap.get(feedBundle.getString("accountType")).equalsIgnoreCase(feedBundle.getString("checkedAccount"))){
+            //TODO finish this method
+        }
+        return resultAccount;
+    }
+
+
     public void setActiveAccount(AbstractAccount activeAccount) {
         this.activeAccount = activeAccount;
     }
@@ -47,16 +56,24 @@ public class Client implements IReport {
         return activeAccount;
     }
 
-    public List<AbstractAccount> getAccountsList() {
-        return accountsList;
+    public Set<AbstractAccount> getAccountsList() {
+        return Collections.unmodifiableSet(accountsList);
     }
 
-    public void setAccountsList(List<AbstractAccount> accountsList) {
+    public void setAccountsList(Set<AbstractAccount> accountsList) {
         this.accountsList = accountsList;
     }
 
     public float getBalance() {
         return activeAccount.getBalance();
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
     }
 
     @Override
@@ -72,7 +89,7 @@ public class Client implements IReport {
         builder.append(sex.getGenderPrefix());
         builder.append(getName());
         builder.append(" ");
-        for(IAccount account : accountsList) {
+        for (IAccount account : accountsList) {
             builder.append(account.toString());
             builder.append("\n");
         }
@@ -112,6 +129,7 @@ public class Client implements IReport {
 
         if (Float.compare(client.initialOverdraft, initialOverdraft) != 0) return false;
         if (!accountsList.equals(client.accountsList)) return false;
+        if (city != null ? !city.equals(client.city) : client.city != null) return false;
         if (email != null ? !email.equals(client.email) : client.email != null) return false;
         if (!name.equals(client.name)) return false;
         if (phone != null ? !phone.equals(client.phone) : client.phone != null) return false;
@@ -126,6 +144,7 @@ public class Client implements IReport {
         result = 31 * result + accountsList.hashCode();
         result = 31 * result + (initialOverdraft != +0.0f ? Float.floatToIntBits(initialOverdraft) : 0);
         result = 31 * result + sex.hashCode();
+        result = 31 * result + (city != null ? city.hashCode() : 0);
         result = 31 * result + (email != null ? email.hashCode() : 0);
         result = 31 * result + (phone != null ? phone.hashCode() : 0);
         return result;

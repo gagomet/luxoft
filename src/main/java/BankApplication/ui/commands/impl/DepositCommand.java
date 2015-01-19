@@ -2,7 +2,7 @@ package BankApplication.ui.commands.impl;
 
 import BankApplication.exceptions.IllegalArgumentException;
 import BankApplication.model.client.Client;
-import BankApplication.service.BankServiceEnumSingletone;
+import BankApplication.service.bankservice.BankServiceEnumSingletone;
 import BankApplication.ui.commander.BankCommander;
 
 import java.io.IOException;

@@ -3,6 +3,7 @@ package BankApplication.ui.commander;
 import BankApplication.BankApplication;
 import BankApplication.exceptions.IllegalArgumentException;
 import BankApplication.model.Bank;
+import BankApplication.model.BankReport;
 import BankApplication.model.client.Client;
 import BankApplication.ui.commands.ICommand;
 import BankApplication.ui.commands.impl.AddClientCommand;
@@ -16,6 +17,9 @@ import BankApplication.ui.commands.impl.WithdrawCommand;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.TreeMap;
 
 /**
  * Created by Kir Kolesnikov on 15.01.2015.
@@ -24,6 +28,7 @@ public class BankCommander {
     public static Bank currentBank = new Bank();
     public static Client currentClient = null;
     public static BankApplication bankApplication = new BankApplication();
+    public static Map<String, ICommand> commandsMap = new TreeMap<>();
 
 
     static
@@ -55,30 +60,79 @@ public class BankCommander {
     }
 
     public static void main(String args[]) {
+        //initialization and retrieving of Bank class instance
         bankApplication.initialize();
         currentBank = bankApplication.getBank();
-        //initialization and retrieving of Bank class instance
+
+        if (args[0].equals("report")) {
+            BankReport bankReport = new BankReport();
+            System.out.println("***");
+            System.out.println(bankReport.getAccountsNumber(currentBank));
+            System.out.println("***");
+            System.out.println(bankReport.getBankCreditSum(currentBank));
+            System.out.println("***");
+            System.out.println(bankReport.getNumberOfClients(currentBank));
+            System.out.println("***");
+            System.out.println(bankReport.getClientsByCity(currentBank));
+        }
+
+        composeMapOfCommands();
 
         while (true) {
-            for (int i = 0; i < commands.length; i++) { // show menu
+            /*for (int i = 0; i < commands.length; i++) { // show menu
                 System.out.print(i + ") ");
                 commands[i].printCommandInfo();
+            }*/
+            Iterator iterator = commandsMap.entrySet().iterator();
+            while(iterator.hasNext()){
+                Map.Entry<String, ICommand> entry = (Map.Entry<String, ICommand>)iterator.next();
+                StringBuilder builder = new StringBuilder();
+                builder.append(entry.getKey());
+                builder.append("   -->    ");
+                System.out.print(builder.toString());
+                entry.getValue().printCommandInfo();
             }
-            int commandNumber = 0;
+//            int commandNumber = 0;
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
             try {
                 System.out.println("Enter number of your choice: ");
 
                 String commandString = bufferedReader.readLine();
-                commandNumber = Integer.parseInt(commandString);
+//                commandNumber = Integer.parseInt(commandString);
+                commandsMap.get(commandString).execute();
             } catch (IOException e) {
                 e.printStackTrace();
-            }
-            try {
-                commands[commandNumber].execute();
             } catch (IllegalArgumentException e) {
                 e.printStackTrace();
             }
+            /*try {
+                commands[commandNumber].execute();
+            } catch (IllegalArgumentException e) {
+                e.printStackTrace();
+            }*/
         }
     }
+
+    public void registerCommand(String name, ICommand command){
+        commandsMap.put(name, command);
+    }
+
+    public void removeCommand(String name){
+        commandsMap.remove(name);
+/*remove
+public V remove(Object key)
+Removes the mapping for this key from this TreeMap if present.
+Throws:
+ClassCastException - if the specified key cannot be compared with the keys currently in the map
+NullPointerException - if the specified key is null and this map uses natural ordering, or its comparator does not permit null keys*/
+    }
+
+    private static void composeMapOfCommands() {
+        Integer i = 0;
+        for (ICommand command : commands) {
+            commandsMap.put(i.toString(), command);
+            i++;
+        }
+    }
+
 }

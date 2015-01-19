@@ -2,7 +2,7 @@ package BankApplication.ui.commands.impl;
 
 import BankApplication.exceptions.NotEnoughFundsException;
 import BankApplication.model.client.Client;
-import BankApplication.service.BankServiceEnumSingletone;
+import BankApplication.service.bankservice.BankServiceEnumSingletone;
 import BankApplication.ui.commander.BankCommander;
 
 import java.io.IOException;
@@ -57,7 +57,7 @@ public class WithdrawCommand extends AbstractCommand {
             client.getActiveAccount().printReport();
             System.out.println(bundle.getString("separator"));
         } catch (NotEnoughFundsException e) {
-            e.printStackTrace();
+            System.out.println(e.getMessage());
         }
     }
 }

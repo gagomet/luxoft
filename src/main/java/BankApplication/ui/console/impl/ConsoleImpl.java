@@ -11,12 +11,12 @@ import java.io.InputStreamReader;
  */
 public class ConsoleImpl implements IConsole {
     private static BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
+
     @Override
     public String consoleResponse(String consoleRequest) throws IOException {
         System.out.println(consoleRequest);
         return bufferedReader.readLine();
     }
-
 
 
 }

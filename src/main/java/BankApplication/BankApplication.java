@@ -4,8 +4,9 @@ import BankApplication.exceptions.*;
 import BankApplication.exceptions.IllegalArgumentException;
 import BankApplication.listeners.IClientRegistrationListener;
 import BankApplication.model.Bank;
-import BankApplication.service.impl.BankServiceImpl;
-import BankApplication.service.IBankService;
+import BankApplication.model.BankReport;
+import BankApplication.service.bankservice.impl.BankServiceImpl;
+import BankApplication.service.bankservice.IBankService;
 import BankApplication.model.client.Client;
 import BankApplication.type.Gender;
 
@@ -20,11 +21,22 @@ public class BankApplication {
     static IBankService bankService = new BankServiceImpl();
 
     public static void main(String[] args) {
+        BankReport bankReport = new BankReport();
+
         initialize();
         printBankReport();
         System.out.println("modifying...");
         modifyBank();
         printBankReport();
+
+        System.out.println("***");
+        System.out.println(bankReport.getAccountsNumber(bank));
+        System.out.println("***");
+        System.out.println(bankReport.getBankCreditSum(bank));
+        System.out.println("***");
+        System.out.println(bankReport.getNumberOfClients(bank));
+        System.out.println("***");
+        System.out.println(bankReport.getClientsByCity(bank));
     }
 
     public static void initialize() {
@@ -41,10 +53,13 @@ public class BankApplication {
             bankService.depositeFunds(client1.getActiveAccount(), 1000);
             client2 = new Client(5000, Gender.MALE);
             client2.setName("beggar");
-//            client3 = new Client(5000, Gender.MALE);
-//            client3.setName("beggar");
+            client3 = new Client(3000, Gender.MALE);
+            client3.setName("neighbour");
             bankService.addClient(bank, client2);
-//            bankService.addClient(bank, client3);
+            bankService.addClient(bank, client3);
+            client1.setCity("Moscow");
+            client2.setCity("Paris");
+            client3.setCity("Paris");
         } catch (IllegalArgumentException e) {
             System.out.println(e.getMessage());
             e.printStackTrace();
@@ -67,11 +82,11 @@ public class BankApplication {
             bankService.depositeFunds(client1.getActiveAccount(), 1000);
             bankService.withdrawFunds(client2.getActiveAccount(), 4999);
             bankService.depositeFunds(client2.getActiveAccount(), 1000);
-            bankService.depositeFunds(client3.getActiveAccount(), 4999);
+            bankService.depositeFunds(client3.getActiveAccount(), 4000);
         } catch (IllegalArgumentException e) {
             System.out.println(e.getMessage());
             e.printStackTrace();
-        } catch (OverdraftLimitExceedException e){
+        } catch (OverdraftLimitExceedException e) {
             System.out.println(e.getMessage());
             e.printStackTrace();
         } catch (NotEnoughFundsException e) {

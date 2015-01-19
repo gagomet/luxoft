@@ -9,6 +9,7 @@ import BankApplication.account.impl.CheckingAccount;
  */
 public class OverdraftLimitExceedException extends NotEnoughFundsException {
     private CheckingAccount checkingAccount;
+
     public OverdraftLimitExceedException() {
     }
 
@@ -18,7 +19,7 @@ public class OverdraftLimitExceedException extends NotEnoughFundsException {
 
     public OverdraftLimitExceedException(String message, AbstractAccount account, float amount) {
         super(message, account, amount);
-        this.checkingAccount = (CheckingAccount)account;
+        this.checkingAccount = (CheckingAccount) account;
         String oldMessage = getMessage();
         StringBuilder builder = new StringBuilder();
         builder.append(oldMessage);
@@ -29,7 +30,7 @@ public class OverdraftLimitExceedException extends NotEnoughFundsException {
         setMessage(builder.toString());
     }
 
-    public float getPossiblyFunds(){
+    public float getPossiblyFunds() {
         return checkingAccount.getBalance() + checkingAccount.getOverdraft();
     }
 }

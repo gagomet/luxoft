@@ -2,9 +2,8 @@ package BankApplication.ui.commands.impl;
 
 import BankApplication.exceptions.ClientNotFoundException;
 import BankApplication.exceptions.IllegalArgumentException;
-import BankApplication.model.Bank;
 import BankApplication.model.client.Client;
-import BankApplication.service.BankServiceEnumSingletone;
+import BankApplication.service.bankservice.BankServiceEnumSingletone;
 import BankApplication.ui.commander.BankCommander;
 
 import java.io.IOException;
@@ -27,7 +26,7 @@ public class FindClientCommand extends AbstractCommand {
                 }
             }
 
-        findClientInBank(clientName);
+            findClientInBank(clientName);
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -41,7 +40,7 @@ public class FindClientCommand extends AbstractCommand {
         System.out.println(bundle.getString("findClientCommand"));
     }
 
-    private void findClientInBank(String clientName){
+    private void findClientInBank(String clientName) {
         try {
             Client client = BankServiceEnumSingletone.getClientByName(BankCommander.currentBank, clientName);
             BankCommander.setCurrentClient(client);

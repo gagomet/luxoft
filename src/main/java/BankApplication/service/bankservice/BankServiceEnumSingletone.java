@@ -1,4 +1,4 @@
-package BankApplication.service;
+package BankApplication.service.bankservice;
 
 import BankApplication.account.impl.AbstractAccount;
 import BankApplication.exceptions.AccountNotFoundException;
@@ -10,8 +10,10 @@ import BankApplication.listeners.IClientRegistrationListener;
 import BankApplication.model.Bank;
 import BankApplication.model.client.Client;
 
+import java.util.Iterator;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.Set;
 
 /**
  * Created by Kir Kolesnikov on 16.01.2015.
@@ -22,34 +24,40 @@ public enum BankServiceEnumSingletone {
     private static ResourceBundle errorsBundle = ResourceBundle.getBundle("errors");
 
     public static void addClient(Bank bank, Client client) throws ClientExceedsException {
-        List<Client> clientsList = bank.getClientsList();
-        //here must be DB selection :)
+        Set<Client> clientsList = bank.getClientsList();
         for (Client tempClient : bank.getClientsList()) {
             if (client.equals(tempClient)) {
                 throw new ClientExceedsException(errorsBundle.getString("clientAlreadyExceeds"));
             }
         }
-        clientsList.add(client);
+        bank.addClient(client);
         for (IClientRegistrationListener listener : bank.getListeners()) {
             listener.onClientAdded(client);
         }
-        bank.setClientsList(clientsList);
     }
 
     public static void removeClient(Bank bank, Client client) {
-        List<Client> clientsList = bank.getClientsList();
-        for (int i = 0; i < clientsList.size(); i++) {
+        Set<Client> clientsList = bank.getClientsList();
+        Iterator iterator = clientsList.iterator();
+        while (iterator.hasNext()) {
+            Client tempClient = (Client) iterator.next();
+            if (client.equals(tempClient)) {
+                System.out.println("removing " + tempClient.getName());
+                bank.removeClient(tempClient);
+                break;
+            }
+        }
+        /*for (int i = 0; i < clientsList.size(); i++) {
             if (clientsList.get(i).equals(client)) {
                 System.out.println("removing " + clientsList.get(i).getName());
                 clientsList.remove(i);
                 break;
             }
-        }
-        bank.setClientsList(clientsList);
+        }*/
     }
 
     public static void addAccount(Client client, AbstractAccount account) {
-        List<AbstractAccount> accounts = client.getAccountsList();
+        Set<AbstractAccount> accounts = client.getAccountsList();
         accounts.add(account);
         client.setAccountsList(accounts);
     }

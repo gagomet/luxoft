@@ -7,7 +7,7 @@ import BankApplication.model.client.IReport;
 /**
  * Created by Kir Kolesnikov on 14.01.2015.
  */
-public interface  IAccount extends IReport {
+public interface IAccount extends IReport {
     float getBalance();
 
     void deposit(float amount) throws IllegalArgumentException;

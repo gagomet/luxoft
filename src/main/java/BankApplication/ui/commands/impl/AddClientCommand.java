@@ -3,12 +3,11 @@ package BankApplication.ui.commands.impl;
 import BankApplication.exceptions.ClientExceedsException;
 import BankApplication.exceptions.IllegalArgumentException;
 import BankApplication.model.client.Client;
-import BankApplication.service.BankServiceEnumSingletone;
+import BankApplication.service.bankservice.BankServiceEnumSingletone;
 import BankApplication.type.Gender;
 import BankApplication.ui.commander.BankCommander;
 
 import java.io.IOException;
-import java.util.ResourceBundle;
 
 /**
  * Created by Kir Kolesnikov on 15.01.2015.
@@ -23,10 +22,12 @@ public class AddClientCommand extends AbstractCommand {
     @Override
     public void execute() throws IllegalArgumentException {
         try {
+
+            //TODO add client's city dialogue and validation
             while (true) {
                 try {
                     newClientsName = validateClientsName(console.consoleResponse(bundle.getString("addClientsName")));
-                        break;
+                    break;
                 } catch (IllegalArgumentException e) {
                     System.out.println(errorsBundle.getString("wrongClientsName"));
                     continue;
@@ -36,7 +37,7 @@ public class AddClientCommand extends AbstractCommand {
             while (true) {
                 try {
                     newClientSex = validateClientsSex(console.consoleResponse(bundle.getString("addClientsSex")));
-                        break;
+                    break;
                 } catch (IllegalArgumentException e) {
                     System.out.println(errorsBundle.getString("wrongGender"));
                     continue;
@@ -75,7 +76,6 @@ public class AddClientCommand extends AbstractCommand {
                     continue;
                 }
             }
-
 
 
             addClient(newClientOverdraft, newClientSex);

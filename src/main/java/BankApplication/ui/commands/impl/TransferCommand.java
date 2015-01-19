@@ -5,7 +5,7 @@ import BankApplication.exceptions.ClientNotFoundException;
 import BankApplication.exceptions.IllegalArgumentException;
 import BankApplication.exceptions.NotEnoughFundsException;
 import BankApplication.model.client.Client;
-import BankApplication.service.BankServiceEnumSingletone;
+import BankApplication.service.bankservice.BankServiceEnumSingletone;
 import BankApplication.ui.commander.BankCommander;
 
 import java.io.IOException;
@@ -91,8 +91,8 @@ public class TransferCommand extends AbstractCommand {
     }
 
     public void transferFunds(AbstractAccount sender, AbstractAccount recepient, Float amount) throws NotEnoughFundsException, IllegalArgumentException {
-            BankServiceEnumSingletone.withdrawFunds(sender, amount);
-            BankServiceEnumSingletone.depositeFunds(recepient, amount);
+        BankServiceEnumSingletone.withdrawFunds(sender, amount);
+        BankServiceEnumSingletone.depositeFunds(recepient, amount);
 
     }
 }
