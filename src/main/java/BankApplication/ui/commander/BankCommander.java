@@ -7,7 +7,7 @@ import BankApplication.model.Bank;
 import BankApplication.model.BankReport;
 import BankApplication.model.Client;
 import BankApplication.service.bankservice.BankServiceEnumSingletone;
-import BankApplication.ui.commands.ICommand;
+import BankApplication.ui.commands.Command;
 import BankApplication.ui.commands.impl.AddClientCommand;
 import BankApplication.ui.commands.impl.DepositCommand;
 import BankApplication.ui.commands.impl.FindClientCommand;
@@ -15,8 +15,6 @@ import BankApplication.ui.commands.impl.GetAccountCommand;
 import BankApplication.ui.commands.impl.ShowHelpCommand;
 import BankApplication.ui.commands.impl.TransferCommand;
 import BankApplication.ui.commands.impl.WithdrawCommand;
-import BankApplication.ui.console.IConsole;
-import BankApplication.ui.console.impl.ConsoleImpl;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -32,11 +30,11 @@ public class BankCommander {
     public static Bank currentBank = new Bank();
     public static Client currentClient = null;
     public static BankApplication bankApplication = new BankApplication();
-    public static Map<String, ICommand> commandsMap = new TreeMap<>();
+    public static Map<String, Command> commandsMap = new TreeMap<>();
 
 
     static
-    ICommand[] commands = {
+    Command[] commands = {
             new FindClientCommand(), // 1
             new GetAccountCommand(), // 2
             new WithdrawCommand(), //3
@@ -44,7 +42,7 @@ public class BankCommander {
             new TransferCommand(), //5
             new AddClientCommand(), //6
             new ShowHelpCommand(), //7
-            new ICommand() {
+            new Command() {
                 public void execute() {
                     System.exit(0);
                 }
@@ -83,13 +81,13 @@ public class BankCommander {
 
         //serialization/deserialization
             serializationTest();
-        IConsole console = new ConsoleImpl();
+        /*IConsole console = new ConsoleImpl();
         BufferedReader bReader = console.consoleResponseReader("question");
         try {
             System.out.println(bReader.readLine());
         } catch (IOException e) {
             e.printStackTrace();
-        }
+        }*/
 
 
         composeMapOfCommands();
@@ -97,7 +95,7 @@ public class BankCommander {
             while (true) {
                 Iterator iterator = commandsMap.entrySet().iterator();
                 while (iterator.hasNext()) {
-                    Map.Entry<String, ICommand> entry = (Map.Entry<String, ICommand>) iterator.next();
+                    Map.Entry<String, Command> entry = (Map.Entry<String, Command>) iterator.next();
                     StringBuilder builder = new StringBuilder();
                     builder.append(entry.getKey());
                     builder.append("   -->    ");
@@ -119,7 +117,7 @@ public class BankCommander {
 
     }
 
-    public void registerCommand(String name, ICommand command) {
+    public void registerCommand(String name, Command command) {
         commandsMap.put(name, command);
     }
 
@@ -135,7 +133,7 @@ NullPointerException - if the specified key is null and this map uses natural or
 
     public static void composeMapOfCommands() {
         Integer i = 0;
-        for (ICommand command : commands) {
+        for (Command command : commands) {
             commandsMap.put(i.toString(), command);
             i++;
         }

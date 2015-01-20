@@ -19,18 +19,17 @@ import java.util.TreeMap;
  */
 public class Bank {
     private Set<Client> clientsList = new HashSet<Client>();
-    private List<IClientRegistrationListener> listeners = new ArrayList<IClientRegistrationListener>();
+    private List<ClientRegistrationListener> listeners = new ArrayList<ClientRegistrationListener>();
     private Map<String, Client> clientsNamesTable = new TreeMap<>();
-    private static ResourceBundle feedBundle = ResourceBundle.getBundle("feedfile");
     private static ResourceBundle errorsBundle = ResourceBundle.getBundle("errors");
 
     public Bank() {
 
     }
 
-    public Bank(List<IClientRegistrationListener> listenerList) {
+    public Bank(List<ClientRegistrationListener> listenerList) {
         this.listeners = listenerList;
-        listeners.add(new IClientRegistrationListener() {
+        listeners.add(new ClientRegistrationListener() {
             @Override
             public void onClientAdded(Client client) {
                 System.out.println("This report printed by anonymous listener");
@@ -50,7 +49,7 @@ public class Bank {
         this.clientsList = clientsList;
     }
 
-    public List<IClientRegistrationListener> getListeners() {
+    public List<ClientRegistrationListener> getListeners() {
         return listeners;
     }
 
@@ -69,13 +68,14 @@ public class Bank {
     public Client parseFeed(Map<String, String> feedMap) throws IllegalArgumentException {
         Client resultClient = null;
         if (clientsNamesTable.get(feedMap.get("name")) == null) {
-            if (feedMap.containsKey(feedBundle.getString("gender"))) {
-                Gender clientsGender = getGenderFromFeed(feedMap.get(feedBundle.getString("gender")));
-                resultClient = new Client(clientsGender);
-                resultClient.setName(feedMap.get(feedBundle.getString("name")));
-                resultClient.setInitialOverdraft(Float.parseFloat(feedMap.get(feedBundle.getString("overdraft"))));
+            if (feedMap.containsKey("gender")) {
+                Gender clientsGender = getGenderFromFeed(feedMap.get("gender"));
+                resultClient = new Client();
+                resultClient.setName(feedMap.get("gender"));
+                resultClient.setName(feedMap.get("name"));
+                resultClient.setInitialOverdraft(Float.parseFloat(feedMap.get("overdraft")));
             } else {
-                resultClient = clientsNamesTable.get(feedBundle.getString("name"));
+                resultClient = clientsNamesTable.get("name");
             }
         }
         if (resultClient != null) {
@@ -94,7 +94,7 @@ public class Bank {
         return builder.toString();
     }
 
-    public static class PrintClientListener implements IClientRegistrationListener {
+    public static class PrintClientListener implements ClientRegistrationListener {
 
         @Override
         public void onClientAdded(Client client) {
@@ -103,7 +103,7 @@ public class Bank {
         }
     }
 
-    public static class EmailClientListener implements IClientRegistrationListener {
+    public static class EmailClientListener implements ClientRegistrationListener {
 
         @Override
         public void onClientAdded(Client client) {

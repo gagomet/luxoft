@@ -1,5 +1,6 @@
 package BankApplication.ui.commands.impl;
 
+import BankApplication.model.account.Account;
 import BankApplication.model.account.impl.AbstractAccount;
 import BankApplication.exceptions.ClientNotFoundException;
 import BankApplication.exceptions.IllegalArgumentException;
@@ -15,7 +16,7 @@ import java.io.IOException;
  */
 public class TransferCommand extends AbstractCommand {
     Float transferFunds;
-    Long recepientAccountId;
+    long recepientAccountId;
     String recepientName;
 
     @Override
@@ -26,7 +27,7 @@ public class TransferCommand extends AbstractCommand {
             System.out.println(bundle.getString("separator"));
         } else {
             try {
-                AbstractAccount senderAccount = BankCommander.getCurrentClient().getActiveAccount();
+                Account senderAccount = BankCommander.getCurrentClient().getActiveAccount();
                 while (true) {
                     try {
                         recepientName = validateClientsName(console.consoleResponse(bundle.getString("recipientName")));
@@ -80,7 +81,7 @@ public class TransferCommand extends AbstractCommand {
         System.out.println(bundle.getString("transferCommand"));
     }
 
-    public void transferFunds(AbstractAccount sender, AbstractAccount recepient, Float amount) throws NotEnoughFundsException, IllegalArgumentException {
+    public void transferFunds(Account sender, Account recepient, Float amount) throws NotEnoughFundsException, IllegalArgumentException {
         BankServiceEnumSingletone.withdrawFunds(sender, amount);
         BankServiceEnumSingletone.depositeFunds(recepient, amount);
 

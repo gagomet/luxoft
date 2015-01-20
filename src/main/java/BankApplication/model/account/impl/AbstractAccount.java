@@ -1,6 +1,6 @@
 package BankApplication.model.account.impl;
 
-import BankApplication.model.account.IAccount;
+import BankApplication.model.account.Account;
 import BankApplication.exceptions.IllegalArgumentException;
 import BankApplication.exceptions.NotEnoughFundsException;
 
@@ -11,10 +11,8 @@ import java.util.ResourceBundle;
 /**
  * Created by Kir Kolesnikov on 14.01.2015.
  */
-public abstract class AbstractAccount implements IAccount, Serializable {
+public abstract class AbstractAccount implements Account, Serializable {
     protected static ResourceBundle errorsBundle = ResourceBundle.getBundle("errors");
-    protected static ResourceBundle bundle = ResourceBundle.getBundle("strings");
-    protected static ResourceBundle feedBundle = ResourceBundle.getBundle("feedfile");
     protected float balance;
     final protected Long id;
 
@@ -31,7 +29,7 @@ public abstract class AbstractAccount implements IAccount, Serializable {
         this.balance = balance;
     }
 
-    public Long getId() {
+    public long getId() {
         return id;
     }
 
@@ -63,9 +61,9 @@ public abstract class AbstractAccount implements IAccount, Serializable {
         builder.append(id);
         builder.append(" ");
         if (this instanceof CheckingAccount) {
-            builder.append(bundle.getString("checkingAccount"));
+            builder.append("Checking account main funds:");
         } else {
-            builder.append(bundle.getString("savingAccount"));
+            builder.append("Saving account funds:");
         }
         builder.append(" ");
         builder.append(this.getBalance());

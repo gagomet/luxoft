@@ -5,7 +5,7 @@ import BankApplication.exceptions.*;
 import BankApplication.exceptions.IllegalArgumentException;
 import BankApplication.service.bankservice.BankServiceEnumSingletone;
 import BankApplication.ui.commander.BankCommander;
-import BankApplication.ui.commands.ICommand;
+import BankApplication.ui.commands.Command;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -50,7 +50,7 @@ public class BankServer {
                     System.out.println("client>" + message);
 
                     if(BankCommander.commandsMap.containsKey(message)){
-                        ICommand command = BankCommander.commandsMap.get(message);
+                        Command command = BankCommander.commandsMap.get(message);
                         command.printCommandInfo();
                         command.execute();
 //                        sendMessage(command.);

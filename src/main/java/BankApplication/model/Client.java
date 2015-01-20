@@ -1,7 +1,7 @@
 package BankApplication.model;
 
 import BankApplication.exceptions.IllegalArgumentException;
-import BankApplication.model.account.IAccount;
+import BankApplication.model.account.Account;
 import BankApplication.model.account.impl.AbstractAccount;
 import BankApplication.model.account.impl.CheckingAccount;
 import BankApplication.model.account.impl.SavingAccount;
@@ -11,24 +11,20 @@ import java.io.Serializable;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Map;
-import java.util.ResourceBundle;
 import java.util.Set;
 
 /**
  * Created by Kir Kolesnikov on 14.01.2015.
  */
-public class Client implements IReport, Serializable {
+public class Client implements Report, Serializable {
     private String name;
-    private Set<AbstractAccount> accountsList = new HashSet<>();
-    private transient AbstractAccount activeAccount;
+    private Set<Account> accountsList = new HashSet<>();
+    private transient Account activeAccount;
     private float initialOverdraft;
     private Gender sex;
     private String city;
     private String email;
     private String phone;
-    private static ResourceBundle bundle = ResourceBundle.getBundle("strings");
-    private static ResourceBundle feedBundle = ResourceBundle.getBundle("feedfile");
-
 
     public Client() {
 
@@ -40,9 +36,9 @@ public class Client implements IReport, Serializable {
 
     public AbstractAccount parseFeed(Map<String, String> feedMap) throws IllegalArgumentException {
         AbstractAccount resultAccount = null;
-        if (feedMap.get(feedBundle.getString("accountType")).equalsIgnoreCase(feedBundle.getString("checkedAccount"))) {
+        if (feedMap.get("accounttype").equalsIgnoreCase("c")) {
             resultAccount = new CheckingAccount();
-        } else if (feedMap.get(feedBundle.getString("accountType")).equalsIgnoreCase(feedBundle.getString("savingAccount"))) {
+        } else if (feedMap.get("accounttype").equalsIgnoreCase("s")) {
             resultAccount = new SavingAccount();
         }
         activeAccount = resultAccount;
@@ -61,19 +57,19 @@ public class Client implements IReport, Serializable {
         this.initialOverdraft = initialOverdraft;
     }
 
-    public void setActiveAccount(AbstractAccount activeAccount) {
+    public void setActiveAccount(Account activeAccount) {
         this.activeAccount = activeAccount;
     }
 
-    public AbstractAccount getActiveAccount() {
+    public Account getActiveAccount() {
         return activeAccount;
     }
 
-    public Set<AbstractAccount> getAccountsList() {
+    public Set<Account> getAccountsList() {
         return Collections.unmodifiableSet(accountsList);
     }
 
-    public void setAccountsList(Set<AbstractAccount> accountsList) {
+    public void setAccountsList(Set<Account> accountsList) {
         this.accountsList = accountsList;
     }
 
@@ -89,20 +85,29 @@ public class Client implements IReport, Serializable {
         this.city = city;
     }
 
+    public Gender getSex() {
+        return sex;
+    }
+
+    public void setSex(Gender sex) {
+        this.sex = sex;
+    }
+
     @Override
     public void printReport() {
-        System.out.println(this.toString());
+        System.out.println(toString());
     }
 
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
-        builder.append(bundle.getString("clientName"));
-        builder.append(" ");
-        builder.append(sex.getGenderPrefix());
+        builder.append("Client name: ");
+        if (sex != null) {
+            builder.append(sex.getGenderPrefix());
+        }
         builder.append(getName());
         builder.append(" ");
-        for (IAccount account : accountsList) {
+        for (Account account : accountsList) {
             builder.append(account.toString());
             builder.append("\n");
         }
@@ -156,7 +161,7 @@ public class Client implements IReport, Serializable {
         int result = name.hashCode();
         result = 31 * result + accountsList.hashCode();
         result = 31 * result + (initialOverdraft != +0.0f ? Float.floatToIntBits(initialOverdraft) : 0);
-        result = 31 * result + sex.hashCode();
+        result = 31 * result + (sex != null ? sex.hashCode() : 0);
         result = 31 * result + (city != null ? city.hashCode() : 0);
         result = 31 * result + (email != null ? email.hashCode() : 0);
         result = 31 * result + (phone != null ? phone.hashCode() : 0);

@@ -2,12 +2,13 @@ package BankApplication.model.account;
 
 import BankApplication.exceptions.*;
 import BankApplication.exceptions.IllegalArgumentException;
-import BankApplication.model.IReport;
+import BankApplication.model.Report;
 
 /**
  * Created by Kir Kolesnikov on 14.01.2015.
  */
-public interface IAccount extends IReport {
+public interface Account extends Report {
+    long getId();
     float getBalance();
 
     void deposit(float amount) throws IllegalArgumentException;

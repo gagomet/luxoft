@@ -81,7 +81,7 @@ public class AddClientCommand extends AbstractCommand {
                 }
             }
 
-            addClient( newClientSex);
+            addClient(newClientSex);
         } catch (NumberFormatException e) {
             throw new IllegalArgumentException("Not valid entry :" + e.getMessage());
         } catch (ClientExceedsException | IOException e) {
@@ -96,9 +96,10 @@ public class AddClientCommand extends AbstractCommand {
 
     private void addClient(Gender newClientGender) throws IllegalArgumentException, ClientExceedsException {
 
-        Client newClient = new Client(newClientGender);
+        Client newClient = new Client();
+        newClient.setSex(newClientSex);
         newClient.setName(newClientsName);
-        if(newClientOverdraft != null){
+        if (newClientOverdraft != null) {
             newClient.setInitialOverdraft(newClientOverdraft);
         }
         if (newClientPhone != null) {
@@ -106,6 +107,9 @@ public class AddClientCommand extends AbstractCommand {
         }
         if (newClientEmail != null) {
             newClient.setEmail(newClientEmail);
+        }
+        if (newClientsCity != null) {
+            newClient.setCity(newClientsCity);
         }
         System.out.println(bundle.getString("separator"));
         BankServiceEnumSingletone.addClient(BankCommander.currentBank, newClient);

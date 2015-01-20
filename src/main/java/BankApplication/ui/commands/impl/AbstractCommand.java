@@ -2,8 +2,8 @@ package BankApplication.ui.commands.impl;
 
 import BankApplication.exceptions.IllegalArgumentException;
 import BankApplication.type.Gender;
-import BankApplication.ui.commands.ICommand;
-import BankApplication.ui.console.IConsole;
+import BankApplication.ui.commands.Command;
+import BankApplication.ui.console.Console;
 import BankApplication.ui.console.impl.ConsoleImpl;
 
 import java.util.ResourceBundle;
@@ -11,8 +11,8 @@ import java.util.ResourceBundle;
 /**
  * Created by Kir Kolesnikov on 15.01.2015.
  */
-public abstract class AbstractCommand implements ICommand {
-    protected IConsole console = new ConsoleImpl();
+public abstract class AbstractCommand implements Command {
+    protected Console console = new ConsoleImpl();
     protected ResourceBundle bundle = ResourceBundle.getBundle("strings");
     protected ResourceBundle errorsBundle = ResourceBundle.getBundle("errors");
     private String currentConsoleRequest;

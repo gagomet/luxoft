@@ -1,13 +1,11 @@
 package BankApplication.ui.console.impl;
 
-import BankApplication.ui.console.IConsole;
-
 import java.io.*;
 
 /**
  * Created by Padonag on 15.01.2015.
  */
-public class ConsoleImpl implements IConsole {
+public class ConsoleImpl implements BankApplication.ui.console.Console {
     private String currentRequest;
     private String currentResponse;
     private static BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));

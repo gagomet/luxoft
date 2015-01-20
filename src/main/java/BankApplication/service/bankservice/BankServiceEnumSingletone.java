@@ -1,12 +1,13 @@
 package BankApplication.service.bankservice;
 
+import BankApplication.model.ClientRegistrationListener;
+import BankApplication.model.account.Account;
 import BankApplication.model.account.impl.AbstractAccount;
 import BankApplication.exceptions.AccountNotFoundException;
 import BankApplication.exceptions.ClientExceedsException;
 import BankApplication.exceptions.ClientNotFoundException;
 import BankApplication.exceptions.IllegalArgumentException;
 import BankApplication.exceptions.NotEnoughFundsException;
-import BankApplication.model.IClientRegistrationListener;
 import BankApplication.model.Bank;
 import BankApplication.model.Client;
 
@@ -36,7 +37,7 @@ public enum BankServiceEnumSingletone {
             }
         }
         bank.addClient(client);
-        for (IClientRegistrationListener listener : bank.getListeners()) {
+        for (ClientRegistrationListener listener : bank.getListeners()) {
             listener.onClientAdded(client);
         }
     }
@@ -52,17 +53,10 @@ public enum BankServiceEnumSingletone {
                 break;
             }
         }
-        /*for (int i = 0; i < clientsList.size(); i++) {
-            if (clientsList.get(i).equals(client)) {
-                System.out.println("removing " + clientsList.get(i).getName());
-                clientsList.remove(i);
-                break;
-            }
-        }*/
     }
 
     public static void addAccount(Client client, AbstractAccount account) {
-        Set<AbstractAccount> accounts = client.getAccountsList();
+        Set<Account> accounts = client.getAccountsList();
         accounts.add(account);
         client.setAccountsList(accounts);
     }
@@ -81,9 +75,9 @@ public enum BankServiceEnumSingletone {
         return searchResult;
     }
 
-    public static AbstractAccount getAccountById(Client client, Long id) throws AccountNotFoundException {
-        AbstractAccount searchResult = null;
-        for (AbstractAccount account : client.getAccountsList()) {
+    public static Account getAccountById(Client client, Long id) throws AccountNotFoundException {
+        Account searchResult = null;
+        for (Account account : client.getAccountsList()) {
             if (id.equals(account.getId())) {
                 searchResult = account;
                 break;
@@ -125,11 +119,11 @@ public enum BankServiceEnumSingletone {
         client.setActiveAccount(account);
     }
 
-    public static void depositeFunds(AbstractAccount account, float amount) throws IllegalArgumentException {
+    public static void depositeFunds(Account account, float amount) throws IllegalArgumentException {
         account.deposit(amount);
     }
 
-    public static void withdrawFunds(AbstractAccount account, float amount) throws NotEnoughFundsException {
+    public static void withdrawFunds(Account account, float amount) throws NotEnoughFundsException {
         account.withdraw(amount);
     }
 }

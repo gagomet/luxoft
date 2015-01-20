@@ -3,13 +3,13 @@ package BankApplication;
 import BankApplication.exceptions.IllegalArgumentException;
 import BankApplication.exceptions.NotEnoughFundsException;
 import BankApplication.exceptions.OverdraftLimitExceedException;
-import BankApplication.model.IClientRegistrationListener;
+import BankApplication.model.ClientRegistrationListener;
 import BankApplication.model.Bank;
 import BankApplication.model.BankReport;
 import BankApplication.model.Client;
-import BankApplication.service.bankfeedservice.IBankFeedService;
+import BankApplication.service.bankfeedservice.BankFeedService;
 import BankApplication.service.bankfeedservice.impl.BankFeedServiceImpl;
-import BankApplication.service.bankservice.IBankService;
+import BankApplication.service.bankservice.BankService;
 import BankApplication.service.bankservice.impl.BankServiceImpl;
 
 import java.util.ArrayList;
@@ -21,7 +21,7 @@ public class BankApplication {
     static Client client1 = null;
     static Client client2 = null;
     static Client client3 = null;
-    static IBankService bankService = new BankServiceImpl();
+    static BankService bankService = new BankServiceImpl();
     private static final String FEED_FILES_FOLDER = "c:\\!toBankApplication\\";
 
     public static void main(String[] args) {
@@ -46,13 +46,13 @@ public class BankApplication {
     public static void initialize() {
         Bank.PrintClientListener printListener = new Bank.PrintClientListener();
         Bank.EmailClientListener emailListener = new Bank.EmailClientListener();
-        List<IClientRegistrationListener> listenersList = new ArrayList<IClientRegistrationListener>();
+        List<ClientRegistrationListener> listenersList = new ArrayList<ClientRegistrationListener>();
         listenersList.add(printListener);
         listenersList.add(emailListener);
         bank = new Bank(listenersList);
 
         //initialize from feed files
-        IBankFeedService feedService = new BankFeedServiceImpl();
+        BankFeedService feedService = new BankFeedServiceImpl();
         List<String[]> feeds = feedService.loadFeeds(FEED_FILES_FOLDER);
         for (String[] fileFeed : feeds) {
             for (String tempFeedLine : fileFeed) {

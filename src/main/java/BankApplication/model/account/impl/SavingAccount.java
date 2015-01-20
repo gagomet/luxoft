@@ -12,7 +12,7 @@ public class SavingAccount extends AbstractAccount {
     }
 
     public void parseFeed(Map<String, String> feedMap){
-        Float balance = Float.parseFloat(feedMap.get(feedBundle.getString("balance")));
+        Float balance = Float.parseFloat(feedMap.get("balance"));
         setBalance(balance);
     }
     @Override

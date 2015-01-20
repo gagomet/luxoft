@@ -1,6 +1,6 @@
 package BankApplication.service.bankfeedservice.impl;
 
-import BankApplication.service.bankfeedservice.IBankFeedService;
+import BankApplication.service.bankfeedservice.BankFeedService;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -16,7 +16,7 @@ import java.util.Map;
 /**
  * Created by Kir Kolesnikov on 19.01.2015.
  */
-public class BankFeedServiceImpl implements IBankFeedService {
+public class BankFeedServiceImpl implements BankFeedService {
     @Override
     public Map<String, String> parseFeed(String feed) {
         Map<String, String> result = new HashMap<>();

@@ -1,6 +1,7 @@
 package BankApplication.model;
 
 import BankApplication.model.Bank;
+import BankApplication.model.account.Account;
 import BankApplication.model.account.impl.AbstractAccount;
 import BankApplication.model.Client;
 
@@ -17,7 +18,7 @@ public class BankReport {
     public int getAccountsNumber(Bank bank) {
         int result = 0;
         for (Client client : bank.getClientsList()) {
-            for (AbstractAccount account : client.getAccountsList()) {
+            for (Account account : client.getAccountsList()) {
                 result++;
             }
         }
@@ -27,7 +28,7 @@ public class BankReport {
     public float getBankCreditSum(Bank bank) {
         float resultSum = 0;
         for (Client client : bank.getClientsList()) {
-            for (AbstractAccount account : client.getAccountsList()) {
+            for (Account account : client.getAccountsList()) {
                 if (account.getBalance() < 0) {
                     resultSum += -account.getBalance();
                 }

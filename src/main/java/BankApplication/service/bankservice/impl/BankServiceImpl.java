@@ -1,15 +1,15 @@
 package BankApplication.service.bankservice.impl;
 
-import BankApplication.model.account.impl.AbstractAccount;
+import BankApplication.model.ClientRegistrationListener;
+import BankApplication.model.account.Account;
 import BankApplication.exceptions.AccountNotFoundException;
 import BankApplication.exceptions.ClientExceedsException;
 import BankApplication.exceptions.ClientNotFoundException;
 import BankApplication.exceptions.IllegalArgumentException;
 import BankApplication.exceptions.NotEnoughFundsException;
-import BankApplication.model.IClientRegistrationListener;
 import BankApplication.model.Bank;
 import BankApplication.model.Client;
-import BankApplication.service.bankservice.IBankService;
+import BankApplication.service.bankservice.BankService;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -24,7 +24,7 @@ import java.util.Set;
 /**
  * Created by Kir Kolesnikov on 14.01.2015.
  */
-public class BankServiceImpl implements IBankService {
+public class BankServiceImpl implements BankService {
     protected ResourceBundle errorsBundle = ResourceBundle.getBundle("errors");
 
     @Override
@@ -37,7 +37,7 @@ public class BankServiceImpl implements IBankService {
             }
         }
         bank.addClient(client);
-        for (IClientRegistrationListener listener : bank.getListeners()) {
+        for (ClientRegistrationListener listener : bank.getListeners()) {
             listener.onClientAdded(client);
         }
     }
@@ -66,24 +66,24 @@ public class BankServiceImpl implements IBankService {
     }
 
     @Override
-    public void addAccount(Client client, AbstractAccount account) {
-        Set<AbstractAccount> accounts = client.getAccountsList();
+    public void addAccount(Client client, Account account) {
+        Set<Account> accounts = client.getAccountsList();
         accounts.add(account);
         client.setAccountsList(accounts);
     }
 
     @Override
-    public void setActiveAccount(Client client, AbstractAccount account) {
+    public void setActiveAccount(Client client, Account account) {
         client.setActiveAccount(account);
     }
 
     @Override
-    public void depositeFunds(AbstractAccount account, float amount) throws IllegalArgumentException {
+    public void depositeFunds(Account account, float amount) throws IllegalArgumentException {
         account.deposit(amount);
     }
 
     @Override
-    public void withdrawFunds(AbstractAccount account, float amount) throws NotEnoughFundsException {
+    public void withdrawFunds(Account account, float amount) throws NotEnoughFundsException {
         account.withdraw(amount);
     }
 
@@ -102,9 +102,9 @@ public class BankServiceImpl implements IBankService {
     }
 
     @Override
-    public AbstractAccount getAccountById(Client client, Long id) throws AccountNotFoundException {
-        AbstractAccount searchResult = null;
-        for (AbstractAccount account : client.getAccountsList()) {
+    public Account getAccountById(Client client, Long id) throws AccountNotFoundException {
+        Account searchResult = null;
+        for (Account account : client.getAccountsList()) {
             if (id == account.getId()) {
                 searchResult = account;
                 break;

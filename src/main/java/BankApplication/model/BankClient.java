@@ -44,14 +44,14 @@ public class BankClient {
                     }
                     message = bufferedReader.readLine();
                     if (message.startsWith("addclient")) {
-                        Client client = null;
+                        Client client = new Client();
                         String[] command = message.split(" ");
                         String[] arguments = command[1].split(",");
                         if (arguments[0].equalsIgnoreCase("m")) {
-                            client = new Client(Gender.MALE);
+                            client.setSex(Gender.MALE);
                         }
                         if (arguments[0].equalsIgnoreCase("f")) {
-                            client = new Client(Gender.FEMALE);
+                            client.setSex(Gender.FEMALE);
                         }
                         if (client != null) {
                             client.setName(arguments[1]);
@@ -63,8 +63,6 @@ public class BankClient {
                     sendMessage(message);
                 } catch (ClassNotFoundException classNot) {
                     System.err.println("data received in unknown format");
-                } catch (BankApplication.exceptions.IllegalArgumentException e) {
-                    e.printStackTrace();
                 }
             } while (!message.equals("bye"));
         } catch (UnknownHostException unknownHost) {

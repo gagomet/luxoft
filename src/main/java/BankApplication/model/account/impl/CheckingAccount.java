@@ -1,7 +1,7 @@
 package BankApplication.model.account.impl;
 
-import BankApplication.exceptions.*;
-import BankApplication.exceptions.IllegalArgumentException;
+import BankApplication.exceptions.NotEnoughFundsException;
+import BankApplication.exceptions.OverdraftLimitExceedException;
 
 import java.util.Map;
 
@@ -12,7 +12,7 @@ import java.util.Map;
 public class CheckingAccount extends AbstractAccount {
     private float overdraft;
 
-    public CheckingAccount(){
+    public CheckingAccount() {
 
     }
 
@@ -26,23 +26,21 @@ public class CheckingAccount extends AbstractAccount {
 
     @Override
     public void withdraw(float amount) throws NotEnoughFundsException {
-        float balance = this.getBalance();
+        float balance = this.balance;
         if (balance >= amount) {
             super.withdraw(amount);
         } else {
-            float difference = balance - amount;
-            if (Math.abs(difference) <= overdraft + balance) {
-                balance -= amount;
-                setBalance(balance);
+            if (Math.abs(balance - amount) <= overdraft + balance) {
+                this.balance -= amount;
             } else {
                 throw new OverdraftLimitExceedException(errorsBundle.getString("notEnoughFunds"), this, amount);
             }
         }
     }
 
-    public void parseFeed(Map<String, String> feedMap){
-        Float balance = Float.parseFloat(feedMap.get(feedBundle.getString("balance")));
-        Float overdraft = Float.parseFloat(feedMap.get(feedBundle.getString("overdraft")));
+    public void parseFeed(Map<String, String> feedMap) {
+        Float balance = Float.parseFloat(feedMap.get("balance"));
+        Float overdraft = Float.parseFloat(feedMap.get("overdraft"));
         setBalance(balance);
         setOverdraft(overdraft);
     }
@@ -57,13 +55,9 @@ public class CheckingAccount extends AbstractAccount {
         StringBuilder builder = new StringBuilder();
         builder.append("ID: ");
         builder.append(id);
-        builder.append(" ");
-        builder.append(bundle.getString("checkingAccount"));
-        builder.append(" ");
-        builder.append(this.getBalance());
-        builder.append(" ");
-        builder.append(bundle.getString("overdraft"));
-        builder.append(" ");
+        builder.append(" Checking account main funds: ");
+        builder.append(getBalance());
+        builder.append(" Overdraft of client: ");
         builder.append(this.getOverdraft());
         return builder.toString();
     }

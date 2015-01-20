@@ -1,6 +1,7 @@
 package BankApplication.ui.commands.impl;
 
 import BankApplication.exceptions.AccountNotFoundException;
+import BankApplication.model.account.Account;
 import BankApplication.model.account.impl.AbstractAccount;
 import BankApplication.model.Client;
 import BankApplication.service.bankservice.BankServiceEnumSingletone;
@@ -27,7 +28,7 @@ public class GetAccountCommand extends AbstractCommand {
             if (currentClient.getAccountsList().size() == 1) {
                 System.out.println(bundle.getString("oneAccount"));
             } else {
-                for (AbstractAccount tempAccount : currentClient.getAccountsList()) {
+                for (Account tempAccount : currentClient.getAccountsList()) {
                     System.out.println(bundle.getString("separator"));
                     tempAccount.printReport();
                     System.out.println(bundle.getString("separator"));
@@ -47,7 +48,7 @@ public class GetAccountCommand extends AbstractCommand {
                         }
                     }
 
-                    AbstractAccount account = BankServiceEnumSingletone.getAccountById(currentClient, clientId);
+                    Account account = BankServiceEnumSingletone.getAccountById(currentClient, clientId);
                     BankCommander.currentClient.setActiveAccount(account);
                     account.printReport();
                     System.out.println(bundle.getString("separator"));
