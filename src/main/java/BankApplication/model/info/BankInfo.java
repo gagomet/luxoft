@@ -11,7 +11,7 @@ public class BankInfo implements Serializable {
     int totalClients;
     int totalAccounts;
     float totalCredit;
-
+    //TODO clients by cities
     public BankInfo(){
 
     }

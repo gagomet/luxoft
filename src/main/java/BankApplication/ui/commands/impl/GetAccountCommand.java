@@ -38,11 +38,12 @@ public class GetAccountCommand extends AbstractCommand {
                     while (true) {
                         try {
                             clientId = validateId(console.consoleResponse(bundle.getString("enterId")));
+                            super.setCurrentConsoleRequest(console.getCurrentRequest());
+                            super.setCurrentConsoleResponse(console.getCurrentResponse());
                             break;
 
                         } catch (BankApplication.exceptions.IllegalArgumentException e) {
                             System.out.println(errorsBundle.getString("wrongNumber"));
-                            continue;
                         }
                     }
 
@@ -58,9 +59,7 @@ public class GetAccountCommand extends AbstractCommand {
                     builder.append(bundle.getString("active"));
                     System.out.println(builder.toString());
                     System.out.println(bundle.getString("separator"));
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } catch (AccountNotFoundException e) {
+                } catch (IOException | AccountNotFoundException e) {
                     e.printStackTrace();
                 }
             }

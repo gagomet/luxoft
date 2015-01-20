@@ -30,7 +30,6 @@ public class DepositCommand extends AbstractCommand {
 
                     } catch (IllegalArgumentException e) {
                         System.out.println(errorsBundle.getString("wrongNumber"));
-                        continue;
                     }
                 }
 

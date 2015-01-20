@@ -1,5 +1,6 @@
 package BankApplication.ui.console;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 
 /**
@@ -7,4 +8,6 @@ import java.io.IOException;
  */
 public interface IConsole {
     String consoleResponse(String consoleRequest) throws IOException;
+    String getCurrentRequest();
+    String getCurrentResponse();
 }

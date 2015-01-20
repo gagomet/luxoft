@@ -22,7 +22,6 @@ public class FindClientCommand extends AbstractCommand {
                     break;
                 } catch (IllegalArgumentException e) {
                     System.out.println(errorsBundle.getString("wrongClientsName"));
-                    continue;
                 }
             }
 

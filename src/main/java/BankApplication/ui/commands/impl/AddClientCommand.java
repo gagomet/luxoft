@@ -18,19 +18,18 @@ public class AddClientCommand extends AbstractCommand {
     Float newClientOverdraft;
     String newClientPhone;
     String newClientEmail;
+    String newClientsCity;
 
     @Override
     public void execute() throws IllegalArgumentException {
         try {
 
-            //TODO add client's city dialogue and validation
             while (true) {
                 try {
                     newClientsName = validateClientsName(console.consoleResponse(bundle.getString("addClientsName")));
                     break;
                 } catch (IllegalArgumentException e) {
                     System.out.println(errorsBundle.getString("wrongClientsName"));
-                    continue;
                 }
             }
 
@@ -40,7 +39,6 @@ public class AddClientCommand extends AbstractCommand {
                     break;
                 } catch (IllegalArgumentException e) {
                     System.out.println(errorsBundle.getString("wrongGender"));
-                    continue;
                 }
             }
 
@@ -50,7 +48,6 @@ public class AddClientCommand extends AbstractCommand {
                     break;
                 } catch (IllegalArgumentException e) {
                     System.out.println(errorsBundle.getString("wrongNumber"));
-                    continue;
                 }
             }
 
@@ -61,7 +58,6 @@ public class AddClientCommand extends AbstractCommand {
 
                 } catch (IllegalArgumentException e) {
                     System.out.println(errorsBundle.getString("wrongPhone"));
-                    continue;
                 }
             }
 
@@ -73,17 +69,22 @@ public class AddClientCommand extends AbstractCommand {
 
                 } catch (IllegalArgumentException e) {
                     System.out.println(errorsBundle.getString("wrongEmail"));
-                    continue;
                 }
             }
 
+            while (true) {
+                try {
+                    newClientsCity = validateClientsName(console.consoleResponse(bundle.getString("addClientsCity")));
+                    break;
+                } catch (IllegalArgumentException e) {
+                    System.out.println(errorsBundle.getString("wrongClientsCity"));
+                }
+            }
 
-            addClient(/*newClientOverdraft,*/ newClientSex);
+            addClient( newClientSex);
         } catch (NumberFormatException e) {
             throw new IllegalArgumentException("Not valid entry :" + e.getMessage());
-        } catch (ClientExceedsException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
+        } catch (ClientExceedsException | IOException e) {
             e.printStackTrace();
         }
     }
@@ -93,15 +94,13 @@ public class AddClientCommand extends AbstractCommand {
         System.out.println(bundle.getString("addClientCommand"));
     }
 
-    private void addClient(/*Float newClientOverdraft,*/ Gender newClientGender) throws IllegalArgumentException, ClientExceedsException {
-        /*Client newClient = null;
-        if (newClientOverdraft == null) {
-            newClient = new Client(newClientGender);
-        } else {
-            newClient = new Client(newClientOverdraft, newClientGender);
-        }*/
+    private void addClient(Gender newClientGender) throws IllegalArgumentException, ClientExceedsException {
+
         Client newClient = new Client(newClientGender);
         newClient.setName(newClientsName);
+        if(newClientOverdraft != null){
+            newClient.setInitialOverdraft(newClientOverdraft);
+        }
         if (newClientPhone != null) {
             newClient.setPhone(newClientPhone);
         }

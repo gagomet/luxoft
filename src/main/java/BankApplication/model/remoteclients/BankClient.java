@@ -1,4 +1,4 @@
-package BankApplication.client;
+package BankApplication.model.remoteclients;
 
 import BankApplication.model.client.Client;
 import BankApplication.model.info.BankInfo;
@@ -21,13 +21,14 @@ public class BankClient {
     ObjectInputStream in;
     String message;
     BankInfo bankInfo;
+    Object plainObject;
     static final String SERVER = "localhost";
 
     void run() {
         try {
             // 1. creating a socket to connect to the server
-            requestSocket = new Socket(SERVER, 2004);
-            System.out.println("Connected to localhost in port 2004");
+            requestSocket = new Socket(SERVER, 20004);
+            System.out.println("Connected to localhost in port 20004");
             // 2. get Input and Output streams
             out = new ObjectOutputStream(requestSocket.getOutputStream());
             out.flush();

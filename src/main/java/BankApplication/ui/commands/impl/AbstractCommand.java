@@ -15,7 +15,25 @@ public abstract class AbstractCommand implements ICommand {
     protected IConsole console = new ConsoleImpl();
     protected ResourceBundle bundle = ResourceBundle.getBundle("strings");
     protected ResourceBundle errorsBundle = ResourceBundle.getBundle("errors");
+    private String currentConsoleRequest;
+    private String currentConsoleResponse;
     private final String EMPTY_STRING = "";
+
+    public String getCurrentConsoleRequest() {
+        return currentConsoleRequest;
+    }
+
+    public void setCurrentConsoleRequest(String currentConsoleRequest) {
+        this.currentConsoleRequest = currentConsoleRequest;
+    }
+
+    public String getCurrentConsoleResponse() {
+        return currentConsoleResponse;
+    }
+
+    public void setCurrentConsoleResponse(String currentConsoleResponse) {
+        this.currentConsoleResponse = currentConsoleResponse;
+    }
 
     protected Gender validateClientsSex(String input) throws IllegalArgumentException {
         if (input.equalsIgnoreCase("M")) {

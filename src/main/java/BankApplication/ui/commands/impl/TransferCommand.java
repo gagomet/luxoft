@@ -33,7 +33,6 @@ public class TransferCommand extends AbstractCommand {
                         break;
                     } catch (IllegalArgumentException e) {
                         System.out.println(errorsBundle.getString("wrongClientsName"));
-                        continue;
                     }
                 }
                 Client recepient = BankServiceEnumSingletone.getClientByName(BankCommander.currentBank, recepientName);
@@ -48,7 +47,6 @@ public class TransferCommand extends AbstractCommand {
 
                     } catch (BankApplication.exceptions.IllegalArgumentException e) {
                         System.out.println(errorsBundle.getString("wrongNumber"));
-                        continue;
                     }
                 }
 
@@ -59,7 +57,6 @@ public class TransferCommand extends AbstractCommand {
 
                     } catch (BankApplication.exceptions.IllegalArgumentException e) {
                         System.out.println(errorsBundle.getString("wrongNumber"));
-                        continue;
                     }
                 }
 
@@ -71,13 +68,7 @@ public class TransferCommand extends AbstractCommand {
                 BankCommander.getCurrentClient().printReport();
                 recepient.printReport();
 
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (ClientNotFoundException e) {
-                e.printStackTrace();
-            } catch (IllegalArgumentException e) {
-                e.printStackTrace();
-            } catch (NotEnoughFundsException e) {
+            } catch (IOException | ClientNotFoundException | IllegalArgumentException | NotEnoughFundsException e) {
                 e.printStackTrace();
             }
         }

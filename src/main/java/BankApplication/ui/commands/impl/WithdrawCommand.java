@@ -29,7 +29,6 @@ public class WithdrawCommand extends AbstractCommand {
 
                     } catch (BankApplication.exceptions.IllegalArgumentException e) {
                         System.out.println(errorsBundle.getString("wrongNumber"));
-                        continue;
                     }
                 }
 

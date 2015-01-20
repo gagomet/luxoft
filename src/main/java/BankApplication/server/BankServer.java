@@ -1,13 +1,14 @@
 package BankApplication.server;
 
 import BankApplication.BankApplication;
-import BankApplication.exceptions.ClientExceedsException;
-import BankApplication.exceptions.ClientNotFoundException;
-import BankApplication.exceptions.NotEnoughFundsException;
+import BankApplication.exceptions.*;
+import BankApplication.exceptions.IllegalArgumentException;
 import BankApplication.model.Bank;
 import BankApplication.model.client.Client;
 import BankApplication.model.info.BankInfo;
 import BankApplication.service.bankservice.BankServiceEnumSingletone;
+import BankApplication.ui.commander.BankCommander;
+import BankApplication.ui.commands.ICommand;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -28,27 +29,35 @@ public class BankServer {
 
     public static Bank currentBank = new Bank();
     public static Client currentClient = null;
-    public static BankApplication bankApplication = new BankApplication();
+
 
     void run() {
         //initialization and retrieving of Bank class instance
-        bankApplication.initialize();
-        currentBank = bankApplication.getBank();
+        BankApplication.initialize();
+        currentBank = BankApplication.getBank();
+        BankCommander.composeMapOfCommands();
 
         try {
-            providerSocket = new ServerSocket(2004, 10);
+            providerSocket = new ServerSocket(20004, 10);
             System.out.println("Waiting for connection");
             connection = providerSocket.accept();
             System.out.println("Connection received from " + connection.getInetAddress().getHostName());
             out = new ObjectOutputStream(connection.getOutputStream());
             out.flush();
             in = new ObjectInputStream(connection.getInputStream());
-            sendMessage("Connection successful");
+            sendMessage("Enter client's name");
             do {
                 try {
 
                     message = (String) in.readObject();
                     System.out.println("client>" + message);
+
+                    if(BankCommander.commandsMap.containsKey(message)){
+                        ICommand command = BankCommander.commandsMap.get(message);
+                        command.printCommandInfo();
+                        command.execute();
+//                        sendMessage(command.);
+                    }
 
                     if (message.startsWith("balance")) {
                         sendMessage(getBalance(message));
@@ -73,6 +82,8 @@ public class BankServer {
                 } catch (ClassNotFoundException classnot) {
                     System.err.println("Data received in unknown format");
                 } catch (ClientExceedsException e) {
+                    e.printStackTrace();
+                } catch (IllegalArgumentException e) {
                     e.printStackTrace();
                 }
             } while (!message.equals("bye"));
@@ -131,8 +142,11 @@ public class BankServer {
             } catch (ClientNotFoundException e) {
                 e.printStackTrace();
             }
+
             currentClient = client;
-            System.out.println("Client " + currentClient.getName() + " active now");
+            if (currentClient != null) {
+                System.out.println("Client " + currentClient.getName() + " active now");
+            }
         }
         return builder.toString();
     }
@@ -181,12 +195,7 @@ public class BankServer {
     }
 
     private String addedClientMessage(){
-        StringBuilder builder = new StringBuilder();
-        builder.append("Client ");
-        builder.append(currentClient.getName());
-        builder.append(" successully added");
-        builder.append(currentBank.getClientsList().toString());
-        return builder.toString();
+        return "Client " + currentClient.getName() + " successully added" + currentBank.getClientsList().toString();
     }
 
 

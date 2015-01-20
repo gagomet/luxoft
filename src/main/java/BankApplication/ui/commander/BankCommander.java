@@ -15,6 +15,8 @@ import BankApplication.ui.commands.impl.GetAccountCommand;
 import BankApplication.ui.commands.impl.ShowHelpCommand;
 import BankApplication.ui.commands.impl.TransferCommand;
 import BankApplication.ui.commands.impl.WithdrawCommand;
+import BankApplication.ui.console.IConsole;
+import BankApplication.ui.console.impl.ConsoleImpl;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -63,8 +65,8 @@ public class BankCommander {
 
     public static void main(String args[]) {
         //initialization and retrieving of Bank class instance
-        bankApplication.initialize();
-        currentBank = bankApplication.getBank();
+        BankApplication.initialize();
+        currentBank = BankApplication.getBank();
 
         if (args[0].equals("report")) {
             BankReport bankReport = new BankReport();
@@ -81,9 +83,16 @@ public class BankCommander {
 
         //serialization/deserialization
             serializationTest();
+        IConsole console = new ConsoleImpl();
+        BufferedReader bReader = console.consoleResponseReader("question");
+        try {
+            System.out.println(bReader.readLine());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
 
-            composeMapOfCommands();
+        composeMapOfCommands();
 
             while (true) {
                 Iterator iterator = commandsMap.entrySet().iterator();
@@ -124,7 +133,7 @@ ClassCastException - if the specified key cannot be compared with the keys curre
 NullPointerException - if the specified key is null and this map uses natural ordering, or its comparator does not permit null keys*/
     }
 
-    private static void composeMapOfCommands() {
+    public static void composeMapOfCommands() {
         Integer i = 0;
         for (ICommand command : commands) {
             commandsMap.put(i.toString(), command);
