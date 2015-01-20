@@ -1,5 +1,6 @@
-package BankApplication.model;
+package BankApplication.model.info;
 
+import BankApplication.model.Bank;
 import BankApplication.model.account.impl.AbstractAccount;
 import BankApplication.model.client.Client;
 

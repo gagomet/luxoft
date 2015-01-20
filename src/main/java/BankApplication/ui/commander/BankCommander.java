@@ -4,7 +4,7 @@ import BankApplication.BankApplication;
 import BankApplication.exceptions.ClientNotFoundException;
 import BankApplication.exceptions.IllegalArgumentException;
 import BankApplication.model.Bank;
-import BankApplication.model.BankReport;
+import BankApplication.model.info.BankReport;
 import BankApplication.model.client.Client;
 import BankApplication.service.bankservice.BankServiceEnumSingletone;
 import BankApplication.ui.commands.ICommand;
@@ -17,7 +17,6 @@ import BankApplication.ui.commands.impl.TransferCommand;
 import BankApplication.ui.commands.impl.WithdrawCommand;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Iterator;

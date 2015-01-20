@@ -29,24 +29,14 @@ public class Client implements IReport, Serializable {
     private static ResourceBundle bundle = ResourceBundle.getBundle("strings");
     private static ResourceBundle feedBundle = ResourceBundle.getBundle("feedfile");
 
-    public Client(){
+
+    public Client() {
 
     }
 
     public Client(Gender sex) throws BankApplication.exceptions.IllegalArgumentException {
         this.sex = sex;
-//        activeAccount = AccountType.SAVING.create();
-//        accountsList.add(activeAccount);
-//        setActiveAccount(activeAccount);
     }
-
-    /*public Client(float initialOverdraft, Gender sex) throws IllegalArgumentException {
-        this.sex = sex;
-        this.initialOverdraft = initialOverdraft;
-        activeAccount = AccountType.CHECKING.create();
-        accountsList.add(activeAccount);
-        setActiveAccount(activeAccount);
-    }*/
 
     public AbstractAccount parseFeed(Map<String, String> feedMap) throws IllegalArgumentException {
         AbstractAccount resultAccount = null;
@@ -55,6 +45,7 @@ public class Client implements IReport, Serializable {
         } else if (feedMap.get(feedBundle.getString("accountType")).equalsIgnoreCase(feedBundle.getString("savingAccount"))) {
             resultAccount = new SavingAccount();
         }
+        activeAccount = resultAccount;
         accountsList.add(resultAccount);
         if (resultAccount != null) {
             resultAccount.parseFeed(feedMap);

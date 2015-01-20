@@ -5,7 +5,7 @@ import BankApplication.exceptions.NotEnoughFundsException;
 import BankApplication.exceptions.OverdraftLimitExceedException;
 import BankApplication.listeners.IClientRegistrationListener;
 import BankApplication.model.Bank;
-import BankApplication.model.BankReport;
+import BankApplication.model.info.BankReport;
 import BankApplication.model.client.Client;
 import BankApplication.service.bankfeedservice.IBankFeedService;
 import BankApplication.service.bankfeedservice.impl.BankFeedServiceImpl;

@@ -18,6 +18,7 @@ public abstract class AbstractAccount implements IAccount, Serializable {
     protected float balance;
     final protected Long id;
 
+
     public AbstractAccount() {
         this.id = System.currentTimeMillis();
     }
