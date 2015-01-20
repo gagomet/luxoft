@@ -25,4 +25,8 @@ public interface IBankService {
     public Client getClientByName(Bank bank, String clientsName) throws ClientNotFoundException;
 
     public AbstractAccount getAccountById(Client client, Long id) throws AccountNotFoundException;
+
+    public void saveClient(Client client);
+
+    public Client loadClient();
 }

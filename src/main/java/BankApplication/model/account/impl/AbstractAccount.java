@@ -4,13 +4,14 @@ import BankApplication.model.account.IAccount;
 import BankApplication.exceptions.IllegalArgumentException;
 import BankApplication.exceptions.NotEnoughFundsException;
 
+import java.io.Serializable;
 import java.util.Map;
 import java.util.ResourceBundle;
 
 /**
  * Created by Kir Kolesnikov on 14.01.2015.
  */
-public abstract class AbstractAccount implements IAccount {
+public abstract class AbstractAccount implements IAccount, Serializable {
     protected static ResourceBundle errorsBundle = ResourceBundle.getBundle("errors");
     protected static ResourceBundle bundle = ResourceBundle.getBundle("strings");
     protected static ResourceBundle feedBundle = ResourceBundle.getBundle("feedfile");

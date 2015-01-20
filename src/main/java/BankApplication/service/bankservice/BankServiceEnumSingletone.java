@@ -10,6 +10,12 @@ import BankApplication.listeners.IClientRegistrationListener;
 import BankApplication.model.Bank;
 import BankApplication.model.client.Client;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.Iterator;
 import java.util.ResourceBundle;
 import java.util.Set;
@@ -87,6 +93,32 @@ public enum BankServiceEnumSingletone {
             throw new AccountNotFoundException(errorsBundle.getString("accountNotFound"));
         }
         return searchResult;
+    }
+
+    public static void saveClient(Client client) {
+        try(FileOutputStream fileOutputStream = new FileOutputStream("c:\\!toBankApplicationSerialization\\object.ser")){
+            ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
+            objectOutputStream.writeObject(client);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static Client loadClient() {
+        Client result = null;
+        try(FileInputStream fileInputStream = new FileInputStream("c:\\!toBankApplicationSerialization\\object.ser")){
+            ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
+            result = (Client)objectInputStream.readObject();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        return result;
     }
 
     public static void setActiveAccount(Client client, AbstractAccount account) {

@@ -1,10 +1,12 @@
 package BankApplication.ui.commander;
 
 import BankApplication.BankApplication;
+import BankApplication.exceptions.ClientNotFoundException;
 import BankApplication.exceptions.IllegalArgumentException;
 import BankApplication.model.Bank;
 import BankApplication.model.BankReport;
 import BankApplication.model.client.Client;
+import BankApplication.service.bankservice.BankServiceEnumSingletone;
 import BankApplication.ui.commands.ICommand;
 import BankApplication.ui.commands.impl.AddClientCommand;
 import BankApplication.ui.commands.impl.DepositCommand;
@@ -15,6 +17,7 @@ import BankApplication.ui.commands.impl.TransferCommand;
 import BankApplication.ui.commands.impl.WithdrawCommand;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Iterator;
@@ -76,6 +79,11 @@ public class BankCommander {
 //            System.out.println(bankReport.getClientsByCity(currentBank));
         }
 
+
+        //serialization/deserialization
+            serializationTest();
+
+
             composeMapOfCommands();
 
             while (true) {
@@ -122,6 +130,21 @@ NullPointerException - if the specified key is null and this map uses natural or
         for (ICommand command : commands) {
             commandsMap.put(i.toString(), command);
             i++;
+        }
+    }
+
+    private static void serializationTest(){
+        try {
+            Client testClient = BankServiceEnumSingletone.getClientByName(currentBank, "Beggar");
+            testClient.printReport();
+            BankServiceEnumSingletone.saveClient(testClient);
+            System.out.println("Saving done!");
+            System.out.println("Now reading from file");
+            Client readedClient = BankServiceEnumSingletone.loadClient();
+            System.out.println("Reading done");
+            readedClient.printReport();
+        } catch (ClientNotFoundException e) {
+            e.printStackTrace();
         }
     }
 

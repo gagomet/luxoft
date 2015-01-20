@@ -11,6 +11,12 @@ import BankApplication.model.Bank;
 import BankApplication.model.client.Client;
 import BankApplication.service.bankservice.IBankService;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.Iterator;
 import java.util.ResourceBundle;
 import java.util.Set;
@@ -107,6 +113,34 @@ public class BankServiceImpl implements IBankService {
             }
         }
         return searchResult;
+    }
+
+    @Override
+    public void saveClient(Client client) {
+        try(FileOutputStream fileOutputStream = new FileOutputStream("c:\\!toBankApplicationSerialization\\object.ser")){
+            ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
+            objectOutputStream.writeObject(client);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public Client loadClient() {
+        Client result = null;
+        try(FileInputStream fileInputStream = new FileInputStream("c:\\!toBankApplicationSerialization\\object.ser")){
+            ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
+            result = (Client)objectInputStream.readObject();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        return result;
     }
 
 

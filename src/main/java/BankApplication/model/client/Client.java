@@ -7,6 +7,7 @@ import BankApplication.model.account.impl.CheckingAccount;
 import BankApplication.model.account.impl.SavingAccount;
 import BankApplication.type.Gender;
 
+import java.io.Serializable;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Map;
@@ -16,10 +17,10 @@ import java.util.Set;
 /**
  * Created by Kir Kolesnikov on 14.01.2015.
  */
-public class Client implements IReport {
+public class Client implements IReport, Serializable {
     private String name;
     private Set<AbstractAccount> accountsList = new HashSet<>();
-    private AbstractAccount activeAccount;
+    private transient AbstractAccount activeAccount;
     private float initialOverdraft;
     private Gender sex;
     private String city;
@@ -27,6 +28,10 @@ public class Client implements IReport {
     private String phone;
     private static ResourceBundle bundle = ResourceBundle.getBundle("strings");
     private static ResourceBundle feedBundle = ResourceBundle.getBundle("feedfile");
+
+    public Client(){
+
+    }
 
     public Client(Gender sex) throws BankApplication.exceptions.IllegalArgumentException {
         this.sex = sex;
