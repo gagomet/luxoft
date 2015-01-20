@@ -1,11 +1,8 @@
-package BankApplication.server;
+package BankApplication.model;
 
 import BankApplication.BankApplication;
 import BankApplication.exceptions.*;
 import BankApplication.exceptions.IllegalArgumentException;
-import BankApplication.model.Bank;
-import BankApplication.model.client.Client;
-import BankApplication.model.info.BankInfo;
 import BankApplication.service.bankservice.BankServiceEnumSingletone;
 import BankApplication.ui.commander.BankCommander;
 import BankApplication.ui.commands.ICommand;

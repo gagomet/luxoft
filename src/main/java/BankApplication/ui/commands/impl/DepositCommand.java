@@ -1,7 +1,7 @@
 package BankApplication.ui.commands.impl;
 
 import BankApplication.exceptions.IllegalArgumentException;
-import BankApplication.model.client.Client;
+import BankApplication.model.Client;
 import BankApplication.service.bankservice.BankServiceEnumSingletone;
 import BankApplication.ui.commander.BankCommander;
 

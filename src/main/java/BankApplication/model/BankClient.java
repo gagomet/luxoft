@@ -1,7 +1,5 @@
-package BankApplication.model.remoteclients;
+package BankApplication.model;
 
-import BankApplication.model.client.Client;
-import BankApplication.model.info.BankInfo;
 import BankApplication.type.Gender;
 
 import java.io.BufferedReader;

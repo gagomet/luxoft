@@ -6,9 +6,9 @@ import BankApplication.exceptions.ClientExceedsException;
 import BankApplication.exceptions.ClientNotFoundException;
 import BankApplication.exceptions.IllegalArgumentException;
 import BankApplication.exceptions.NotEnoughFundsException;
-import BankApplication.listeners.IClientRegistrationListener;
+import BankApplication.model.IClientRegistrationListener;
 import BankApplication.model.Bank;
-import BankApplication.model.client.Client;
+import BankApplication.model.Client;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;

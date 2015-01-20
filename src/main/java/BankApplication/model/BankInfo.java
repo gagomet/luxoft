@@ -1,6 +1,4 @@
-package BankApplication.model.info;
-
-import BankApplication.model.Bank;
+package BankApplication.model;
 
 import java.io.Serializable;
 

@@ -1,4 +1,4 @@
-package BankApplication.model.remoteclients;
+package BankApplication.model;
 
 /**
  * Created by Kir Kolesnikov on 20.01.2015.

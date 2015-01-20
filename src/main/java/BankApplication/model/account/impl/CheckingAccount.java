@@ -16,15 +16,6 @@ public class CheckingAccount extends AbstractAccount {
 
     }
 
-    public CheckingAccount(float overdraft) throws IllegalArgumentException {
-        super();
-        if (overdraft > 0) {
-            this.overdraft = overdraft;
-        } else {
-            throw new IllegalArgumentException(errorsBundle.getString("negativeOverdraft"));
-        }
-    }
-
     public void setOverdraft(float overdraft) {
         this.overdraft = overdraft;
     }

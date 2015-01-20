@@ -2,8 +2,6 @@ package BankApplication.model;
 
 import BankApplication.exceptions.FeedException;
 import BankApplication.exceptions.IllegalArgumentException;
-import BankApplication.listeners.IClientRegistrationListener;
-import BankApplication.model.client.Client;
 import BankApplication.type.Gender;
 
 import java.util.ArrayList;

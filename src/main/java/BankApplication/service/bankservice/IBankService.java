@@ -4,7 +4,7 @@ import BankApplication.model.account.impl.AbstractAccount;
 import BankApplication.exceptions.*;
 import BankApplication.exceptions.IllegalArgumentException;
 import BankApplication.model.Bank;
-import BankApplication.model.client.Client;
+import BankApplication.model.Client;
 
 /**
  * Created by Kir Kolesnikov on 14.01.2015.

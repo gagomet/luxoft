@@ -1,8 +1,8 @@
-package BankApplication.model.info;
+package BankApplication.model;
 
 import BankApplication.model.Bank;
 import BankApplication.model.account.impl.AbstractAccount;
-import BankApplication.model.client.Client;
+import BankApplication.model.Client;
 
 import java.util.*;
 

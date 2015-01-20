@@ -2,7 +2,7 @@ package BankApplication.ui.commands.impl;
 
 import BankApplication.exceptions.AccountNotFoundException;
 import BankApplication.model.account.impl.AbstractAccount;
-import BankApplication.model.client.Client;
+import BankApplication.model.Client;
 import BankApplication.service.bankservice.BankServiceEnumSingletone;
 import BankApplication.ui.commander.BankCommander;
 

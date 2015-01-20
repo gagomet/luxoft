@@ -17,7 +17,6 @@ public class SavingAccount extends AbstractAccount {
     }
     @Override
     public void printReport() {
-//        System.out.println(bundle.getString("savingAccount") + " " + this.getBalance());
         System.out.println(super.toString());
     }
 
