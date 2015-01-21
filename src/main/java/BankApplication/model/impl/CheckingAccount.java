@@ -26,12 +26,11 @@ public class CheckingAccount extends AbstractAccount {
 
     @Override
     public void withdraw(float amount) throws NotEnoughFundsException {
-        float balance = this.balance;
         if (balance >= amount) {
             super.withdraw(amount);
         } else {
             if (Math.abs(balance - amount) <= overdraft + balance) {
-                this.balance -= amount;
+                balance -= amount;
             } else {
                 throw new OverdraftLimitExceedException(errorsBundle.getString("notEnoughFunds"), this, amount);
             }

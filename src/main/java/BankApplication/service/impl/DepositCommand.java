@@ -18,14 +18,12 @@ public class DepositCommand extends AbstractCommand {
         Client currentClient = BankCommander.getCurrentClient();
         float amountToDeposit;
         if (currentClient == null) {
-            System.out.println(bundle.getString("separator"));
             System.out.println(errorsBundle.getString("noActiveClient"));
-            System.out.println(bundle.getString("separator"));
         } else {
             try {
                 while (true) {
                     try {
-                        amountToDeposit = validateFunds(console.consoleResponse(bundle.getString("depositFunds")));
+                        amountToDeposit = validateFunds(console.consoleResponse("How much do you want to deposit :"));
                         break;
 
                     } catch (IllegalArgumentException e) {
@@ -44,18 +42,16 @@ public class DepositCommand extends AbstractCommand {
 
     @Override
     public void printCommandInfo() {
-        System.out.println(bundle.getString("depositCommand"));
+        System.out.println("Deposit funds to account (9999999 Money in max)");
     }
 
     private void depositFunds(Client client, float amountToDeposit) {
         try {
-            System.out.println(bundle.getString("separator"));
+            System.out.println(errorsBundle.getString("separator"));
             client.getActiveAccount().printReport();
-            System.out.println(bundle.getString("separator"));
             BankServiceEnumSingletone.depositeFunds(client.getActiveAccount(), amountToDeposit);
-            System.out.println(bundle.getString("deposit"));
+            System.out.println("Account was successfully refilled");
             client.getActiveAccount().printReport();
-            System.out.println(bundle.getString("separator"));
         } catch (IllegalArgumentException e) {
             e.printStackTrace();
         }

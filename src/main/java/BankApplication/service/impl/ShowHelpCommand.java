@@ -35,6 +35,6 @@ public class ShowHelpCommand extends AbstractCommand {
 
     @Override
     public void printCommandInfo() {
-        System.out.println(bundle.getString("help"));
+        System.out.println("Show help about system");
     }
 }

@@ -28,7 +28,6 @@ import java.util.TreeMap;
 public class BankCommander {
     public static Bank currentBank = new Bank();
     public static Client currentClient = null;
-    public static BankApplication bankApplication = new BankApplication();
     public static Map<String, Command> commandsMap = new TreeMap<>();
 
 
@@ -80,13 +79,7 @@ public class BankCommander {
 
         //serialization/deserialization
             serializationTest();
-        /*IConsole console = new ConsoleImpl();
-        BufferedReader bReader = console.consoleResponseReader("question");
-        try {
-            System.out.println(bReader.readLine());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }*/
+
 
 
         composeMapOfCommands();

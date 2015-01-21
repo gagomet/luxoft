@@ -19,27 +19,21 @@ public class GetAccountCommand extends AbstractCommand {
     public void execute() {
         currentClient = BankCommander.getCurrentClient();
         if (currentClient == null) {
-            System.out.println(bundle.getString("separator"));
             System.out.println(errorsBundle.getString("noActiveClient"));
-            System.out.println(bundle.getString("separator"));
         } else {
-            System.out.println(bundle.getString("accountsList"));
+            System.out.println("*****Accounts list*****");
             if (currentClient.getAccountsList().size() == 1) {
-                System.out.println(bundle.getString("oneAccount"));
+                System.out.println("Client has only 1 account and it's active by default.");
             } else {
                 for (Account tempAccount : currentClient.getAccountsList()) {
-                    System.out.println(bundle.getString("separator"));
                     tempAccount.printReport();
-                    System.out.println(bundle.getString("separator"));
-                    System.out.println(bundle.getString("selectAccount"));
                 }
+                System.out.println("Select an account from the Accounts list by entering it ID");
 
                 try {
                     while (true) {
                         try {
-                            clientId = validateId(console.consoleResponse(bundle.getString("enterId")));
-                            super.setCurrentConsoleRequest(console.getCurrentRequest());
-                            super.setCurrentConsoleResponse(console.getCurrentResponse());
+                            clientId = validateId(console.consoleResponse("Enter an account's ID please:"));
                             break;
 
                         } catch (BankApplication.exceptions.IllegalArgumentException e) {
@@ -50,15 +44,12 @@ public class GetAccountCommand extends AbstractCommand {
                     Account account = BankServiceEnumSingletone.getAccountById(currentClient, clientId);
                     BankCommander.currentClient.setActiveAccount(account);
                     account.printReport();
-                    System.out.println(bundle.getString("separator"));
+                    System.out.println(errorsBundle.getString("separator"));
                     StringBuilder builder = new StringBuilder();
-                    builder.append(bundle.getString("account"));
-                    builder.append(" ");
+                    builder.append("Account ");
                     builder.append(account.getId());
-                    builder.append(" ");
-                    builder.append(bundle.getString("active"));
+                    builder.append(" is active now. ");
                     System.out.println(builder.toString());
-                    System.out.println(bundle.getString("separator"));
                 } catch (IOException | AccountNotFoundException e) {
                     e.printStackTrace();
                 }
@@ -69,6 +60,6 @@ public class GetAccountCommand extends AbstractCommand {
 
     @Override
     public void printCommandInfo() {
-        System.out.println(bundle.getString("getAccountCommand"));
+        System.out.println("Set an active account of the client");
     }
 }

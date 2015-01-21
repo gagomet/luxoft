@@ -21,28 +21,26 @@ public class TransferCommand extends AbstractCommand {
     @Override
     public void execute() {
         if (BankCommander.currentClient == null) {
-            System.out.println(bundle.getString("separator"));
             System.out.println(errorsBundle.getString("noActiveClient"));
-            System.out.println(bundle.getString("separator"));
         } else {
             try {
                 Account senderAccount = BankCommander.getCurrentClient().getActiveAccount();
                 while (true) {
                     try {
-                        recepientName = validateClientsName(console.consoleResponse(bundle.getString("recipientName")));
+                        recepientName = validateClientsName(console.consoleResponse("Enter Client-recipient name, please"));
                         break;
                     } catch (IllegalArgumentException e) {
                         System.out.println(errorsBundle.getString("wrongClientsName"));
                     }
                 }
                 Client recepient = BankServiceEnumSingletone.getClientByName(BankCommander.currentBank, recepientName);
-                System.out.println(bundle.getString("separator"));
-                recepient.printReport();
-                System.out.println(bundle.getString("separator"));
-
+                System.out.println("Recepient: " + recepient.getName() +" accounts ID ");
+                for(Account account : recepient.getAccountsList()){
+                    System.out.println(account.getId());
+                }
                 while (true) {
                     try {
-                        recepientAccountId = validateId(console.consoleResponse(bundle.getString("recipientAccountId")));
+                        recepientAccountId = validateId(console.consoleResponse("Enter recipient account ID"));
                         break;
 
                     } catch (BankApplication.exceptions.IllegalArgumentException e) {
@@ -52,7 +50,7 @@ public class TransferCommand extends AbstractCommand {
 
                 while (true) {
                     try {
-                        transferFunds = validateFunds(console.consoleResponse(bundle.getString("transferFunds")));
+                        transferFunds = validateFunds(console.consoleResponse("How much do you want to transfer :"));
                         break;
 
                     } catch (BankApplication.exceptions.IllegalArgumentException e) {
@@ -61,10 +59,6 @@ public class TransferCommand extends AbstractCommand {
                 }
 
                 transferFunds(senderAccount, recepient.getActiveAccount(), transferFunds);
-
-                System.out.println(bundle.getString("separator"));
-                System.out.println(bundle.getString("complete"));
-                System.out.println(bundle.getString("separator"));
                 BankCommander.getCurrentClient().printReport();
                 recepient.printReport();
 
@@ -77,12 +71,13 @@ public class TransferCommand extends AbstractCommand {
 
     @Override
     public void printCommandInfo() {
-        System.out.println(bundle.getString("transferCommand"));
+        System.out.println("Transfer funds from active account to another account (9999999 Money in max)");
     }
 
     public void transferFunds(Account sender, Account recepient, Float amount) throws NotEnoughFundsException, IllegalArgumentException {
         BankServiceEnumSingletone.withdrawFunds(sender, amount);
         BankServiceEnumSingletone.depositeFunds(recepient, amount);
+        System.out.println("Transfer funds succesfully completed");
 
     }
 }

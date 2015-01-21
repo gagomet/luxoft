@@ -1,11 +1,11 @@
 package BankApplication.service.impl;
 
+import BankApplication.BankCommander;
 import BankApplication.exceptions.ClientExceedsException;
 import BankApplication.exceptions.IllegalArgumentException;
 import BankApplication.model.impl.Client;
 import BankApplication.service.BankServiceEnumSingletone;
 import BankApplication.type.Gender;
-import BankApplication.BankCommander;
 
 import java.io.IOException;
 
@@ -26,7 +26,7 @@ public class AddClientCommand extends AbstractCommand {
 
             while (true) {
                 try {
-                    newClientsName = validateClientsName(console.consoleResponse(bundle.getString("addClientsName")));
+                    newClientsName = validateClientsName(console.consoleResponse("Enter client's name:"));
                     break;
                 } catch (IllegalArgumentException e) {
                     System.out.println(errorsBundle.getString("wrongClientsName"));
@@ -35,7 +35,7 @@ public class AddClientCommand extends AbstractCommand {
 
             while (true) {
                 try {
-                    newClientSex = validateClientsSex(console.consoleResponse(bundle.getString("addClientsSex")));
+                    newClientSex = validateClientsSex(console.consoleResponse("Enter client's gender:"));
                     break;
                 } catch (IllegalArgumentException e) {
                     System.out.println(errorsBundle.getString("wrongGender"));
@@ -44,7 +44,7 @@ public class AddClientCommand extends AbstractCommand {
 
             while (true) {
                 try {
-                    newClientOverdraft = validateFunds(console.consoleResponse(bundle.getString("addClientsOverdraft")));
+                    newClientOverdraft = validateFunds(console.consoleResponse("Enter client's overdraft (live it empty if client has no overdraft):"));
                     break;
                 } catch (IllegalArgumentException e) {
                     System.out.println(errorsBundle.getString("wrongNumber"));
@@ -53,7 +53,7 @@ public class AddClientCommand extends AbstractCommand {
 
             while (true) {
                 try {
-                    newClientPhone = validateClientsPhone(console.consoleResponse(bundle.getString("addClientsPhone")));
+                    newClientPhone = validateClientsPhone(console.consoleResponse("Enter client's phone number (live it empty if client has no phone):"));
                     break;
 
                 } catch (IllegalArgumentException e) {
@@ -64,7 +64,7 @@ public class AddClientCommand extends AbstractCommand {
 
             while (true) {
                 try {
-                    newClientEmail = validateClientsEmail(console.consoleResponse(bundle.getString("addClientsEmail")));
+                    newClientEmail = validateClientsEmail(console.consoleResponse("Enter client's email (live it empty if client has no email):"));
                     break;
 
                 } catch (IllegalArgumentException e) {
@@ -74,14 +74,14 @@ public class AddClientCommand extends AbstractCommand {
 
             while (true) {
                 try {
-                    newClientsCity = validateClientsName(console.consoleResponse(bundle.getString("addClientsCity")));
+                    newClientsCity = validateClientsName(console.consoleResponse("Enter client's city (live it empty if city is unknown):"));
                     break;
                 } catch (IllegalArgumentException e) {
                     System.out.println(errorsBundle.getString("wrongClientsCity"));
                 }
             }
 
-            addClient(newClientSex);
+            addClient();
         } catch (NumberFormatException e) {
             throw new IllegalArgumentException("Not valid entry :" + e.getMessage());
         } catch (ClientExceedsException | IOException e) {
@@ -91,14 +91,17 @@ public class AddClientCommand extends AbstractCommand {
 
     @Override
     public void printCommandInfo() {
-        System.out.println(bundle.getString("addClientCommand"));
+        System.out.println("Add client to Bank System");
     }
 
-    private void addClient(Gender newClientGender) throws IllegalArgumentException, ClientExceedsException {
+    private void addClient() throws IllegalArgumentException, ClientExceedsException {
 
         Client newClient = new Client();
-        newClient.setSex(newClientSex);
+
         newClient.setName(newClientsName);
+        if (newClientSex != null) {
+            newClient.setSex(newClientSex);
+        }
         if (newClientOverdraft != null) {
             newClient.setInitialOverdraft(newClientOverdraft);
         }
@@ -111,19 +114,14 @@ public class AddClientCommand extends AbstractCommand {
         if (newClientsCity != null) {
             newClient.setCity(newClientsCity);
         }
-        System.out.println(bundle.getString("separator"));
+        System.out.println(errorsBundle.getString("separator"));
         BankServiceEnumSingletone.addClient(BankCommander.currentBank, newClient);
-        System.out.println(bundle.getString("clientAdded"));
-        System.out.println(bundle.getString("separator"));
+        System.out.println("New Client successfully added!");
         newClient.printReport();
         StringBuilder builder = new StringBuilder();
-        builder.append(bundle.getString("client"));
-        builder.append(" ");
+        builder.append("Client ");
         builder.append(newClient.getName());
-        builder.append(" ");
-        builder.append(bundle.getString("active"));
-        System.out.println(bundle.getString("separator"));
+        builder.append(" is active now");
         System.out.println(builder.toString());
-        System.out.println(bundle.getString("separator"));
     }
 }

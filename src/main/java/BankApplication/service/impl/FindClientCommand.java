@@ -18,7 +18,7 @@ public class FindClientCommand extends AbstractCommand {
         try {
             while (true) {
                 try {
-                    clientName = validateClientsName(console.consoleResponse(bundle.getString("addClientsName")));
+                    clientName = validateClientsName(console.consoleResponse("Enter client's name: "));
                     break;
                 } catch (IllegalArgumentException e) {
                     System.out.println(errorsBundle.getString("wrongClientsName"));
@@ -36,7 +36,7 @@ public class FindClientCommand extends AbstractCommand {
 
     @Override
     public void printCommandInfo() {
-        System.out.println(bundle.getString("findClientCommand"));
+        System.out.println("Find client by name (also makes found Client active)");
     }
 
     private void findClientInBank(String clientName) {
@@ -44,16 +44,12 @@ public class FindClientCommand extends AbstractCommand {
             Client client = BankServiceEnumSingletone.getClientByName(BankCommander.currentBank, clientName);
             BankCommander.setCurrentClient(client);
             StringBuilder builder = new StringBuilder();
-            builder.append(bundle.getString("client"));
-            builder.append(" ");
+            builder.append("Client ");
             builder.append(client.getName());
-            builder.append(" ");
-            builder.append(bundle.getString("active"));
-            System.out.println(bundle.getString("separator"));
+            builder.append(" is active now.");
+            System.out.println(errorsBundle.getString("separator"));
             System.out.println(builder.toString());
-            System.out.println(bundle.getString("separator"));
             client.printReport();
-            System.out.println(bundle.getString("separator"));
         } catch (ClientNotFoundException e) {
             e.printStackTrace();
         }
