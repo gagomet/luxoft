@@ -2,25 +2,19 @@ package BankApplication;
 
 import BankApplication.exceptions.ClientNotFoundException;
 import BankApplication.exceptions.IllegalArgumentException;
+import BankApplication.model.ClientRegistrationListener;
 import BankApplication.model.impl.Bank;
-import BankApplication.model.impl.BankReport;
+import BankApplication.network.BankRemoteOffice;
+import BankApplication.service.BankFeedService;
+import BankApplication.service.impl.*;
 import BankApplication.model.impl.Client;
 import BankApplication.service.BankServiceEnumSingletone;
 import BankApplication.service.Command;
-import BankApplication.service.impl.AddClientCommand;
-import BankApplication.service.impl.DepositCommand;
-import BankApplication.service.impl.FindClientCommand;
-import BankApplication.service.impl.GetAccountCommand;
-import BankApplication.service.impl.ShowHelpCommand;
-import BankApplication.service.impl.TransferCommand;
-import BankApplication.service.impl.WithdrawCommand;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 
 /**
  * Created by Kir Kolesnikov on 15.01.2015.
@@ -29,6 +23,7 @@ public class BankCommander {
     public static Bank currentBank = new Bank();
     public static Client currentClient = null;
     public static Map<String, Command> commandsMap = new TreeMap<>();
+    private static final String FEED_FILES_FOLDER = "c:\\!toBankApplication\\";
 
 
     static
@@ -51,62 +46,43 @@ public class BankCommander {
             }
     };
 
+
+    public BankCommander() {
+        composeMapOfCommands();
+    }
+
+    public void initialize() {
+        Bank.PrintClientListener printListener = new Bank.PrintClientListener();
+        Bank.EmailClientListener emailListener = new Bank.EmailClientListener();
+        List<ClientRegistrationListener> listenersList = new ArrayList<ClientRegistrationListener>();
+        listenersList.add(printListener);
+        listenersList.add(emailListener);
+        currentBank = new Bank(listenersList);
+
+        //initialize from feed files
+        BankFeedService feedService = new BankFeedServiceImpl();
+        List<String[]> feeds = feedService.loadFeeds(FEED_FILES_FOLDER);
+        for (String[] fileFeed : feeds) {
+            for (String tempFeedLine : fileFeed) {
+                Map<String, String> feedMap = feedService.parseFeed(tempFeedLine);
+                try {
+                    Client tempClient = currentBank.parseFeed(feedMap);
+                    currentBank.addClient(tempClient);
+                } catch (IllegalArgumentException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+
     public static Client getCurrentClient() {
         return currentClient;
     }
 
     public static void setCurrentClient(Client currentClient) {
-        BankCommander.currentClient = currentClient;
-    }
-
-    public static void main(String args[]) {
-        //initialization and retrieving of Bank class instance
-        BankApplication.initialize();
-        currentBank = BankApplication.getBank();
-
-        if (args[0].equals("report")) {
-            BankReport bankReport = new BankReport();
-            System.out.println("***");
-            System.out.println(bankReport.getAccountsNumber(currentBank));
-            System.out.println("***");
-            System.out.println(bankReport.getBankCreditSum(currentBank));
-            System.out.println("***");
-            System.out.println(bankReport.getNumberOfClients(currentBank));
-            System.out.println("***");
-//            System.out.println(bankReport.getClientsByCity(currentBank));
-        }
-
-
-        //serialization/deserialization
-            serializationTest();
-
-
-
-        composeMapOfCommands();
-
-            while (true) {
-                Iterator iterator = commandsMap.entrySet().iterator();
-                while (iterator.hasNext()) {
-                    Map.Entry<String, Command> entry = (Map.Entry<String, Command>) iterator.next();
-                    StringBuilder builder = new StringBuilder();
-                    builder.append(entry.getKey());
-                    builder.append("   -->    ");
-                    System.out.print(builder.toString());
-                    entry.getValue().printCommandInfo();
-                }
-                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
-                try {
-                    System.out.println("Enter number of your choice: ");
-
-                    String commandString = bufferedReader.readLine();
-                    commandsMap.get(commandString).execute();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } catch (IllegalArgumentException e) {
-                    e.printStackTrace();
-                }
-            }
-
+//        BankCommander.currentClient = currentClient;
+        BankRemoteOffice.setCurrentClient(currentClient);
     }
 
     public void registerCommand(String name, Command command) {
@@ -123,7 +99,7 @@ ClassCastException - if the specified key cannot be compared with the keys curre
 NullPointerException - if the specified key is null and this map uses natural ordering, or its comparator does not permit null keys*/
     }
 
-    public static void composeMapOfCommands() {
+    public void composeMapOfCommands() {
         Integer i = 0;
         for (Command command : commands) {
             commandsMap.put(i.toString(), command);
@@ -131,7 +107,7 @@ NullPointerException - if the specified key is null and this map uses natural or
         }
     }
 
-    private static void serializationTest(){
+    private static void serializationTest() {
         try {
             Client testClient = BankServiceEnumSingletone.getClientByName(currentBank, "Beggar");
             testClient.printReport();
@@ -144,6 +120,52 @@ NullPointerException - if the specified key is null and this map uses natural or
         } catch (ClientNotFoundException e) {
             e.printStackTrace();
         }
+    }
+
+    public static void main(String args[]) {
+        BankCommander bankCommander = new BankCommander();
+        bankCommander.initialize();
+
+        if (args[0].equals("report")) {
+            BankReport bankReport = new BankReport();
+            System.out.println("***");
+            System.out.println(bankReport.getAccountsNumber(currentBank));
+            System.out.println("***");
+            System.out.println(bankReport.getBankCreditSum(currentBank));
+            System.out.println("***");
+            System.out.println(bankReport.getNumberOfClients(currentBank));
+            System.out.println("***");
+            System.out.println(bankReport.getClientsByCity(currentBank));
+        }
+
+
+        //serialization/deserialization
+        serializationTest();
+
+
+        while (true) {
+            Iterator iterator = commandsMap.entrySet().iterator();
+            while (iterator.hasNext()) {
+                Map.Entry<String, Command> entry = (Map.Entry<String, Command>) iterator.next();
+                StringBuilder builder = new StringBuilder();
+                builder.append(entry.getKey());
+                builder.append("   -->    ");
+                System.out.print(builder.toString());
+                entry.getValue().printCommandInfo();
+            }
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
+            try {
+                System.out.println("Enter number of your choice: ");
+
+                String commandString = bufferedReader.readLine();
+                commandsMap.get(commandString).execute();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (IllegalArgumentException e) {
+                e.printStackTrace();
+            }
+        }
+
     }
 
 }

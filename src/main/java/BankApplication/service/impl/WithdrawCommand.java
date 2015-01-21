@@ -13,18 +13,16 @@ import java.io.IOException;
 public class WithdrawCommand extends AbstractCommand {
     @Override
     public void execute() {
-        String clientName;
+
         Client currentClient = BankCommander.getCurrentClient();
         float amountToDeposit;
         if (currentClient == null) {
-            System.out.println(bundle.getString("separator"));
             System.out.println(errorsBundle.getString("noActiveClient"));
-            System.out.println(bundle.getString("separator"));
         } else {
             try {
                 while (true) {
                     try {
-                        amountToDeposit = validateFunds(console.consoleResponse(bundle.getString("withdrawFunds")));
+                        amountToDeposit = validateFunds(console.consoleResponse("How much do you want to withdraw :"));
                         break;
 
                     } catch (BankApplication.exceptions.IllegalArgumentException e) {
@@ -43,22 +41,18 @@ public class WithdrawCommand extends AbstractCommand {
 
     @Override
     public void printCommandInfo() {
-        System.out.println(bundle.getString("withdrawCommand"));
+        System.out.println("Withdraw funds from account (9999999 Money in max)");
     }
 
     private void depositFunds(Client client, float amountToDeposit) {
         try {
-            System.out.println(bundle.getString("separator"));
+            System.out.println(errorsBundle.getString("separator"));
             client.getActiveAccount().printReport();
-            System.out.println(bundle.getString("separator"));
             BankServiceEnumSingletone.withdrawFunds(client.getActiveAccount(), amountToDeposit);
-            System.out.println(bundle.getString("withdrawed"));
+            System.out.println("Account was successfully reduced");
             client.getActiveAccount().printReport();
-            System.out.println(bundle.getString("separator"));
         } catch (NotEnoughFundsException e) {
             System.out.println(e.getMessage());
-        }
+        }//TODO refactor to remote console
     }
-
-    //TODO remove bundles
 }

@@ -19,9 +19,11 @@ public class TransferCommand extends AbstractCommand {
     String recepientName;
 
     @Override
+    //TODO refactor to remote console
     public void execute() {
         if (BankCommander.currentClient == null) {
             System.out.println(errorsBundle.getString("noActiveClient"));
+            console.sendResponse(errorsBundle.getString("noActiveClient"));
         } else {
             try {
                 Account senderAccount = BankCommander.getCurrentClient().getActiveAccount();

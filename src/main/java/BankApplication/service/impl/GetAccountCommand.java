@@ -16,6 +16,7 @@ public class GetAccountCommand extends AbstractCommand {
     Long clientId;
 
     @Override
+    //TODO refactor to remote console
     public void execute() {
         currentClient = BankCommander.getCurrentClient();
         if (currentClient == null) {

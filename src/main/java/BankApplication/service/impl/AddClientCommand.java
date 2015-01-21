@@ -4,6 +4,8 @@ import BankApplication.BankCommander;
 import BankApplication.exceptions.ClientExceedsException;
 import BankApplication.exceptions.IllegalArgumentException;
 import BankApplication.model.impl.Client;
+import BankApplication.network.BankRemoteOffice;
+import BankApplication.network.console.Console;
 import BankApplication.service.BankServiceEnumSingletone;
 import BankApplication.type.Gender;
 
@@ -20,6 +22,13 @@ public class AddClientCommand extends AbstractCommand {
     String newClientEmail;
     String newClientsCity;
 
+    public AddClientCommand() {
+    }
+
+    public AddClientCommand(Console console){
+        this.console = console;
+    }
+    //TODO refactor to remote console
     @Override
     public void execute() throws IllegalArgumentException {
         try {
@@ -74,10 +83,11 @@ public class AddClientCommand extends AbstractCommand {
 
             while (true) {
                 try {
-                    newClientsCity = validateClientsName(console.consoleResponse("Enter client's city (live it empty if city is unknown):"));
+                    newClientsCity = validateClientsCity(console.consoleResponse("Enter client's city (live it empty if city is unknown):"));
                     break;
                 } catch (IllegalArgumentException e) {
                     System.out.println(errorsBundle.getString("wrongClientsCity"));
+//                    newClientsCity = console.consoleResponse(errorsBundle.getString("wrongClientsCity"));
                 }
             }
 
@@ -115,7 +125,7 @@ public class AddClientCommand extends AbstractCommand {
             newClient.setCity(newClientsCity);
         }
         System.out.println(errorsBundle.getString("separator"));
-        BankServiceEnumSingletone.addClient(BankCommander.currentBank, newClient);
+        BankServiceEnumSingletone.addClient(/*BankCommander.currentBank*/BankRemoteOffice.getCurrentBank(), newClient);
         System.out.println("New Client successfully added!");
         newClient.printReport();
         StringBuilder builder = new StringBuilder();

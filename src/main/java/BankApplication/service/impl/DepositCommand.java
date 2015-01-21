@@ -13,6 +13,7 @@ import java.io.IOException;
 public class DepositCommand extends AbstractCommand {
 
     @Override
+    //TODO refactor to remote console
     public void execute() {
         String clientName;
         Client currentClient = BankCommander.getCurrentClient();

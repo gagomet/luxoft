@@ -1,6 +1,8 @@
-package BankApplication.model.impl;
+package BankApplication.service.impl;
 
 import BankApplication.model.Account;
+import BankApplication.model.impl.Bank;
+import BankApplication.model.impl.Client;
 
 import java.util.*;
 
@@ -36,13 +38,20 @@ public class BankReport {
 
     public Map<String, List<Client>> getClientsByCity(Bank bank) {
         Map<String, List<Client>> result = new TreeMap<>();
+        result.put("Unknown", new ArrayList<Client>());
         for (Client client : bank.getClientsList()) {
-            if (result.keySet().contains(client.getCity())) {
-                result.get(client.getCity()).add(client);
+            if (client.getCity() != null) {
+                if (result.keySet().contains(client.getCity())) {
+                    result.get(client.getCity()).add(client);
+                } else {
+                    List<Client> tempClients = new ArrayList<>();
+                    tempClients.add(client);
+                    result.put(client.getCity(), tempClients);
+                }
             } else {
-                List<Client> tempClients = new ArrayList<>();
-                tempClients.add(client);
-                result.put(client.getCity(), tempClients);
+                List<Client> unknowns = result.get("Unknown");
+                unknowns.add(client);
+                result.put("Unknown", unknowns);
             }
         }
         return result;

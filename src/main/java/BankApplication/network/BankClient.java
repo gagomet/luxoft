@@ -1,8 +1,6 @@
-package BankApplication;
+package BankApplication.network;
 
 import BankApplication.model.impl.BankInfo;
-import BankApplication.model.impl.Client;
-import BankApplication.type.Gender;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -21,7 +19,7 @@ public class BankClient {
     ObjectInputStream in;
     String message;
     BankInfo bankInfo;
-    Object plainObject;
+    BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
     static final String SERVER = "localhost";
 
     void run() {
@@ -34,39 +32,14 @@ public class BankClient {
             out.flush();
             in = new ObjectInputStream(requestSocket.getInputStream());
             // 3: Communicating with the server
-            System.out.println("To add client use: addclient gender(m|f),name");
             do {
-                try {
-                    BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
-                    message = (String) in.readObject();
-                    System.out.println("server>" + message);
-                    if (message.equals("bankinfo")) {
-                        bankInfo = (BankInfo) in.readObject();
-                        System.out.println(bankInfo.toString());
-                    }
-                    message = bufferedReader.readLine();
-                    if (message.startsWith("addclient")) {
-                        Client client = new Client();
-                        String[] command = message.split(" ");
-                        String[] arguments = command[1].split(",");
-                        if (arguments[0].equalsIgnoreCase("m")) {
-                            client.setSex(Gender.MALE);
-                        }
-                        if (arguments[0].equalsIgnoreCase("f")) {
-                            client.setSex(Gender.FEMALE);
-                        }
-                        if (client != null) {
-                            client.setName(arguments[1]);
-                        }
-                        sendMessage("client");
-                        sendClient(client);
-
-                    }
-                    sendMessage(message);
-                } catch (ClassNotFoundException classNot) {
-                    System.err.println("data received in unknown format");
+                message = receiveMessage();
+                System.out.println("Server> " + message);
+                if (!message.equals("0")) {
+                    String command = bufferedReader.readLine();
+                    sendMessage(command);
                 }
-            } while (!message.equals("bye"));
+            } while (!message.equals("0"));
         } catch (UnknownHostException unknownHost) {
             System.err.println("You are trying to connect to an unknown host!");
         } catch (IOException ioException) {
@@ -93,14 +66,24 @@ public class BankClient {
         }
     }
 
-    void sendClient(final Client client){
-        try{
-            out.writeObject(client);
-            out.flush();
-            System.out.println(client.toString() + " was sent");
+    public String receiveMessage() {
+        String result = null;
+        try {
+            result = (String) in.readObject();
         } catch (IOException e) {
             e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            System.err.println("Data received in unknown format");
         }
+        return result;
+    }
+
+    public ObjectOutputStream getOut() {
+        return out;
+    }
+
+    public ObjectInputStream getIn() {
+        return in;
     }
 
     public static void main(final String args[]) {

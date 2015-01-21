@@ -1,9 +1,10 @@
 package BankApplication.service.impl;
 
 import BankApplication.exceptions.IllegalArgumentException;
+import BankApplication.network.console.ConsoleImpl;
 import BankApplication.type.Gender;
 import BankApplication.service.Command;
-import BankApplication.service.Console;
+import BankApplication.network.console.Console;
 
 import java.util.ResourceBundle;
 
@@ -11,9 +12,14 @@ import java.util.ResourceBundle;
  * Created by Kir Kolesnikov on 15.01.2015.
  */
 public abstract class AbstractCommand implements Command {
-    protected Console console = new ConsoleImpl();
+    protected Console console; /*= new ConsoleImpl();*/
     protected ResourceBundle errorsBundle = ResourceBundle.getBundle("errors");
     private final String EMPTY_STRING = "";
+
+    public AbstractCommand() {
+        this.console = new ConsoleImpl();
+    }
+
 
     protected Gender validateClientsSex(String input) throws IllegalArgumentException {
         if (input.equalsIgnoreCase("M")) {
@@ -30,6 +36,16 @@ public abstract class AbstractCommand implements Command {
             return input;
         } else {
             throw new IllegalArgumentException("Not valid name");
+        }
+    }
+
+    protected String validateClientsCity(String input) throws IllegalArgumentException {
+        if (isName(input)) {
+            return input;
+        } else if (EMPTY_STRING.equals(input)) {
+            return null;
+        } else {
+            throw new IllegalArgumentException("Not valid city");
         }
     }
 
