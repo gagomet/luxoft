@@ -101,11 +101,7 @@ public class BankServer {
                         sendMessage("0");
                     }
 
-                } catch (ClientNotFoundException e) {
-                    e.printStackTrace();
-                } catch (IllegalArgumentException e) {
-                    e.printStackTrace();
-                } catch (NotEnoughFundsException e) {
+                } catch (ClientNotFoundException | NotEnoughFundsException | IllegalArgumentException e) {
                     e.printStackTrace();
                 }
             } while (!message.equals("0"));

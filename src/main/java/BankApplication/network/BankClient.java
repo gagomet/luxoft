@@ -33,16 +33,18 @@ public class BankClient {
             in = new ObjectInputStream(requestSocket.getInputStream());
             // 3: Communicating with the server
             do {
-                message = receiveMessage();
+//                message = receiveMessage();
+                message = in.readObject().toString();
                 System.out.println("Server> " + message);
                 if (!message.equals("0")) {
                     String command = bufferedReader.readLine();
                     sendMessage(command);
                 }
+
             } while (!message.equals("0"));
         } catch (UnknownHostException unknownHost) {
             System.err.println("You are trying to connect to an unknown host!");
-        } catch (IOException ioException) {
+        } catch (IOException | ClassNotFoundException ioException) {
             ioException.printStackTrace();
         } finally {
             // 4: Closing connection
@@ -64,6 +66,16 @@ public class BankClient {
         } catch (IOException ioException) {
             ioException.printStackTrace();
         }
+    }
+
+    public Object recieveObject() {
+        Object result = null;
+        try {
+            result = in.readObject();
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        return result;
     }
 
     public String receiveMessage() {

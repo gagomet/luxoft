@@ -3,6 +3,7 @@ package BankApplication.network;
 
 import BankApplication.model.ClientRegistrationListener;
 import BankApplication.model.impl.Bank;
+import BankApplication.model.impl.BankInfo;
 import BankApplication.model.impl.Client;
 import BankApplication.network.console.Console;
 import BankApplication.network.console.RemoteConsoleImpl;
@@ -18,7 +19,11 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 /**
  * Created by Kir Kolesnikov on 20.01.2015.
@@ -33,10 +38,10 @@ public class BankRemoteOffice {
 
     //TODO implement it
 
-private static Bank currentBank;
-private static Client currentClient;
-private Map<String, Command> commandsMap = new TreeMap<>();
-private static final String FEED_FILES_FOLDER = "c:\\!toBankApplication\\";
+    private static Bank currentBank;
+    private static Client currentClient;
+    private Map<String, Command> commandsMap = new TreeMap<>();
+    private static final String FEED_FILES_FOLDER = "c:\\!toBankApplication\\";
 
     public void initialize() {
         Bank.PrintClientListener printListener = new Bank.PrintClientListener();
@@ -77,20 +82,23 @@ private static final String FEED_FILES_FOLDER = "c:\\!toBankApplication\\";
             out.flush();
             in = new ObjectInputStream(connection.getInputStream());
             do {
-                    message = console.consoleResponse(composeUserMenu());
-                if(commandsMap.containsKey(message)){
-                   Command cmd = commandsMap.get(message);
-                   cmd.execute();
-                } else if(message.equals("info")){
-                    //TODO add object instanciate and send it to client
+                message = console.consoleResponse(composeUserMenu());
+                if (commandsMap.containsKey(message)) {
+                    Command cmd = commandsMap.get(message);
+                    cmd.execute();
+                } else if (message.equals("info")) {
+                    BankInfo bankInfo = new BankInfo(currentBank);
+                    out.writeObject(bankInfo);
+                    //TODO add object instantiate and send it to client
+                } else if (message.equals("0")) {
+                    sendMessage("0");
                 }
                 System.out.println("Client> " + message);
 
 
             } while (!message.equals("0"));
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (BankApplication.exceptions.IllegalArgumentException e) {
+
+        } catch (IOException | BankApplication.exceptions.IllegalArgumentException e) {
             e.printStackTrace();
         } finally {
             try {
@@ -123,13 +131,35 @@ private static final String FEED_FILES_FOLDER = "c:\\!toBankApplication\\";
         return currentBank;
     }
 
+    public String receiveMessage(){
+        String result = null;
+        try {
+            result = (String) in.readObject();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            System.err.println("Data received in unknown format");
+        }
+        return result;
+    }
+
+    void sendMessage(final String msg) {
+        try {
+            out.writeObject(msg);
+            out.flush();
+            System.out.println("server>" + msg);
+        } catch (IOException ioException) {
+            ioException.printStackTrace();
+        }
+    }
+
     public static void main(String[] args) {
         BankRemoteOffice remoteOffice = new BankRemoteOffice();
         remoteOffice.initialize();
         remoteOffice.run();
     }
 
-    private String composeUserMenu(){
+    private String composeUserMenu() {
         StringBuilder builder = new StringBuilder();
         Iterator iterator = commandsMap.entrySet().iterator();
         builder.append(System.getProperty("line.separator"));

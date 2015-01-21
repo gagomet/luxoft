@@ -28,7 +28,6 @@ public class AddClientCommand extends AbstractCommand {
     public AddClientCommand(Console console){
         this.console = console;
     }
-    //TODO refactor to remote console
     @Override
     public void execute() throws IllegalArgumentException {
         try {

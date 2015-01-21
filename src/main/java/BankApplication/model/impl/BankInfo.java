@@ -32,6 +32,7 @@ public class BankInfo implements Serializable {
                 "totalClients=" + totalClients +
                 ", totalAccounts=" + totalAccounts +
                 ", totalCredit=" + totalCredit +
+                ", clientsByCities=" + clientsByCities.toString() +
                 '}';
     }
 }
