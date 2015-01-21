@@ -4,7 +4,13 @@ import BankApplication.model.Account;
 import BankApplication.model.impl.Bank;
 import BankApplication.model.impl.Client;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeMap;
+import java.util.TreeSet;
 
 /**
  * Created by Kir Kolesnikov on 19.01.2015.
@@ -54,6 +60,21 @@ public class BankReport {
                 result.put("Unknown", unknowns);
             }
         }
+        return result;
+    }
+
+    public Set getClientsSorted(Bank bank) {
+        Set<Client> result = new TreeSet<Client>(new Comparator<Client>() {
+            @Override
+            public int compare(Client o1, Client o2) {
+                if (o1.getActiveAccount().getBalance() > o2.getActiveAccount().getBalance()) {
+                    return 1;
+                } else if (o1.getActiveAccount().getBalance() > o2.getActiveAccount().getBalance()) {
+                    return -1;
+                }
+                return 0;
+            }
+        });
         return result;
     }
 }

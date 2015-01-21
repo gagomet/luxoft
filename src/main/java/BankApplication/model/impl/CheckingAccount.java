@@ -80,4 +80,5 @@ public class CheckingAccount extends AbstractAccount {
         result = 31 * result + (overdraft != +0.0f ? Float.floatToIntBits(overdraft) : 0);
         return result;
     }
+
 }

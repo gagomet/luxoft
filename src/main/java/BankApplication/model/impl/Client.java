@@ -165,4 +165,6 @@ public class Client implements Report, Serializable {
         result = 31 * result + (phone != null ? phone.hashCode() : 0);
         return result;
     }
+
+
 }
