@@ -49,7 +49,7 @@ public class RemoveClientCommand extends AbstractCommand {
         try {
             Client client = BankServiceEnumSingletone.getClientByName(BankRemoteOffice.getCurrentBank(), clientName);
             BankServiceEnumSingletone.removeClient(BankRemoteOffice.getCurrentBank(), client);
-            console.sendResponse(client.toString() + " was removed");
+            console.sendResponse(client.toString() + " was removed. Press Enter to continue.");
         } catch (ClientNotFoundException e) {
             e.printStackTrace();
         }

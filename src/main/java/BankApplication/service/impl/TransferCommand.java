@@ -5,6 +5,7 @@ import BankApplication.exceptions.ClientNotFoundException;
 import BankApplication.exceptions.IllegalArgumentException;
 import BankApplication.exceptions.NotEnoughFundsException;
 import BankApplication.model.impl.Client;
+import BankApplication.network.BankRemoteOffice;
 import BankApplication.service.BankServiceEnumSingletone;
 import BankApplication.BankCommander;
 
@@ -21,12 +22,12 @@ public class TransferCommand extends AbstractCommand {
     @Override
     //TODO refactor to remote console
     public void execute() {
-        if (BankCommander.currentClient == null) {
+        if (/*BankCommander*/BankRemoteOffice.getCurrentClient() == null) {
             System.out.println(errorsBundle.getString("noActiveClient"));
             console.sendResponse(errorsBundle.getString("noActiveClient"));
         } else {
             try {
-                Account senderAccount = BankCommander.getCurrentClient().getActiveAccount();
+                Account senderAccount = /*BankCommander*/BankRemoteOffice.getCurrentClient().getActiveAccount();
                 while (true) {
                     try {
                         recepientName = validateClientsName(console.consoleResponse("Enter Client-recipient name, please"));
@@ -35,7 +36,8 @@ public class TransferCommand extends AbstractCommand {
                         System.out.println(errorsBundle.getString("wrongClientsName"));
                     }
                 }
-                Client recepient = BankServiceEnumSingletone.getClientByName(BankCommander.currentBank, recepientName);
+                Client recepient = BankServiceEnumSingletone.getClientByName(/*BankCommander.*/BankRemoteOffice.getCurrentBank()
+                        , recepientName);
                 System.out.println("Recepient: " + recepient.getName() +" accounts ID ");
                 for(Account account : recepient.getAccountsList()){
                     System.out.println(account.getId());
@@ -61,7 +63,7 @@ public class TransferCommand extends AbstractCommand {
                 }
 
                 transferFunds(senderAccount, recepient.getActiveAccount(), transferFunds);
-                BankCommander.getCurrentClient().printReport();
+//                /*BankCommander*/BankRemoteOffice.getCurrentClient().printReport();
                 recepient.printReport();
 
             } catch (IOException | ClientNotFoundException | IllegalArgumentException | NotEnoughFundsException e) {
@@ -79,7 +81,12 @@ public class TransferCommand extends AbstractCommand {
     public void transferFunds(Account sender, Account recepient, Float amount) throws NotEnoughFundsException, IllegalArgumentException {
         BankServiceEnumSingletone.withdrawFunds(sender, amount);
         BankServiceEnumSingletone.depositeFunds(recepient, amount);
-        System.out.println("Transfer funds succesfully completed");
-
+        StringBuilder builder = new StringBuilder();
+        builder.append("Transfer funds successfully completed");
+        builder.append(System.getProperty("line.separator"));
+        builder.append("Use info command to get detailed info");
+        builder.append(System.getProperty("line.separator"));
+        builder.append("Press Enter to continue");
+        console.sendResponse(builder.toString());
     }
 }

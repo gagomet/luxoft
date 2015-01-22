@@ -20,7 +20,7 @@ public class ConsoleImpl implements Console {
 
     @Override
     public void sendResponse(String response) {
-
+        System.out.println(response);
     }
 
 

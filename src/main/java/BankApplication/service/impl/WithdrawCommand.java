@@ -2,6 +2,8 @@ package BankApplication.service.impl;
 
 import BankApplication.exceptions.NotEnoughFundsException;
 import BankApplication.model.impl.Client;
+import BankApplication.network.BankRemoteOffice;
+import BankApplication.network.console.Console;
 import BankApplication.service.BankServiceEnumSingletone;
 import BankApplication.BankCommander;
 
@@ -11,10 +13,16 @@ import java.io.IOException;
  * Created by Kir Kolesnikov on 15.01.2015.
  */
 public class WithdrawCommand extends AbstractCommand {
+    public WithdrawCommand() {
+    }
+
+    public WithdrawCommand(Console console){
+        this.console = console;
+    }
     @Override
     public void execute() {
 
-        Client currentClient = BankCommander.getCurrentClient();
+        Client currentClient = /*BankCommander.*/BankRemoteOffice.getCurrentClient();
         float amountToDeposit;
         if (currentClient == null) {
             System.out.println(errorsBundle.getString("noActiveClient"));
@@ -46,13 +54,20 @@ public class WithdrawCommand extends AbstractCommand {
 
     private void depositFunds(Client client, float amountToDeposit) {
         try {
-            System.out.println(errorsBundle.getString("separator"));
-            client.getActiveAccount().printReport();
+            StringBuilder builder = new StringBuilder();
+            builder.append(errorsBundle.getString("separator"));
+            builder.append(System.getProperty("line.separator"));
+            builder.append(client.getActiveAccount().toString());
+            builder.append(System.getProperty("line.separator"));
             BankServiceEnumSingletone.withdrawFunds(client.getActiveAccount(), amountToDeposit);
-            System.out.println("Account was successfully reduced");
-            client.getActiveAccount().printReport();
+            builder.append("Account was successfully reduced");
+            builder.append(System.getProperty("line.separator"));
+            builder.append(client.getActiveAccount().toString());
+            builder.append(System.getProperty("line.separator"));
+            builder.append("Press Enter to continue");
+            console.sendResponse(builder.toString());
         } catch (NotEnoughFundsException e) {
             System.out.println(e.getMessage());
-        }//TODO refactor to remote console
+        }
     }
 }

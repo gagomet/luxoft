@@ -9,10 +9,7 @@ import BankApplication.network.console.Console;
 import BankApplication.network.console.RemoteConsoleImpl;
 import BankApplication.service.BankFeedService;
 import BankApplication.service.Command;
-import BankApplication.service.impl.AddClientCommand;
-import BankApplication.service.impl.BankFeedServiceImpl;
-import BankApplication.service.impl.FindClientCommand;
-import BankApplication.service.impl.RemoveClientCommand;
+import BankApplication.service.impl.*;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -69,6 +66,7 @@ public class BankRemoteOffice {
         commandsMap.put("1", new FindClientCommand(console));
         commandsMap.put("2", new AddClientCommand(console));
         commandsMap.put("3", new RemoveClientCommand(console));
+        commandsMap.put("4", new WithdrawCommand(console));
     }
 
 

@@ -131,6 +131,9 @@ public class AddClientCommand extends AbstractCommand {
         builder.append("Client ");
         builder.append(newClient.getName());
         builder.append(" is active now");
+        builder.append(System.getProperty("line.separator"));
+        builder.append("Press Enter to continue");
         System.out.println(builder.toString());
+        console.sendResponse(builder.toString());
     }
 }
