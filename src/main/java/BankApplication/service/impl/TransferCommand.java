@@ -1,13 +1,13 @@
 package BankApplication.service.impl;
 
-import BankApplication.model.Account;
 import BankApplication.exceptions.ClientNotFoundException;
 import BankApplication.exceptions.IllegalArgumentException;
 import BankApplication.exceptions.NotEnoughFundsException;
+import BankApplication.model.Account;
 import BankApplication.model.impl.Client;
 import BankApplication.network.BankRemoteOffice;
+import BankApplication.network.console.Console;
 import BankApplication.service.BankServiceEnumSingletone;
-import BankApplication.BankCommander;
 
 import java.io.IOException;
 
@@ -19,12 +19,19 @@ public class TransferCommand extends AbstractCommand {
     long recepientAccountId;
     String recepientName;
 
+    public TransferCommand() {
+    }
+
+    public TransferCommand(Console console) {
+        this.console = console;
+    }
+
     @Override
     //TODO refactor to remote console
     public void execute() {
         if (/*BankCommander*/BankRemoteOffice.getCurrentClient() == null) {
             System.out.println(errorsBundle.getString("noActiveClient"));
-            console.sendResponse(errorsBundle.getString("noActiveClient"));
+            console.sendResponse("Select active client first! Press enter to continue");
         } else {
             try {
                 Account senderAccount = /*BankCommander*/BankRemoteOffice.getCurrentClient().getActiveAccount();
@@ -34,12 +41,13 @@ public class TransferCommand extends AbstractCommand {
                         break;
                     } catch (IllegalArgumentException e) {
                         System.out.println(errorsBundle.getString("wrongClientsName"));
+                        console.sendResponse(errorsBundle.getString("wrongClientsName"));
                     }
                 }
                 Client recepient = BankServiceEnumSingletone.getClientByName(/*BankCommander.*/BankRemoteOffice.getCurrentBank()
                         , recepientName);
-                System.out.println("Recepient: " + recepient.getName() +" accounts ID ");
-                for(Account account : recepient.getAccountsList()){
+                System.out.println("Recepient: " + recepient.getName() + " accounts ID ");
+                for (Account account : recepient.getAccountsList()) {
                     System.out.println(account.getId());
                 }
                 while (true) {
@@ -49,6 +57,7 @@ public class TransferCommand extends AbstractCommand {
 
                     } catch (BankApplication.exceptions.IllegalArgumentException e) {
                         System.out.println(errorsBundle.getString("wrongNumber"));
+                        console.sendResponse(errorsBundle.getString("wrongNumber"));
                     }
                 }
 
@@ -59,6 +68,7 @@ public class TransferCommand extends AbstractCommand {
 
                     } catch (BankApplication.exceptions.IllegalArgumentException e) {
                         System.out.println(errorsBundle.getString("wrongNumber"));
+                        console.sendResponse(errorsBundle.getString("wrongNumber"));
                     }
                 }
 
@@ -68,6 +78,7 @@ public class TransferCommand extends AbstractCommand {
 
             } catch (IOException | ClientNotFoundException | IllegalArgumentException | NotEnoughFundsException e) {
                 e.printStackTrace();
+                console.sendResponse(e.getMessage());
             }
         }
 
@@ -85,8 +96,6 @@ public class TransferCommand extends AbstractCommand {
         builder.append("Transfer funds successfully completed");
         builder.append(System.getProperty("line.separator"));
         builder.append("Use info command to get detailed info");
-        builder.append(System.getProperty("line.separator"));
-        builder.append("Press Enter to continue");
         console.sendResponse(builder.toString());
     }
 }

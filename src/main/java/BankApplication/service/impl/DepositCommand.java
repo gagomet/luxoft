@@ -2,6 +2,8 @@ package BankApplication.service.impl;
 
 import BankApplication.exceptions.IllegalArgumentException;
 import BankApplication.model.impl.Client;
+import BankApplication.network.BankRemoteOffice;
+import BankApplication.network.console.Console;
 import BankApplication.service.BankServiceEnumSingletone;
 import BankApplication.BankCommander;
 
@@ -12,13 +14,21 @@ import java.io.IOException;
  */
 public class DepositCommand extends AbstractCommand {
 
+    public DepositCommand() {
+    }
+
+    public DepositCommand(Console console){
+        this.console = console;
+    }
+
     @Override
     //TODO refactor to remote console
     public void execute() {
         String clientName;
-        Client currentClient = BankCommander.getCurrentClient();
+        Client currentClient = /*BankCommander.*/BankRemoteOffice.getCurrentClient();
         float amountToDeposit;
         if (currentClient == null) {
+            console.sendResponse(errorsBundle.getString("noActiveClient"));
             System.out.println(errorsBundle.getString("noActiveClient"));
         } else {
             try {
@@ -48,11 +58,16 @@ public class DepositCommand extends AbstractCommand {
 
     private void depositFunds(Client client, float amountToDeposit) {
         try {
-            System.out.println(errorsBundle.getString("separator"));
-            client.getActiveAccount().printReport();
+            StringBuilder builder = new StringBuilder();
+            builder.append(errorsBundle.getString("separator"));
+            builder.append(System.getProperty("line.separator"));
+            builder.append(client.getActiveAccount().toString());
+            builder.append(System.getProperty("line.separator"));
             BankServiceEnumSingletone.depositeFunds(client.getActiveAccount(), amountToDeposit);
-            System.out.println("Account was successfully refilled");
-            client.getActiveAccount().printReport();
+            builder.append("Account was successfully refilled");
+            builder.append(System.getProperty("line.separator"));
+            builder.append(client.getActiveAccount().toString());
+            console.sendResponse(builder.toString());
         } catch (IllegalArgumentException e) {
             e.printStackTrace();
         }

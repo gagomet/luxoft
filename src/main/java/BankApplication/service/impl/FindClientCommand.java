@@ -40,6 +40,7 @@ public class FindClientCommand extends AbstractCommand {
 
         } catch (IOException e) {
             e.printStackTrace();
+            console.sendResponse(e.getMessage());
         }
 
 
@@ -59,13 +60,12 @@ public class FindClientCommand extends AbstractCommand {
             builder.append(client.getName());
             builder.append(" is active now.");
             builder.append(System.getProperty("line.separator"));
-            builder.append("Press Enter to continue");
-            System.out.println(errorsBundle.getString("separator"));
             System.out.println(builder.toString());
             console.sendResponse(client.toString() + builder.toString());
             client.printReport();
         } catch (ClientNotFoundException e) {
             e.printStackTrace();
+            console.sendResponse(errorsBundle.getString("clientNotFound"));
         }
     }
 }

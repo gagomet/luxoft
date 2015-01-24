@@ -38,6 +38,7 @@ public class AddClientCommand extends AbstractCommand {
                     break;
                 } catch (IllegalArgumentException e) {
                     System.out.println(errorsBundle.getString("wrongClientsName"));
+                    console.sendResponse(errorsBundle.getString("wrongClientsName"));
                 }
             }
 
@@ -47,6 +48,7 @@ public class AddClientCommand extends AbstractCommand {
                     break;
                 } catch (IllegalArgumentException e) {
                     System.out.println(errorsBundle.getString("wrongGender"));
+                    console.sendResponse(errorsBundle.getString("wrongGender"));
                 }
             }
 
@@ -56,6 +58,7 @@ public class AddClientCommand extends AbstractCommand {
                     break;
                 } catch (IllegalArgumentException e) {
                     System.out.println(errorsBundle.getString("wrongNumber"));
+                    console.sendResponse(errorsBundle.getString("wrongNumber"));
                 }
             }
 
@@ -66,6 +69,7 @@ public class AddClientCommand extends AbstractCommand {
 
                 } catch (IllegalArgumentException e) {
                     System.out.println(errorsBundle.getString("wrongPhone"));
+                    console.sendResponse(errorsBundle.getString("wrongPhone"));
                 }
             }
 
@@ -77,6 +81,7 @@ public class AddClientCommand extends AbstractCommand {
 
                 } catch (IllegalArgumentException e) {
                     System.out.println(errorsBundle.getString("wrongEmail"));
+                    console.sendResponse(errorsBundle.getString("wrongEmail"));
                 }
             }
 
@@ -86,14 +91,17 @@ public class AddClientCommand extends AbstractCommand {
                     break;
                 } catch (IllegalArgumentException e) {
                     System.out.println(errorsBundle.getString("wrongClientsCity"));
-//                    newClientsCity = console.consoleResponse(errorsBundle.getString("wrongClientsCity"));
+                    console.sendResponse(errorsBundle.getString("wrongClientsCity"));
                 }
             }
 
             addClient();
         } catch (NumberFormatException e) {
+            console.sendResponse("Not valid entry :" + e.getMessage());
             throw new IllegalArgumentException("Not valid entry :" + e.getMessage());
+
         } catch (ClientExceedsException | IOException e) {
+            console.sendResponse(errorsBundle.getString("clientAlreadyExceeds"));
             e.printStackTrace();
         }
     }
@@ -131,8 +139,6 @@ public class AddClientCommand extends AbstractCommand {
         builder.append("Client ");
         builder.append(newClient.getName());
         builder.append(" is active now");
-        builder.append(System.getProperty("line.separator"));
-        builder.append("Press Enter to continue");
         System.out.println(builder.toString());
         console.sendResponse(builder.toString());
     }

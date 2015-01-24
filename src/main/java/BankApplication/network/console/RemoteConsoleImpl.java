@@ -9,7 +9,7 @@ import java.io.*;
  */
 public class RemoteConsoleImpl implements Console {
     BankRemoteOffice bankRemoteOffice;
-    private static String EMPTY_STRING = "";
+    private static String PRESS_ENTER= "   Press Enter to continue";
     public RemoteConsoleImpl(BankRemoteOffice bankRemoteOffice) {
         this.bankRemoteOffice = bankRemoteOffice;
     }
@@ -28,6 +28,7 @@ public class RemoteConsoleImpl implements Console {
 
     public void sendResponse(String response){
         try {
+           response = response + PRESS_ENTER;
            bankRemoteOffice.getOut().writeObject(response);
         } catch (IOException e) {
             e.printStackTrace();

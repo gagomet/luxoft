@@ -3,6 +3,8 @@ package BankApplication.service.impl;
 import BankApplication.exceptions.AccountNotFoundException;
 import BankApplication.model.Account;
 import BankApplication.model.impl.Client;
+import BankApplication.network.BankRemoteOffice;
+import BankApplication.network.console.Console;
 import BankApplication.service.BankServiceEnumSingletone;
 import BankApplication.BankCommander;
 
@@ -15,12 +17,19 @@ public class GetAccountCommand extends AbstractCommand {
     Client currentClient = null;
     Long clientId;
 
+    public GetAccountCommand() {
+    }
+    public GetAccountCommand(Console console) {
+        this.console = console;
+    }
+
     @Override
     //TODO refactor to remote console
     public void execute() {
-        currentClient = BankCommander.getCurrentClient();
+        currentClient = /*BankCommander.*/BankRemoteOffice.getCurrentClient();
         if (currentClient == null) {
             System.out.println(errorsBundle.getString("noActiveClient"));
+            console.sendResponse(errorsBundle.getString("noActiveClient"));
         } else {
             System.out.println("*****Accounts list*****");
             if (currentClient.getAccountsList().size() == 1) {
@@ -43,15 +52,15 @@ public class GetAccountCommand extends AbstractCommand {
                     }
 
                     Account account = BankServiceEnumSingletone.getAccountById(currentClient, clientId);
-                    BankCommander.currentClient.setActiveAccount(account);
-                    account.printReport();
-                    System.out.println(errorsBundle.getString("separator"));
+                    /*BankCommander.*/BankRemoteOffice.getCurrentClient().setActiveAccount(account);
                     StringBuilder builder = new StringBuilder();
+                    builder.append(account.toString());
                     builder.append("Account ");
                     builder.append(account.getId());
                     builder.append(" is active now. ");
-                    System.out.println(builder.toString());
+                    console.sendResponse(builder.toString());
                 } catch (IOException | AccountNotFoundException e) {
+                    console.sendResponse(e.getMessage());
                     e.printStackTrace();
                 }
             }

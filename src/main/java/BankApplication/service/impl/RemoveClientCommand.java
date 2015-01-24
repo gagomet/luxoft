@@ -30,6 +30,7 @@ public class RemoveClientCommand extends AbstractCommand {
                     break;
                 } catch (IllegalArgumentException e) {
                     System.out.println(errorsBundle.getString("wrongClientsName"));
+                    console.sendResponse(errorsBundle.getString("wrongClientsName"));
                 }
             }
 
@@ -37,6 +38,7 @@ public class RemoveClientCommand extends AbstractCommand {
 
         } catch (IOException e) {
             e.printStackTrace();
+            console.sendResponse(e.getMessage());
         }
     }
 
@@ -49,9 +51,10 @@ public class RemoveClientCommand extends AbstractCommand {
         try {
             Client client = BankServiceEnumSingletone.getClientByName(BankRemoteOffice.getCurrentBank(), clientName);
             BankServiceEnumSingletone.removeClient(BankRemoteOffice.getCurrentBank(), client);
-            console.sendResponse(client.toString() + " was removed. Press Enter to continue.");
+            console.sendResponse(client.toString() + " was removed.");
         } catch (ClientNotFoundException e) {
             e.printStackTrace();
+            console.sendResponse(errorsBundle.getString("clientNotFound"));
         }
     }
 }

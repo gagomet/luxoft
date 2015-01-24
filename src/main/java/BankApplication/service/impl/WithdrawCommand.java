@@ -23,22 +23,24 @@ public class WithdrawCommand extends AbstractCommand {
     public void execute() {
 
         Client currentClient = /*BankCommander.*/BankRemoteOffice.getCurrentClient();
-        float amountToDeposit;
+        float amountToWithdraw;
         if (currentClient == null) {
+            console.sendResponse(errorsBundle.getString("noActiveClient"));
             System.out.println(errorsBundle.getString("noActiveClient"));
         } else {
             try {
                 while (true) {
                     try {
-                        amountToDeposit = validateFunds(console.consoleResponse("How much do you want to withdraw :"));
+                        amountToWithdraw = validateFunds(console.consoleResponse("How much do you want to withdraw :"));
                         break;
 
                     } catch (BankApplication.exceptions.IllegalArgumentException e) {
                         System.out.println(errorsBundle.getString("wrongNumber"));
+                        console.sendResponse(errorsBundle.getString("wrongNumber"));
                     }
                 }
 
-                depositFunds(currentClient, amountToDeposit);
+                withdrawFunds(currentClient, amountToWithdraw);
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -52,19 +54,17 @@ public class WithdrawCommand extends AbstractCommand {
         System.out.println("Withdraw funds from account (9999999 Money in max)");
     }
 
-    private void depositFunds(Client client, float amountToDeposit) {
+    private void withdrawFunds(Client client, float amountToWithdraw) {
         try {
             StringBuilder builder = new StringBuilder();
             builder.append(errorsBundle.getString("separator"));
             builder.append(System.getProperty("line.separator"));
             builder.append(client.getActiveAccount().toString());
             builder.append(System.getProperty("line.separator"));
-            BankServiceEnumSingletone.withdrawFunds(client.getActiveAccount(), amountToDeposit);
+            BankServiceEnumSingletone.withdrawFunds(client.getActiveAccount(), amountToWithdraw);
             builder.append("Account was successfully reduced");
             builder.append(System.getProperty("line.separator"));
             builder.append(client.getActiveAccount().toString());
-            builder.append(System.getProperty("line.separator"));
-            builder.append("Press Enter to continue");
             console.sendResponse(builder.toString());
         } catch (NotEnoughFundsException e) {
             System.out.println(e.getMessage());

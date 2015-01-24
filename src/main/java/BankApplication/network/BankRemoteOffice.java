@@ -9,7 +9,15 @@ import BankApplication.network.console.Console;
 import BankApplication.network.console.RemoteConsoleImpl;
 import BankApplication.service.BankFeedService;
 import BankApplication.service.Command;
-import BankApplication.service.impl.*;
+import BankApplication.service.impl.AddClientCommand;
+import BankApplication.service.impl.BankFeedServiceImpl;
+import BankApplication.service.impl.DepositCommand;
+import BankApplication.service.impl.FindClientCommand;
+import BankApplication.service.impl.GetAccountCommand;
+import BankApplication.service.impl.RemoveClientCommand;
+import BankApplication.service.impl.ShowHelpCommand;
+import BankApplication.service.impl.TransferCommand;
+import BankApplication.service.impl.WithdrawCommand;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -67,6 +75,10 @@ public class BankRemoteOffice {
         commandsMap.put("2", new AddClientCommand(console));
         commandsMap.put("3", new RemoveClientCommand(console));
         commandsMap.put("4", new WithdrawCommand(console));
+        commandsMap.put("5", new DepositCommand(console));
+        commandsMap.put("6", new GetAccountCommand(console));
+        commandsMap.put("7", new TransferCommand(console));
+        commandsMap.put("8", new ShowHelpCommand(console));
     }
 
 
@@ -129,7 +141,7 @@ public class BankRemoteOffice {
         return currentBank;
     }
 
-    public String receiveMessage(){
+    public String receiveMessage() {
         String result = null;
         try {
             result = (String) in.readObject();
@@ -160,6 +172,13 @@ public class BankRemoteOffice {
     private String composeUserMenu() {
         StringBuilder builder = new StringBuilder();
         Iterator iterator = commandsMap.entrySet().iterator();
+        builder.append(System.getProperty("line.separator"));
+        builder.append("Active client now is: ");
+        if (getCurrentClient() == null) {
+            builder.append("N/A");
+        } else {
+            builder.append(getCurrentClient().toString());
+        }
         builder.append(System.getProperty("line.separator"));
         while (iterator.hasNext()) {
             Map.Entry<String, Command> entry = (Map.Entry<String, Command>) iterator.next();
