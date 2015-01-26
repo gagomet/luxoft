@@ -1,6 +1,7 @@
 package BankApplication.service.impl;
 
-import BankApplication.exceptions.NotEnoughFundsException;
+import BankApplication.exceptions.*;
+import BankApplication.exceptions.IllegalArgumentException;
 import BankApplication.model.impl.Client;
 import BankApplication.network.BankRemoteOffice;
 import BankApplication.network.console.Console;
@@ -20,7 +21,7 @@ public class WithdrawCommand extends AbstractCommand {
         this.console = console;
     }
     @Override
-    public void execute() {
+    public void execute() throws IllegalArgumentException {
 
         Client currentClient = /*BankCommander.*/BankRemoteOffice.getCurrentClient();
         float amountToWithdraw;
@@ -54,7 +55,7 @@ public class WithdrawCommand extends AbstractCommand {
         System.out.println("Withdraw funds from account (9999999 Money in max)");
     }
 
-    private void withdrawFunds(Client client, float amountToWithdraw) {
+    private void withdrawFunds(Client client, float amountToWithdraw) throws BankApplication.exceptions.IllegalArgumentException {
         try {
             StringBuilder builder = new StringBuilder();
             builder.append(errorsBundle.getString("separator"));

@@ -7,6 +7,7 @@ import BankApplication.exceptions.ClientExceedsException;
 import BankApplication.exceptions.ClientNotFoundException;
 import BankApplication.exceptions.IllegalArgumentException;
 import BankApplication.exceptions.NotEnoughFundsException;
+import BankApplication.model.impl.AbstractAccount;
 import BankApplication.model.impl.Bank;
 import BankApplication.model.impl.Client;
 import BankApplication.service.BankService;
@@ -54,14 +55,6 @@ public class BankServiceImpl implements BankService {
                 break;
             }
         }
-        /*List<Client> clientsList = bank.getClientsList();
-        for (int i = 0; i < clientsList.size(); i++) {
-            if (clientsList.get(i).equals(client)) {
-                System.out.println("removing " + clientsList.get(i).getName());
-                clientsList.remove(i);
-                break;
-            }
-        }*/
         bank.setClientsList(clientsList);
     }
 
@@ -83,7 +76,7 @@ public class BankServiceImpl implements BankService {
     }
 
     @Override
-    public void withdrawFunds(Account account, float amount) throws NotEnoughFundsException {
+    public void withdrawFunds(Account account, float amount) throws NotEnoughFundsException, IllegalArgumentException {
         account.withdraw(amount);
     }
 
@@ -117,7 +110,7 @@ public class BankServiceImpl implements BankService {
 
     @Override
     public void saveClient(Client client) {
-        try(FileOutputStream fileOutputStream = new FileOutputStream("c:\\!toBankApplicationSerialization\\object.ser")){
+        try (FileOutputStream fileOutputStream = new FileOutputStream("c:\\!toBankApplicationSerialization\\object.ser")) {
             ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
             objectOutputStream.writeObject(client);
         } catch (FileNotFoundException e) {
@@ -130,9 +123,9 @@ public class BankServiceImpl implements BankService {
     @Override
     public Client loadClient() {
         Client result = null;
-        try(FileInputStream fileInputStream = new FileInputStream("c:\\!toBankApplicationSerialization\\object.ser")){
+        try (FileInputStream fileInputStream = new FileInputStream("c:\\!toBankApplicationSerialization\\object.ser")) {
             ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
-            result = (Client)objectInputStream.readObject();
+            result = (Client) objectInputStream.readObject();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -142,6 +135,4 @@ public class BankServiceImpl implements BankService {
         }
         return result;
     }
-
-
 }

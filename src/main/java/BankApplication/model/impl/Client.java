@@ -71,8 +71,12 @@ public class Client implements Report, Serializable {
         this.accountsList = accountsList;
     }
 
-    public float getBalance() {
-        return activeAccount.getBalance();
+    public float getFullClientBalance() {
+            float result = 0.0f;
+            for (Account acc : accountsList) {
+                result += acc.getBalance();
+            }
+            return result;
     }
 
     public String getCity() {

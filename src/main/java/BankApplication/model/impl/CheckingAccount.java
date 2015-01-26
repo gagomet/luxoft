@@ -1,7 +1,7 @@
 package BankApplication.model.impl;
 
-import BankApplication.exceptions.NotEnoughFundsException;
-import BankApplication.exceptions.OverdraftLimitExceedException;
+import BankApplication.exceptions.*;
+import BankApplication.exceptions.IllegalArgumentException;
 
 import java.util.Map;
 
@@ -25,16 +25,16 @@ public class CheckingAccount extends AbstractAccount {
     }
 
     @Override
-    public void withdraw(float amount) throws NotEnoughFundsException {
-        if (balance >= amount) {
-            super.withdraw(amount);
-        } else {
-            if (Math.abs(balance - amount) <= overdraft + balance) {
-                balance -= amount;
-            } else {
-                throw new OverdraftLimitExceedException(errorsBundle.getString("notEnoughFunds"), this, amount);
-            }
+    public void withdraw(float amount) throws NotEnoughFundsException, IllegalArgumentException {
+        if (amount < 0) {
+            throw new BankApplication.exceptions.IllegalArgumentException(errorsBundle.getString("notNegative"));
         }
+        if (balance + overdraft >= amount) {
+            balance -= amount;
+        } else {
+            throw new OverdraftLimitExceedException(errorsBundle.getString("notEnoughFunds"), this, amount);
+        }
+
     }
 
     public void parseFeed(Map<String, String> feedMap) {

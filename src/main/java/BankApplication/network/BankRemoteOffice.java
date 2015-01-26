@@ -170,6 +170,8 @@ public class BankRemoteOffice {
     }
 
     private String composeUserMenu() {
+
+        //TODO fix composeMenu to toString() method of commands
         StringBuilder builder = new StringBuilder();
         Iterator iterator = commandsMap.entrySet().iterator();
         builder.append(System.getProperty("line.separator"));

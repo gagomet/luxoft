@@ -20,7 +20,7 @@ public interface BankService {
 
     public void depositeFunds(Account account, float amount) throws IllegalArgumentException;
 
-    public void withdrawFunds(Account account, float amount) throws NotEnoughFundsException;
+    public void withdrawFunds(Account account, float amount) throws NotEnoughFundsException, IllegalArgumentException;
 
     public Client getClientByName(Bank bank, String clientsName) throws ClientNotFoundException;
 

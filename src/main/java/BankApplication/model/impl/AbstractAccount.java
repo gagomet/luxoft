@@ -42,13 +42,7 @@ public abstract class AbstractAccount implements Account, Serializable {
         this.balance += amount;
     }
 
-    public void withdraw(float amount) throws NotEnoughFundsException {
-        if (this.balance >= amount) {
-            this.balance -= amount;
-        } else {
-            throw new NotEnoughFundsException(errorsBundle.getString("notEnoughFunds"));
-        }
-    }
+    public abstract void withdraw(float amount) throws NotEnoughFundsException, IllegalArgumentException;
 
     public void balanceDecimalValue() {
         System.out.println(Math.round(balance));

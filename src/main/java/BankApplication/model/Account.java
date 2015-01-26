@@ -13,5 +13,5 @@ public interface Account extends Report {
 
     void deposit(float amount) throws IllegalArgumentException;
 
-    void withdraw(float amount) throws NotEnoughFundsException;
+    void withdraw(float amount) throws NotEnoughFundsException, IllegalArgumentException;
 }

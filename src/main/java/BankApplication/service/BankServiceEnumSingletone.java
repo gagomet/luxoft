@@ -123,7 +123,7 @@ public enum BankServiceEnumSingletone {
         account.deposit(amount);
     }
 
-    public static void withdrawFunds(Account account, float amount) throws NotEnoughFundsException {
+    public static void withdrawFunds(Account account, float amount) throws NotEnoughFundsException, IllegalArgumentException {
         account.withdraw(amount);
     }
 }
