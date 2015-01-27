@@ -24,7 +24,7 @@ public interface ClientDAO {
      * @param
      * @return
      */
-    Client findClientById(int clientId) throws ClientNotFoundException;
+    Client findClientById(long clientId) throws ClientNotFoundException;
 
     /**
      * Returns the list of all clients of the Bank
@@ -39,7 +39,7 @@ public interface ClientDAO {
      * or update client in database (if id!=null)
      * @param client
      */
-    void save(Client client);
+    void save(Bank bank, Client client);
 
     /**
      * Method removes client from Database

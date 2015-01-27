@@ -9,21 +9,15 @@ import org.junit.Before;
 
 public class ClientDAOImplTest extends TestCase {
     private ClientDAOImpl testInstance;
-    private BankDAO bankDAO;
-    private Bank dummyBank;
+
 
     @Before
     public void setUp() {
         testInstance = new ClientDAOImpl();
-        bankDAO = new BankDAOImpl();
-        dummyBank = bankDAO.getBankByName("MYBANK");
     }
 
     public void testFindClientByName() throws Exception {
-        Client newbie = testInstance.findClientByName(dummyBank, "Ivan Ivanov");
-        System.out.println(newbie.toString());
-        assertFalse(newbie == null);
-        assertFalse(newbie.getAccountsList().size() == 0);
+
     }
 
     public void testFindClientById() throws Exception {

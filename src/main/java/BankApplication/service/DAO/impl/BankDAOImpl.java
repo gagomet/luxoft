@@ -19,8 +19,8 @@ public class BankDAOImpl extends BaseDAOImpl implements BankDAO {
     @Override
     public Bank getBankByName(String name) {
         Bank resultBank = null;
-        Connection connection = null;
         ResultSet resultSet = null;
+        Connection connection = null;
         try {
             connection = openConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(GET_BANK_BY_NAME_STMT);

@@ -15,11 +15,12 @@ import java.util.Set;
  * Created by Kir Kolesnikov on 14.01.2015.
  */
 public class Client implements Report, Serializable {
-    private Long id;
+    private long id;
+    private long bankId;
     private String name;
     private Set<Account> accountsList = new HashSet<>();
     private transient Account activeAccount;
-    private float initialOverdraft;
+    private Float initialOverdraft;
     private Gender sex;
     private String city;
     private String email;
@@ -48,19 +49,27 @@ public class Client implements Report, Serializable {
         return resultAccount;
     }
 
-    public Long getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(long id) {
         this.id = id;
     }
 
-    public float getInitialOverdraft() {
+    public long getBankId() {
+        return bankId;
+    }
+
+    public void setBankId(long bankId) {
+        this.bankId = bankId;
+    }
+
+    public Float getInitialOverdraft() {
         return initialOverdraft;
     }
 
-    public void setInitialOverdraft(float initialOverdraft) {
+    public void setInitialOverdraft(Float initialOverdraft) {
         this.initialOverdraft = initialOverdraft;
     }
 
@@ -156,11 +165,14 @@ public class Client implements Report, Serializable {
 
         Client client = (Client) o;
 
+        if (bankId != client.bankId) return false;
+        if (id != client.id) return false;
         if (Float.compare(client.initialOverdraft, initialOverdraft) != 0) return false;
-        if (!accountsList.equals(client.accountsList)) return false;
+        if (accountsList != null ? !accountsList.equals(client.accountsList) : client.accountsList != null)
+            return false;
         if (city != null ? !city.equals(client.city) : client.city != null) return false;
         if (email != null ? !email.equals(client.email) : client.email != null) return false;
-        if (!name.equals(client.name)) return false;
+        if (name != null ? !name.equals(client.name) : client.name != null) return false;
         if (phone != null ? !phone.equals(client.phone) : client.phone != null) return false;
         if (sex != client.sex) return false;
 
@@ -169,8 +181,10 @@ public class Client implements Report, Serializable {
 
     @Override
     public int hashCode() {
-        int result = name.hashCode();
-        result = 31 * result + accountsList.hashCode();
+        int result = (int) (id ^ (id >>> 32));
+        result = 31 * result + (int) (bankId ^ (bankId >>> 32));
+        result = 31 * result + (name != null ? name.hashCode() : 0);
+        result = 31 * result + (accountsList != null ? accountsList.hashCode() : 0);
         result = 31 * result + (initialOverdraft != +0.0f ? Float.floatToIntBits(initialOverdraft) : 0);
         result = 31 * result + (sex != null ? sex.hashCode() : 0);
         result = 31 * result + (city != null ? city.hashCode() : 0);
@@ -178,6 +192,4 @@ public class Client implements Report, Serializable {
         result = 31 * result + (phone != null ? phone.hashCode() : 0);
         return result;
     }
-
-
 }

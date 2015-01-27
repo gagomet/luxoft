@@ -14,7 +14,8 @@ import java.util.ResourceBundle;
 public abstract class AbstractAccount implements Account, Serializable {
     protected static ResourceBundle errorsBundle = ResourceBundle.getBundle("errors");
     protected float balance;
-    protected Long id;
+    protected long id;
+    protected long clientId;
 
 
     public AbstractAccount() {
@@ -35,6 +36,14 @@ public abstract class AbstractAccount implements Account, Serializable {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public long getClientId() {
+        return clientId;
+    }
+
+    public void setClientId(long clientId) {
+        this.clientId = clientId;
     }
 
     public abstract void parseFeed(Map<String, String> feedMap);

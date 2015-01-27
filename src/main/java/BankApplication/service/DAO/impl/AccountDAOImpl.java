@@ -32,14 +32,18 @@ public class AccountDAOImpl extends BaseDAOImpl implements AccountDAO {
                 CheckingAccount checkingAccount = (CheckingAccount) account;
                 preparedStatement.setFloat(2, checkingAccount.getOverdraft());
             } else {
-                preparedStatement.setNull(2, Types.BIGINT);
+                preparedStatement.setNull(2, Types.REAL);
             }
             preparedStatement.setFloat(3, account.getBalance());
             preparedStatement.executeUpdate();
+
+
             connection.commit();
             connection.setAutoCommit(true);
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            closeConnection(connection);
         }
     }
 

@@ -11,8 +11,6 @@ public interface Account extends Report {
     long getId();
     float getBalance();
     void setBalance(float balance);
-
     void deposit(float amount) throws IllegalArgumentException;
-
     void withdraw(float amount) throws NotEnoughFundsException, IllegalArgumentException;
 }
