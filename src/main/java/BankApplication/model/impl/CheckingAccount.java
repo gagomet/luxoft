@@ -16,6 +16,10 @@ public class CheckingAccount extends AbstractAccount {
 
     }
 
+    public CheckingAccount(float overdraft) {
+        this.overdraft = overdraft;
+    }
+
     public void setOverdraft(float overdraft) {
         this.overdraft = overdraft;
     }

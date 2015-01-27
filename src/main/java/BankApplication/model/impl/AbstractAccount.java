@@ -14,11 +14,11 @@ import java.util.ResourceBundle;
 public abstract class AbstractAccount implements Account, Serializable {
     protected static ResourceBundle errorsBundle = ResourceBundle.getBundle("errors");
     protected float balance;
-    final protected Long id;
+    protected Long id;
 
 
     public AbstractAccount() {
-        this.id = System.currentTimeMillis();
+//        this.id = System.currentTimeMillis();
     }
 
     public float getBalance() {
@@ -31,6 +31,10 @@ public abstract class AbstractAccount implements Account, Serializable {
 
     public long getId() {
         return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public abstract void parseFeed(Map<String, String> feedMap);
@@ -64,23 +68,4 @@ public abstract class AbstractAccount implements Account, Serializable {
         return builder.toString();
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof AbstractAccount)) return false;
-
-        AbstractAccount that = (AbstractAccount) o;
-
-        if (Float.compare(that.balance, balance) != 0) return false;
-        if (!id.equals(that.id)) return false;
-
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        int result = (balance != +0.0f ? Float.floatToIntBits(balance) : 0);
-        result = 31 * result + id.hashCode();
-        return result;
-    }
 }

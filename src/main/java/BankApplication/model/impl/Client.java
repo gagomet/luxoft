@@ -15,6 +15,7 @@ import java.util.Set;
  * Created by Kir Kolesnikov on 14.01.2015.
  */
 public class Client implements Report, Serializable {
+    private Long id;
     private String name;
     private Set<Account> accountsList = new HashSet<>();
     private transient Account activeAccount;
@@ -25,11 +26,11 @@ public class Client implements Report, Serializable {
     private String phone;
 
     public Client() {
-
     }
 
     public Client(Gender sex) throws BankApplication.exceptions.IllegalArgumentException {
-        this.sex = sex;
+//            id = System.currentTimeMillis();
+            this.sex = sex;
     }
 
     public AbstractAccount parseFeed(Map<String, String> feedMap) throws IllegalArgumentException {
@@ -45,6 +46,14 @@ public class Client implements Report, Serializable {
             resultAccount.parseFeed(feedMap);
         }
         return resultAccount;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public float getInitialOverdraft() {

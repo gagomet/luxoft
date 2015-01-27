@@ -38,6 +38,23 @@ public class SavingAccount extends AbstractAccount {
         System.out.println(super.toString());
     }
 
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof SavingAccount)) return false;
 
+        SavingAccount that = (SavingAccount) o;
+
+        if (Float.compare(that.balance, balance) != 0) return false;
+        if (!id.equals(that.id)) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = (super.balance != +0.0f ? Float.floatToIntBits(super.balance) : 0);
+        result = 31 * result + super.id.hashCode();
+        return result;
+    }
 
 }

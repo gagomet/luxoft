@@ -19,6 +19,8 @@ import java.util.TreeMap;
  * Created by Kir Kolesnikov on 14.01.2015.
  */
 public class Bank {
+    private Long id;
+    private String name;
     private Set<Client> clientsList = new HashSet<Client>();
     private List<ClientRegistrationListener> listeners = new ArrayList<ClientRegistrationListener>();
     private Map<String, Client> clientsNamesTable = new TreeMap<>();
@@ -29,6 +31,7 @@ public class Bank {
     }
 
     public Bank(List<ClientRegistrationListener> listenerList) {
+//        id = System.currentTimeMillis();
         this.listeners = listenerList;
         listeners.add(new ClientRegistrationListener() {
             @Override
@@ -40,6 +43,22 @@ public class Bank {
                 }
             }
         });
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public Set<Client> getClientsList() {
