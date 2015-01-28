@@ -7,6 +7,5 @@ import BankApplication.exceptions.*;
  */
 public interface Command {
     void execute() throws BankApplication.exceptions.IllegalArgumentException;
-
     void printCommandInfo();
 }

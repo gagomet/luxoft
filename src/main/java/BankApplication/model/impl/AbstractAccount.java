@@ -34,7 +34,7 @@ public abstract class AbstractAccount implements Account, Serializable {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -64,7 +64,7 @@ public abstract class AbstractAccount implements Account, Serializable {
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
-        builder.append("ID: ");
+        builder.append("Active Account ID: ");
         builder.append(id);
         builder.append(" ");
         if (this instanceof CheckingAccount) {

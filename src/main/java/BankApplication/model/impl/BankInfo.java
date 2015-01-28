@@ -18,6 +18,38 @@ public class BankInfo implements Serializable {
 
     }
 
+    public int getTotalClients() {
+        return totalClients;
+    }
+
+    public void setTotalClients(int totalClients) {
+        this.totalClients = totalClients;
+    }
+
+    public int getTotalAccounts() {
+        return totalAccounts;
+    }
+
+    public void setTotalAccounts(int totalAccounts) {
+        this.totalAccounts = totalAccounts;
+    }
+
+    public float getTotalCredit() {
+        return totalCredit;
+    }
+
+    public void setTotalCredit(float totalCredit) {
+        this.totalCredit = totalCredit;
+    }
+
+    public Map<String, List<Client>> getClientsByCities() {
+        return clientsByCities;
+    }
+
+    public void setClientsByCities(Map<String, List<Client>> clientsByCities) {
+        this.clientsByCities = clientsByCities;
+    }
+
     public BankInfo(Bank bank){
         BankReport bankReport = new BankReport();
         totalClients = bankReport.getNumberOfClients(bank);

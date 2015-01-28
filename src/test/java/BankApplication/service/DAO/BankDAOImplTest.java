@@ -20,31 +20,11 @@ import java.sql.SQLException;
 
 public class BankDAOImplTest extends TestCase {
     private BankDAOImpl testInstance;
-    private Connection connection;
-    private static final String DB_URL = "jdbc:h2:mem:test;DB_CLOSE_DELAY=-1";
-    private static final String DB_USER = "";
-    private static final String DB_PASSWORD = "";
+
 
     @Before
     public void setUp(){
         testInstance = new BankDAOImpl();
-        DataSource dataSource = JdbcConnectionPool.create(DB_URL, DB_USER, DB_PASSWORD);
-        try {
-            connection = dataSource.getConnection();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        String SQLScriptFilePath = "test.sql";
-        URL url = Thread.currentThread().getContextClassLoader().getResource(SQLScriptFilePath);
-        File file = new File(url.getPath());
-
-        try {
-            ScriptRunner scriptRunner = new ScriptRunner(connection, false, false);
-            Reader reader = new BufferedReader(new FileReader(file));
-            scriptRunner.runScript(reader);
-        } catch (SQLException | IOException e) {
-            e.printStackTrace();
-        }
     }
 
     public void testGetBankByName() throws Exception {

@@ -109,7 +109,7 @@ public class BankServiceImpl implements BankService {
     }
 
     @Override
-    public void saveClient(Client client) {
+    public void saveClientToFeedFile(Client client) {
         try (FileOutputStream fileOutputStream = new FileOutputStream("c:\\!toBankApplicationSerialization\\object.ser")) {
             ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
             objectOutputStream.writeObject(client);
@@ -121,7 +121,7 @@ public class BankServiceImpl implements BankService {
     }
 
     @Override
-    public Client loadClient() {
+    public Client loadClientFromFeedFile() {
         Client result = null;
         try (FileInputStream fileInputStream = new FileInputStream("c:\\!toBankApplicationSerialization\\object.ser")) {
             ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);

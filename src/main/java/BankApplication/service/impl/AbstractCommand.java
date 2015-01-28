@@ -2,6 +2,7 @@ package BankApplication.service.impl;
 
 import BankApplication.exceptions.IllegalArgumentException;
 import BankApplication.network.console.ConsoleImpl;
+import BankApplication.service.BankService;
 import BankApplication.type.Gender;
 import BankApplication.service.Command;
 import BankApplication.network.console.Console;
@@ -15,11 +16,20 @@ public abstract class AbstractCommand implements Command {
     protected Console console; /*= new ConsoleImpl();*/
     protected ResourceBundle errorsBundle = ResourceBundle.getBundle("errors");
     private final String EMPTY_STRING = "";
+//    private BankService bankService = new BankServiceImpl(); //uncomment this string to get noDb impl
+    private BankService bankService = new BankServiceDBImpl();
+
+    public BankService getBankService() {
+        return bankService;
+    }
+
+    public void setBankService(BankService bankService) {
+        this.bankService = bankService;
+    }
 
     public AbstractCommand() {
         this.console = new ConsoleImpl();
     }
-
 
     protected Gender validateClientsSex(String input) throws IllegalArgumentException {
         if (input.equalsIgnoreCase("M")) {

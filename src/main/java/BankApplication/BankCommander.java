@@ -6,9 +6,11 @@ import BankApplication.model.ClientRegistrationListener;
 import BankApplication.model.impl.Bank;
 import BankApplication.network.BankRemoteOffice;
 import BankApplication.service.BankFeedService;
+import BankApplication.service.BankService;
+import BankApplication.service.DAO.BankDAO;
+import BankApplication.service.DAO.impl.BankDAOImpl;
 import BankApplication.service.impl.*;
 import BankApplication.model.impl.Client;
-import BankApplication.service.BankServiceEnumSingletone;
 import BankApplication.service.Command;
 
 import java.io.BufferedReader;
@@ -20,11 +22,13 @@ import java.util.*;
  * Created by Kir Kolesnikov on 15.01.2015.
  */
 public class BankCommander {
-    public static Bank currentBank = new Bank();
+    public static Bank currentBank = null;
     public static Client currentClient = null;
     public static Map<String, Command> commandsMap = new TreeMap<>();
     private static final String FEED_FILES_FOLDER = "c:\\!toBankApplication\\";
+    static String bankName = "MYBANK";
 
+    //abstractCommand
 
     static
     Command[] commands = {
@@ -34,6 +38,7 @@ public class BankCommander {
             new DepositCommand(), //4
             new TransferCommand(), //5
             new AddClientCommand(), //6
+            new RemoveClientCommand(),
             new ShowHelpCommand(), //7
             new Command() {
                 public void execute() {
@@ -48,6 +53,8 @@ public class BankCommander {
 
 
     public BankCommander() {
+        BankDAO bankDAO = new BankDAOImpl();
+        currentBank = bankDAO.getBankByName(bankName);
         composeMapOfCommands();
     }
 
@@ -81,8 +88,8 @@ public class BankCommander {
     }
 
     public static void setCurrentClient(Client currentClient) {
-//        BankCommander.currentClient = currentClient;
-        BankRemoteOffice.setCurrentClient(currentClient);
+        BankCommander.currentClient = currentClient;
+//        BankRemoteOffice.setCurrentClient(currentClient);
     }
 
     public void registerCommand(String name, Command command) {
@@ -109,12 +116,13 @@ NullPointerException - if the specified key is null and this map uses natural or
 
     private static void serializationTest() {
         try {
-            Client testClient = BankServiceEnumSingletone.getClientByName(currentBank, "Beggar");
+            BankService service = new BankServiceImpl();
+            Client testClient = service.getClientByName(currentBank, "Beggar");
             testClient.printReport();
-            BankServiceEnumSingletone.saveClient(testClient);
+            service.saveClientToFeedFile(testClient);
             System.out.println("Saving done!");
             System.out.println("Now reading from file");
-            Client readedClient = BankServiceEnumSingletone.loadClient();
+            Client readedClient = service.loadClientFromFeedFile();
             System.out.println("Reading done");
             readedClient.printReport();
         } catch (ClientNotFoundException e) {
@@ -124,7 +132,7 @@ NullPointerException - if the specified key is null and this map uses natural or
 
     public static void main(String args[]) {
         BankCommander bankCommander = new BankCommander();
-        bankCommander.initialize();
+//        bankCommander.initialize();  uncomment this string to return to noDB impl
 
         if (args[0].equals("report")) {
             BankReport bankReport = new BankReport();
@@ -140,7 +148,7 @@ NullPointerException - if the specified key is null and this map uses natural or
 
 
         //serialization/deserialization
-        serializationTest();
+//        serializationTest();
 
 
         while (true) {
@@ -159,10 +167,9 @@ NullPointerException - if the specified key is null and this map uses natural or
 
                 String commandString = bufferedReader.readLine();
                 commandsMap.get(commandString).execute();
-            } catch (IOException e) {
+            } catch (IOException | IllegalArgumentException e) {
                 e.printStackTrace();
-            } catch (IllegalArgumentException e) {
-                e.printStackTrace();
+                System.out.println("Not a command");
             }
         }
 

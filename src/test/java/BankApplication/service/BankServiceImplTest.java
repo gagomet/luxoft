@@ -1,6 +1,5 @@
 package BankApplication.service;
 
-import BankApplication.TestsInitializer;
 import BankApplication.exceptions.ClientNotFoundException;
 import BankApplication.model.Account;
 import BankApplication.model.impl.Bank;
@@ -22,12 +21,6 @@ public class BankServiceImplTest extends TestCase {
     @Before
     public void setUp(){
         testInstanceBankService = new BankServiceImpl();
-        dummyBank = TestsInitializer.getDummyBankInstance();
-        try {
-            dummyClient = testInstanceBankService.getClientByName(dummyBank, "Beggar");
-        } catch (ClientNotFoundException e) {
-            e.printStackTrace();
-        }
     }
 
     @Test

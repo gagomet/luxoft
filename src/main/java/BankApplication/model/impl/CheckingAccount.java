@@ -56,7 +56,7 @@ public class CheckingAccount extends AbstractAccount {
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
-        builder.append("ID: ");
+        builder.append("Account ID: ");
         builder.append(id);
         builder.append(" Checking account main funds: ");
         builder.append(getBalance());

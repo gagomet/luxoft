@@ -26,4 +26,6 @@ public interface AccountDAO {
      * @param id Id of the client
      */
     public List<Account> getClientAccounts(long id);
+
+    public void addAccount(Account account, Client client);
 }

@@ -5,7 +5,6 @@ import BankApplication.exceptions.IllegalArgumentException;
 import BankApplication.model.impl.Client;
 import BankApplication.network.BankRemoteOffice;
 import BankApplication.network.console.Console;
-import BankApplication.service.BankServiceEnumSingletone;
 import BankApplication.BankCommander;
 
 import java.io.IOException;
@@ -37,7 +36,6 @@ public class FindClientCommand extends AbstractCommand {
             }
 
             findClientInBank(clientName);
-
         } catch (IOException e) {
             e.printStackTrace();
             console.sendResponse(e.getMessage());
@@ -53,8 +51,7 @@ public class FindClientCommand extends AbstractCommand {
 
     private void findClientInBank(String clientName) {
         try {
-            Client client = BankServiceEnumSingletone.getClientByName(/*BankCommander.currentBank*/  BankRemoteOffice.getCurrentBank(), clientName);
-            BankCommander.setCurrentClient(client);
+            Client client = getBankService().getClientByName(BankCommander.currentBank /* BankRemoteOffice.getCurrentBank()*/, clientName);
             StringBuilder builder = new StringBuilder();
             builder.append("Client ");
             builder.append(client.getName());
@@ -63,6 +60,7 @@ public class FindClientCommand extends AbstractCommand {
             System.out.println(builder.toString());
             console.sendResponse(client.toString() + builder.toString());
             client.printReport();
+            BankCommander.setCurrentClient(client);
         } catch (ClientNotFoundException e) {
             e.printStackTrace();
             console.sendResponse(errorsBundle.getString("clientNotFound"));

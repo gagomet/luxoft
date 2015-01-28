@@ -6,7 +6,6 @@ import BankApplication.exceptions.IllegalArgumentException;
 import BankApplication.model.impl.Client;
 import BankApplication.network.BankRemoteOffice;
 import BankApplication.network.console.Console;
-import BankApplication.service.BankServiceEnumSingletone;
 import BankApplication.type.Gender;
 
 import java.io.IOException;
@@ -132,7 +131,7 @@ public class AddClientCommand extends AbstractCommand {
             newClient.setCity(newClientsCity);
         }
         System.out.println(errorsBundle.getString("separator"));
-        BankServiceEnumSingletone.addClient(/*BankCommander.currentBank*/BankRemoteOffice.getCurrentBank(), newClient);
+        getBankService().addClient(BankCommander.currentBank/*BankRemoteOffice.getCurrentBank()*/, newClient);
         System.out.println("New Client successfully added!");
         newClient.printReport();
         StringBuilder builder = new StringBuilder();

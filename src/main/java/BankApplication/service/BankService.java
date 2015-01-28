@@ -26,7 +26,7 @@ public interface BankService {
 
     public Account getAccountById(Client client, Long id) throws AccountNotFoundException;
 
-    public void saveClient(Client client);
+    public void saveClientToFeedFile(Client client);
 
-    public Client loadClient();
+    public Client loadClientFromFeedFile();
 }

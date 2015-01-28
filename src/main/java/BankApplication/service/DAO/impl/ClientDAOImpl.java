@@ -3,7 +3,9 @@ package BankApplication.service.DAO.impl;
 import BankApplication.exceptions.ClientNotFoundException;
 import BankApplication.model.Account;
 import BankApplication.model.impl.Bank;
+import BankApplication.model.impl.CheckingAccount;
 import BankApplication.model.impl.Client;
+import BankApplication.model.impl.SavingAccount;
 import BankApplication.service.DAO.AccountDAO;
 import BankApplication.service.DAO.ClientDAO;
 import BankApplication.type.Gender;
@@ -24,10 +26,10 @@ public class ClientDAOImpl extends BaseDAOImpl implements ClientDAO {
     public static final String FIND_CLIENT_BY_NAME_STMT = "SELECT * FROM CLIENTS WHERE CLIENTS.BANK_ID=? AND CLIENTS.NAME=?";
     public static final String FIND_CLIENT_BY_ID_STMT = "SELECT * FROM CLIENTS WHERE CLIENTS.ID=?";
     public static final String GET_ALL_CLIENTS = "SELECT * FROM CLIENTS WHERE CLIENTS.BANK_ID=?";
-    public static final String REMOVE_CLIENT_FROM_DB = "DELETE * FROM CLIENTS WHERE CLIENT_ID=?";
+    public static final String REMOVE_CLIENT_FROM_DB = "DELETE FROM CLIENTS WHERE ID=?";
     public static final String INSERT_CLIENT_INTO_DB = "INSERT INTO CLIENTS " +
             "(BANK_ID, NAME, OVERDRAFT, GENDER, EMAIL, CITY) VALUES (?, ?, ?, ?, ?, ?)";
-    public static final String UPDATE_CLIENT_IN_DB = "UPDATE CLIENT SET " +
+    public static final String UPDATE_CLIENT_IN_DB = "UPDATE CLIENTS SET " +
             "BANK_ID=?, NAME=?, OVERDRAFT=?, GENDER=?, EMAIL=?, CITY=? WHERE ID=? ";
 
 
@@ -45,6 +47,9 @@ public class ClientDAOImpl extends BaseDAOImpl implements ClientDAO {
             resultClient = parseResultSetToGetOneClient(resultSet);
             AccountDAO accountDAO = new AccountDAOImpl();
             List<Account> accountList = accountDAO.getClientAccounts(resultClient.getId());
+            if (accountList.size() == 1) {
+                resultClient.setActiveAccount(accountList.get(0));
+            }
             HashSet<Account> accountSet = new HashSet<Account>(accountList);
             resultClient.setAccountsList(accountSet);
         } catch (SQLException e) {
@@ -74,8 +79,12 @@ public class ClientDAOImpl extends BaseDAOImpl implements ClientDAO {
             resultClient = parseResultSetToGetOneClient(resultSet);
             AccountDAO accountDAO = new AccountDAOImpl();
             List<Account> accountList = accountDAO.getClientAccounts(resultClient.getId());
+            if (accountList.size() == 1) {
+                resultClient.setActiveAccount(accountList.get(0));
+            }
             HashSet<Account> accountSet = new HashSet<Account>(accountList);
             resultClient.setAccountsList(accountSet);
+
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
@@ -142,17 +151,36 @@ public class ClientDAOImpl extends BaseDAOImpl implements ClientDAO {
             connection.setAutoCommit(false);
             Client currentClient = findClientById(client.getId());
             PreparedStatement preparedStatement;
-            if (currentClient != null) {
+
+            if (currentClient.getId() != 0) {
                 preparedStatement = connection.prepareStatement(UPDATE_CLIENT_IN_DB);
                 setPreparedStatementDataForClient(preparedStatement, client);
                 preparedStatement.setLong(7, client.getId());
             } else {
                 preparedStatement = connection.prepareStatement(INSERT_CLIENT_INTO_DB);
                 setPreparedStatementDataForClient(preparedStatement, client);
+
             }
-            preparedStatement.executeUpdate();
+            preparedStatement.setLong(1, bank.getId());
+            int changes = preparedStatement.executeUpdate();
+            if (changes != 0) {
+                try (ResultSet generatedKeys = preparedStatement.getGeneratedKeys()) {
+                    if (generatedKeys.next()) {
+                        client.setId(generatedKeys.getLong(1));
+                    } else {
+                        throw new SQLException("Creating user failed, no ID obtained.");
+                    }
+                }
+            }
             connection.commit();
             connection.setAutoCommit(true);
+
+            AccountDAO accountDAO = new AccountDAOImpl();
+            if (client.getInitialOverdraft() == 0.0f) {
+                accountDAO.addAccount(new SavingAccount(), client);
+            } else {
+                accountDAO.addAccount(new CheckingAccount(client.getInitialOverdraft()), client);
+            }
         } catch (SQLException | ClientNotFoundException e) {
             e.printStackTrace();
         }
@@ -170,7 +198,7 @@ public class ClientDAOImpl extends BaseDAOImpl implements ClientDAO {
             preparedStatement.setLong(1, client.getId());
             preparedStatement.executeUpdate();
             connection.commit();
-            connection.setAutoCommit(false);
+            connection.setAutoCommit(true);
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
@@ -179,7 +207,7 @@ public class ClientDAOImpl extends BaseDAOImpl implements ClientDAO {
     }
 
     private void setPreparedStatementDataForClient(PreparedStatement preparedStatement, Client client) throws SQLException {
-        preparedStatement.setLong(1, client.getBankId());
+
         if (client.getName() == null) {
             preparedStatement.setNull(2, Types.VARCHAR);
         } else {
@@ -190,10 +218,10 @@ public class ClientDAOImpl extends BaseDAOImpl implements ClientDAO {
         } else {
             preparedStatement.setFloat(3, client.getInitialOverdraft());
         }
-        if(client.getSex() == Gender.MALE){
-            preparedStatement.setInt(4,1);
+        if (client.getSex() == Gender.MALE) {
+            preparedStatement.setInt(4, 1);
         } else {
-            preparedStatement.setInt(4,0);
+            preparedStatement.setInt(4, 0);
         }
         if (client.getEmail() == null) {
             preparedStatement.setNull(5, Types.VARCHAR);

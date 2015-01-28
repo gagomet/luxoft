@@ -1,12 +1,11 @@
 package BankApplication.service.impl;
 
+import BankApplication.BankCommander;
 import BankApplication.exceptions.AccountNotFoundException;
 import BankApplication.model.Account;
 import BankApplication.model.impl.Client;
 import BankApplication.network.BankRemoteOffice;
 import BankApplication.network.console.Console;
-import BankApplication.service.BankServiceEnumSingletone;
-import BankApplication.BankCommander;
 
 import java.io.IOException;
 
@@ -19,6 +18,7 @@ public class GetAccountCommand extends AbstractCommand {
 
     public GetAccountCommand() {
     }
+
     public GetAccountCommand(Console console) {
         this.console = console;
     }
@@ -26,7 +26,7 @@ public class GetAccountCommand extends AbstractCommand {
     @Override
     //TODO refactor to remote console
     public void execute() {
-        currentClient = /*BankCommander.*/BankRemoteOffice.getCurrentClient();
+        currentClient = BankCommander.getCurrentClient()/*BankRemoteOffice.getCurrentClient()*/;
         if (currentClient == null) {
             System.out.println(errorsBundle.getString("noActiveClient"));
             console.sendResponse(errorsBundle.getString("noActiveClient"));
@@ -34,6 +34,8 @@ public class GetAccountCommand extends AbstractCommand {
             System.out.println("*****Accounts list*****");
             if (currentClient.getAccountsList().size() == 1) {
                 System.out.println("Client has only 1 account and it's active by default.");
+            } else if (currentClient.getAccountsList().size() == 0) {
+                System.out.println("Client has no any account creating account by default");
             } else {
                 for (Account tempAccount : currentClient.getAccountsList()) {
                     tempAccount.printReport();
@@ -51,8 +53,8 @@ public class GetAccountCommand extends AbstractCommand {
                         }
                     }
 
-                    Account account = BankServiceEnumSingletone.getAccountById(currentClient, clientId);
-                    /*BankCommander.*/BankRemoteOffice.getCurrentClient().setActiveAccount(account);
+                    Account account = getBankService().getAccountById(currentClient, clientId);
+                    BankCommander.getCurrentClient()/*BankRemoteOffice.getCurrentClient()*/.setActiveAccount(account);
                     StringBuilder builder = new StringBuilder();
                     builder.append(account.toString());
                     builder.append("Account ");

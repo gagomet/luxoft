@@ -6,10 +6,11 @@ import BankApplication.model.ClientRegistrationListener;
 import BankApplication.model.impl.Bank;
 import BankApplication.model.impl.Client;
 import BankApplication.service.BankFeedService;
-import BankApplication.service.BankServiceEnumSingletone;
+import BankApplication.service.BankService;
 import BankApplication.service.Command;
 import BankApplication.service.impl.BankFeedServiceImpl;
 import BankApplication.BankCommander;
+import BankApplication.service.impl.BankServiceImpl;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -33,7 +34,7 @@ public class BankServer {
 
     private Bank currentBank;
     private Client currentClient;
-    private BankCommander bankCommander = new BankCommander();
+    private BankService bankService = new BankServiceImpl();
 
     private static final String FEED_FILES_FOLDER = "c:\\!toBankApplication\\";
 
@@ -74,7 +75,7 @@ public class BankServer {
                     StringBuilder builder = new StringBuilder();
                     sendMessage("Enter Client's Name: ");
                     message = receiveMessage();
-                    currentClient = BankServiceEnumSingletone.getClientByName(currentBank, message);
+                    currentClient = bankService.getClientByName(currentBank, message);
                     //get active Client from BankClient
 
                     builder.append("Press 1 to deposit funds");
@@ -90,11 +91,11 @@ public class BankServer {
                     if(message.equals("1")){
                         sendMessage("Enter amount to deposit:");
                         message = receiveMessage();
-                        BankServiceEnumSingletone.depositeFunds(currentClient.getActiveAccount(), Float.parseFloat(message));
+                        bankService.depositeFunds(currentClient.getActiveAccount(), Float.parseFloat(message));
                     } else if (message.equals("2")){
                         sendMessage("Enter amount to withdraw:");
                         message = receiveMessage();
-                        BankServiceEnumSingletone.withdrawFunds(currentClient.getActiveAccount(), Float.parseFloat(message));
+                        bankService.withdrawFunds(currentClient.getActiveAccount(), Float.parseFloat(message));
                     } else if (message.equals("3")){
                         sendMessage(currentClient.toString());
                     } else if(message.equals("0")){

@@ -1,6 +1,7 @@
 package BankApplication.service.DAO.impl;
 
 import BankApplication.model.impl.Bank;
+import BankApplication.model.impl.BankInfo;
 import BankApplication.service.DAO.BankDAO;
 import BankApplication.service.DAO.BaseDAO;
 
@@ -47,6 +48,13 @@ public class BankDAOImpl extends BaseDAOImpl implements BankDAO {
             closeConnection(connection);
         }
         return resultBank;
+    }
+
+    @Override
+    public BankInfo getBankInfo() {
+            BankInfo bankInfo = new BankInfo();
+        //TODO add functionality
+        return null;
     }
 
 }

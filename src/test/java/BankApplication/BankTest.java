@@ -15,9 +15,7 @@ public class BankTest {
     private Bank testInstance;
 
     @Before
-    public void setUp() {
-        testInstance = TestsInitializer.getDummyBankInstance();
-    }
+
 
     @Test
     public void testAddingNewClient() {
