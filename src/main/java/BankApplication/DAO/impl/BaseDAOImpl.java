@@ -1,6 +1,7 @@
-package BankApplication.service.DAO.impl;
+package BankApplication.DAO.impl;
 
-import BankApplication.service.DAO.BaseDAO;
+import BankApplication.DAO.BaseDAO;
+import BankApplication.exceptions.DAOException;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -24,9 +25,10 @@ public class BaseDAOImpl implements BaseDAO {
             );
             return connection;
         } catch (ClassNotFoundException | SQLException e) {
-            e.printStackTrace();
+            System.out.println(e.getMessage());
+            System.out.println(e.getMessage());
         }
-        return null;
+        throw new DAOException("Can't reach the connection to DB");
     }
 
     @Override
@@ -34,7 +36,16 @@ public class BaseDAOImpl implements BaseDAO {
         try {
             connection.close();
         } catch (SQLException e) {
-            e.printStackTrace();
+            handleSQLException(e);
+        }
+    }
+
+    protected void handleSQLException(SQLException e){
+        if(e.getNextException() != null){
+            SQLException nextException = e.getNextException();
+            handleSQLException(nextException);
+        } else {
+            System.out.println(e.getSQLState() + e.getMessage());
         }
     }
 

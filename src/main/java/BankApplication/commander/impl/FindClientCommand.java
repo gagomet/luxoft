@@ -1,11 +1,10 @@
-package BankApplication.service.impl;
+package BankApplication.commander.impl;
 
 import BankApplication.exceptions.ClientNotFoundException;
 import BankApplication.exceptions.IllegalArgumentException;
 import BankApplication.model.impl.Client;
-import BankApplication.network.BankRemoteOffice;
 import BankApplication.network.console.Console;
-import BankApplication.BankCommander;
+import BankApplication.main.BankCommander;
 
 import java.io.IOException;
 
@@ -45,13 +44,13 @@ public class FindClientCommand extends AbstractCommand {
     }
 
     @Override
-    public void printCommandInfo() {
-        System.out.println("Find client by name (also makes found Client active)");
+    public String toString() {
+        return "Find client by name (also makes found Client active)";
     }
 
     private void findClientInBank(String clientName) {
         try {
-            Client client = getBankService().getClientByName(BankCommander.currentBank /* BankRemoteOffice.getCurrentBank()*/, clientName);
+            Client client = getClientService().getClientByName(BankCommander.currentBank /* BankRemoteOffice.getCurrentBank()*/, clientName);
             StringBuilder builder = new StringBuilder();
             builder.append("Client ");
             builder.append(client.getName());

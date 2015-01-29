@@ -1,4 +1,4 @@
-package BankApplication.service.DAO;
+package BankApplication.DAO;
 
 import BankApplication.model.Account;
 import BankApplication.model.impl.Client;
@@ -28,4 +28,6 @@ public interface AccountDAO {
     public List<Account> getClientAccounts(long id);
 
     public void addAccount(Account account, Client client);
+
+    public void transferFunds(Account sender, Account recipient, float amount);
 }

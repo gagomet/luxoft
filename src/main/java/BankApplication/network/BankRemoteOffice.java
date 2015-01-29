@@ -1,6 +1,7 @@
 package BankApplication.network;
 
 
+import BankApplication.main.StartPoint;
 import BankApplication.model.ClientRegistrationListener;
 import BankApplication.model.impl.Bank;
 import BankApplication.model.impl.BankInfo;
@@ -8,16 +9,16 @@ import BankApplication.model.impl.Client;
 import BankApplication.network.console.Console;
 import BankApplication.network.console.RemoteConsoleImpl;
 import BankApplication.service.BankFeedService;
-import BankApplication.service.Command;
-import BankApplication.service.impl.AddClientCommand;
+import BankApplication.commander.Command;
+import BankApplication.commander.impl.AddClientCommand;
 import BankApplication.service.impl.BankFeedServiceImpl;
-import BankApplication.service.impl.DepositCommand;
-import BankApplication.service.impl.FindClientCommand;
-import BankApplication.service.impl.GetAccountCommand;
-import BankApplication.service.impl.RemoveClientCommand;
-import BankApplication.service.impl.ShowHelpCommand;
-import BankApplication.service.impl.TransferCommand;
-import BankApplication.service.impl.WithdrawCommand;
+import BankApplication.commander.impl.DepositCommand;
+import BankApplication.commander.impl.FindClientCommand;
+import BankApplication.commander.impl.GetAccountCommand;
+import BankApplication.commander.impl.RemoveClientCommand;
+import BankApplication.commander.impl.ShowHelpCommand;
+import BankApplication.commander.impl.TransferCommand;
+import BankApplication.commander.impl.WithdrawCommand;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -33,7 +34,7 @@ import java.util.TreeMap;
 /**
  * Created by Kir Kolesnikov on 20.01.2015.
  */
-public class BankRemoteOffice {
+public class BankRemoteOffice implements StartPoint {
     ServerSocket providerSocket;
     Socket connection = null;
     ObjectOutputStream out;
@@ -41,7 +42,6 @@ public class BankRemoteOffice {
     String message;
     Console console = new RemoteConsoleImpl(this);
 
-    //TODO implement it
 
     private static Bank currentBank;
     private static Client currentClient;
@@ -79,6 +79,7 @@ public class BankRemoteOffice {
         commandsMap.put("6", new GetAccountCommand(console));
         commandsMap.put("7", new TransferCommand(console));
         commandsMap.put("8", new ShowHelpCommand(console));
+
     }
 
 
@@ -99,7 +100,6 @@ public class BankRemoteOffice {
                 } else if (message.equals("info")) {
                     BankInfo bankInfo = new BankInfo(currentBank);
                     out.writeObject(bankInfo);
-                    //TODO add object instantiate and send it to client
                 } else if (message.equals("0")) {
                     sendMessage("0");
                 }
@@ -171,7 +171,6 @@ public class BankRemoteOffice {
 
     private String composeUserMenu() {
 
-        //TODO fix composeMenu to toString() method of commands
         StringBuilder builder = new StringBuilder();
         Iterator iterator = commandsMap.entrySet().iterator();
         builder.append(System.getProperty("line.separator"));
@@ -186,7 +185,7 @@ public class BankRemoteOffice {
             Map.Entry<String, Command> entry = (Map.Entry<String, Command>) iterator.next();
             builder.append(entry.getKey());
             builder.append("      -->    ");
-            builder.append(entry.getValue().getClass().getName());
+            builder.append(entry.getValue().toString());
             builder.append(System.getProperty("line.separator"));
         }
         builder.append("info   -->    Get bank info");

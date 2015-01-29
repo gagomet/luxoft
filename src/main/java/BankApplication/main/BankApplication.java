@@ -1,4 +1,4 @@
-package BankApplication;
+package BankApplication.main;
 
 import BankApplication.exceptions.IllegalArgumentException;
 import BankApplication.exceptions.NotEnoughFundsException;
@@ -9,8 +9,7 @@ import BankApplication.service.impl.BankReport;
 import BankApplication.model.impl.Client;
 import BankApplication.service.BankFeedService;
 import BankApplication.service.impl.BankFeedServiceImpl;
-import BankApplication.service.BankService;
-import BankApplication.service.impl.BankServiceImpl;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,17 +20,17 @@ public class BankApplication {
     static Client client1 = null;
     static Client client2 = null;
     static Client client3 = null;
-    static BankService bankService = new BankServiceImpl();
+//    static AllBankServices allBankServices = new AllBankServicesImpl();
     private static final String FEED_FILES_FOLDER = "c:\\!toBankApplication\\";
 
     public static void main(String[] args) {
         BankReport bankReport = new BankReport();
 
-        initialize();
-        printBankReport();
+//        initialize();
+//        printBankReport();
 //        System.out.println("modifying...");
 //        modifyBank();
-        printBankReport();
+//        printBankReport();
 
         System.out.println("***");
         System.out.println(bankReport.getAccountsNumber(bank));
@@ -66,56 +65,13 @@ public class BankApplication {
             }
         }
 
-        /*try {
-            client1 = new Client(Gender.FEMALE);
-            client1.setName("princess");
-            bankService.addClient(bank, client1);
-            bankService.depositeFunds(client1.getActiveAccount(), 1000);
-            client2 = new Client(5000, Gender.MALE);
-            client2.setName("beggar");
-            client3 = new Client(3000, Gender.MALE);
-            client3.setName("neighbour");
-            bankService.addClient(bank, client2);
-            bankService.addClient(bank, client3);
-            client1.setCity("Moscow");
-            client2.setCity("Paris");
-            client3.setCity("Paris");
-        } catch (IllegalArgumentException e) {
-            System.out.println(e.getMessage());
-            e.printStackTrace();
-        } catch (ClientExceedsException e) {
-            System.out.println(e.getMessage());
-            e.printStackTrace();
-        }*/
-
-
     }
 
     public static void printBankReport() {
-//        get info about clients and their accounts
         bank.printReport();
     }
 
-    public static void modifyBank() {
-//        some modifications into data in model
-        try {
-            bankService.depositeFunds(client1.getActiveAccount(), 1000);
-            bankService.withdrawFunds(client2.getActiveAccount(), 4999);
-            bankService.depositeFunds(client2.getActiveAccount(), 1000);
-            bankService.depositeFunds(client3.getActiveAccount(), 4000);
-        } catch (IllegalArgumentException e) {
-            System.out.println(e.getMessage());
-            e.printStackTrace();
-        } catch (OverdraftLimitExceedException e) {
-            System.out.println(e.getMessage());
-            e.printStackTrace();
-        } catch (NotEnoughFundsException e) {
-            System.out.println(e.getMessage());
-            e.printStackTrace();
-        }
 
-//        bankService.removeClient(bank, client2);
-    }
 
     public static Bank getBank() {
         return bank;

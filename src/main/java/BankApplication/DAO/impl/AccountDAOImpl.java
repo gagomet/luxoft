@@ -1,12 +1,10 @@
-package BankApplication.service.DAO.impl;
+package BankApplication.DAO.impl;
 
-import BankApplication.exceptions.ClientNotFoundException;
 import BankApplication.model.Account;
 import BankApplication.model.impl.CheckingAccount;
 import BankApplication.model.impl.Client;
 import BankApplication.model.impl.SavingAccount;
-import BankApplication.service.DAO.AccountDAO;
-import BankApplication.service.DAO.ClientDAO;
+import BankApplication.DAO.AccountDAO;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -22,25 +20,29 @@ public class AccountDAOImpl extends BaseDAOImpl implements AccountDAO {
             "(CLIENT_ID, OVERDRAFT, BALANCE) VALUES (?, ?, ?)";
     public static final String UPDATE_ACCOUNT_IN_DB_STMT = "UPDATE ACCOUNTS " +
             "SET BALANCE=? WHERE ID=?";
-    public static final String GET_ACCOUNT_BY_ID_STMT = "SELECT * FROM ACCOUNTS WHERE ACCOUNTS.ID=?";
 
     public AccountDAOImpl() {
     }
 
     @Override
     public void save(Account account, Client client) {
-        Connection connection;
+        Connection connection = null;
         try {
             connection = openConnection();
             connection.setAutoCommit(false);
             PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_ACCOUNT_IN_DB_STMT);
             preparedStatement.setFloat(1, account.getBalance());
-            preparedStatement.setLong(2, account.getClientId());
+            preparedStatement.setLong(2, account.getId());
             preparedStatement.executeUpdate();
             connection.commit();
             connection.setAutoCommit(true);
         } catch (SQLException e) {
-            e.printStackTrace();
+            try {
+                connection.rollback();
+            } catch (SQLException e1) {
+                handleSQLException(e1);
+            }
+            handleSQLException(e);
         }
     }
 
@@ -56,7 +58,12 @@ public class AccountDAOImpl extends BaseDAOImpl implements AccountDAO {
             connection.commit();
             connection.setAutoCommit(true);
         } catch (SQLException e) {
-            e.printStackTrace();
+            try {
+                connection.rollback();
+            } catch (SQLException e1) {
+                handleSQLException(e1);
+            }
+            handleSQLException(e);
         } finally {
             closeConnection(connection);
         }
@@ -87,7 +94,12 @@ public class AccountDAOImpl extends BaseDAOImpl implements AccountDAO {
                 resultList.add(tempAccount);
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            try {
+                connection.rollback();
+            } catch (SQLException e1) {
+                handleSQLException(e1);
+            }
+            handleSQLException(e);
         } finally {
             closeConnection(connection);
         }
@@ -122,9 +134,40 @@ public class AccountDAOImpl extends BaseDAOImpl implements AccountDAO {
             connection.commit();
             connection.setAutoCommit(true);
         } catch (SQLException e) {
-            e.printStackTrace();
+            try {
+                connection.rollback();
+            } catch (SQLException e1) {
+                handleSQLException(e1);
+            }
+            handleSQLException(e);
         } finally {
             closeConnection(connection);
         }
     }
+
+    public void transferFunds(Account sender, Account recipient, float amount) {
+        Connection connection = null;
+        try {
+            connection = openConnection();
+            connection.setAutoCommit(false);
+            PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_ACCOUNT_IN_DB_STMT);
+            preparedStatement.setFloat(1, sender.getBalance() - amount);
+            preparedStatement.setLong(2, sender.getId());
+            preparedStatement.executeUpdate();
+            preparedStatement.setFloat(1, recipient.getBalance() + amount);
+            preparedStatement.setLong(2, recipient.getId());
+            preparedStatement.executeUpdate();
+            connection.commit();
+            connection.setAutoCommit(true);
+
+        } catch (SQLException e) {
+            try {
+                connection.rollback();
+            } catch (SQLException e1) {
+                handleSQLException(e1);
+            }
+            handleSQLException(e);
+        }
+    }
+
 }

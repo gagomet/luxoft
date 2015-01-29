@@ -1,12 +1,13 @@
 package BankApplication.exceptions;
 
+import BankApplication.model.Account;
 import BankApplication.model.impl.AbstractAccount;
 
 /**
  * Created by Kir Kolesnikov on 14.01.2015.
  */
 public class NotEnoughFundsException extends BankException {
-    private AbstractAccount account;
+    private Account account;
     private float amount;
 
     public NotEnoughFundsException() {
@@ -16,7 +17,7 @@ public class NotEnoughFundsException extends BankException {
         super(message);
     }
 
-    public NotEnoughFundsException(String message, AbstractAccount account, float amount) {
+    public NotEnoughFundsException(String message, Account account, float amount) {
         super(message);
         this.amount = amount;
         this.account = account;

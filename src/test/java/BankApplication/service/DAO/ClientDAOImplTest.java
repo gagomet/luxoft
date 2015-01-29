@@ -1,9 +1,6 @@
 package BankApplication.service.DAO;
 
-import BankApplication.model.impl.Bank;
-import BankApplication.model.impl.Client;
-import BankApplication.service.DAO.impl.BankDAOImpl;
-import BankApplication.service.DAO.impl.ClientDAOImpl;
+import BankApplication.DAO.impl.ClientDAOImpl;
 import junit.framework.TestCase;
 import org.junit.Before;
 

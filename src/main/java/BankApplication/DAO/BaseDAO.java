@@ -1,4 +1,4 @@
-package BankApplication.service.DAO;
+package BankApplication.DAO;
 
 import java.sql.Connection;
 

@@ -1,4 +1,4 @@
-package BankApplication.service;
+package BankApplication.commander;
 
 import BankApplication.exceptions.*;
 

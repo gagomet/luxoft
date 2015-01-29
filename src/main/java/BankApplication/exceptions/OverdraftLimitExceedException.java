@@ -1,6 +1,7 @@
 package BankApplication.exceptions;
 
 
+import BankApplication.model.Account;
 import BankApplication.model.impl.AbstractAccount;
 import BankApplication.model.impl.CheckingAccount;
 
@@ -17,7 +18,7 @@ public class OverdraftLimitExceedException extends NotEnoughFundsException {
         super(message);
     }
 
-    public OverdraftLimitExceedException(String message, AbstractAccount account, float amount) {
+    public OverdraftLimitExceedException(String message, Account account, float amount) {
         super(message, account, amount);
         this.checkingAccount = (CheckingAccount) account;
         String oldMessage = getMessage();

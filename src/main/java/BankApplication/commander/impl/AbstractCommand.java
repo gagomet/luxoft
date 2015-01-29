@@ -1,10 +1,15 @@
-package BankApplication.service.impl;
+package BankApplication.commander.impl;
 
 import BankApplication.exceptions.IllegalArgumentException;
 import BankApplication.network.console.ConsoleImpl;
+import BankApplication.service.AccountService;
 import BankApplication.service.BankService;
+import BankApplication.service.ClientService;
+import BankApplication.service.impl.AccountServiceImpl;
+import BankApplication.service.impl.BankServiceImpl;
+import BankApplication.service.impl.ClientServiceImpl;
 import BankApplication.type.Gender;
-import BankApplication.service.Command;
+import BankApplication.commander.Command;
 import BankApplication.network.console.Console;
 
 import java.util.ResourceBundle;
@@ -16,8 +21,13 @@ public abstract class AbstractCommand implements Command {
     protected Console console; /*= new ConsoleImpl();*/
     protected ResourceBundle errorsBundle = ResourceBundle.getBundle("errors");
     private final String EMPTY_STRING = "";
-//    private BankService bankService = new BankServiceImpl(); //uncomment this string to get noDb impl
-    private BankService bankService = new BankServiceDBImpl();
+    private BankService bankService = new BankServiceImpl();
+    private ClientService clientService = new ClientServiceImpl();
+    private AccountService accountService = new AccountServiceImpl();
+
+    public void printCommandInfo(){
+        System.out.println(toString());
+    }
 
     public BankService getBankService() {
         return bankService;
@@ -25,6 +35,22 @@ public abstract class AbstractCommand implements Command {
 
     public void setBankService(BankService bankService) {
         this.bankService = bankService;
+    }
+
+    public ClientService getClientService() {
+        return clientService;
+    }
+
+    public void setClientService(ClientService clientService) {
+        this.clientService = clientService;
+    }
+
+    public AccountService getAccountService() {
+        return accountService;
+    }
+
+    public void setAccountService(AccountService accountService) {
+        this.accountService = accountService;
     }
 
     public AbstractCommand() {
@@ -110,7 +136,7 @@ public abstract class AbstractCommand implements Command {
 
 
     protected boolean isId(String id) {
-        return id.matches("[0-9]{12,15}");
+        return id.matches("[0-9]");
     }
 
     protected boolean isName(String name) {

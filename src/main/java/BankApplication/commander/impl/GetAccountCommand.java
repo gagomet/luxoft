@@ -1,10 +1,9 @@
-package BankApplication.service.impl;
+package BankApplication.commander.impl;
 
-import BankApplication.BankCommander;
+import BankApplication.main.BankCommander;
 import BankApplication.exceptions.AccountNotFoundException;
 import BankApplication.model.Account;
 import BankApplication.model.impl.Client;
-import BankApplication.network.BankRemoteOffice;
 import BankApplication.network.console.Console;
 
 import java.io.IOException;
@@ -53,7 +52,7 @@ public class GetAccountCommand extends AbstractCommand {
                         }
                     }
 
-                    Account account = getBankService().getAccountById(currentClient, clientId);
+                    Account account = getAccountService().getAccountById(currentClient, clientId);
                     BankCommander.getCurrentClient()/*BankRemoteOffice.getCurrentClient()*/.setActiveAccount(account);
                     StringBuilder builder = new StringBuilder();
                     builder.append(account.toString());
@@ -71,7 +70,7 @@ public class GetAccountCommand extends AbstractCommand {
     }
 
     @Override
-    public void printCommandInfo() {
-        System.out.println("Set an active account of the client");
+    public String toString() {
+        return "Set an active account of the client";
     }
 }

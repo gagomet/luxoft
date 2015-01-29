@@ -1,4 +1,4 @@
-package BankApplication.service.DAO;
+package BankApplication.DAO;
 
 import BankApplication.exceptions.ClientNotFoundException;
 import BankApplication.model.impl.Bank;

@@ -1,10 +1,9 @@
-package BankApplication.service.impl;
+package BankApplication.commander.impl;
 
-import BankApplication.BankCommander;
+import BankApplication.main.BankCommander;
 import BankApplication.exceptions.ClientExceedsException;
 import BankApplication.exceptions.IllegalArgumentException;
 import BankApplication.model.impl.Client;
-import BankApplication.network.BankRemoteOffice;
 import BankApplication.network.console.Console;
 import BankApplication.type.Gender;
 
@@ -24,9 +23,10 @@ public class AddClientCommand extends AbstractCommand {
     public AddClientCommand() {
     }
 
-    public AddClientCommand(Console console){
+    public AddClientCommand(Console console) {
         this.console = console;
     }
+
     @Override
     public void execute() throws IllegalArgumentException {
         try {
@@ -106,8 +106,8 @@ public class AddClientCommand extends AbstractCommand {
     }
 
     @Override
-    public void printCommandInfo() {
-        System.out.println("Add client to Bank System");
+    public String toString() {
+        return "Add client to Bank System";
     }
 
     private void addClient() throws IllegalArgumentException, ClientExceedsException {

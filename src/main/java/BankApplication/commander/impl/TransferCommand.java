@@ -1,12 +1,11 @@
-package BankApplication.service.impl;
+package BankApplication.commander.impl;
 
-import BankApplication.BankCommander;
+import BankApplication.main.BankCommander;
 import BankApplication.exceptions.ClientNotFoundException;
 import BankApplication.exceptions.IllegalArgumentException;
 import BankApplication.exceptions.NotEnoughFundsException;
 import BankApplication.model.Account;
 import BankApplication.model.impl.Client;
-import BankApplication.network.BankRemoteOffice;
 import BankApplication.network.console.Console;
 
 
@@ -16,7 +15,7 @@ import java.io.IOException;
  * Created by Kir Kolesnikov on 15.01.2015.
  */
 public class TransferCommand extends AbstractCommand {
-    Float transferFunds;
+    Float transferAmount;
     long recepientAccountId;
     String recepientName;
 
@@ -30,7 +29,7 @@ public class TransferCommand extends AbstractCommand {
     @Override
     //TODO refactor to remote console
     public void execute() {
-        if (/*BankCommander*/BankRemoteOffice.getCurrentClient() == null) {
+        if (BankCommander.getCurrentClient()/*BankRemoteOffice.getCurrentClient()*/ == null) {
             System.out.println(errorsBundle.getString("noActiveClient"));
             console.sendResponse("Select active client first! Press enter to continue");
         } else {
@@ -45,7 +44,7 @@ public class TransferCommand extends AbstractCommand {
                         console.sendResponse(errorsBundle.getString("wrongClientsName"));
                     }
                 }
-                Client recepient = getBankService().getClientByName(BankCommander.currentBank/*BankRemoteOffice.getCurrentBank()*/
+                Client recepient = getClientService().getClientByName(BankCommander.currentBank/*BankRemoteOffice.getCurrentBank()*/
                         , recepientName);
                 System.out.println("Recepient: " + recepient.getName() + " accounts ID ");
                 for (Account account : recepient.getAccountsList()) {
@@ -64,7 +63,7 @@ public class TransferCommand extends AbstractCommand {
 
                 while (true) {
                     try {
-                        transferFunds = validateFunds(console.consoleResponse("How much do you want to transfer :"));
+                        transferAmount = validateFunds(console.consoleResponse("How much do you want to transfer :"));
                         break;
 
                     } catch (BankApplication.exceptions.IllegalArgumentException e) {
@@ -73,7 +72,7 @@ public class TransferCommand extends AbstractCommand {
                     }
                 }
 
-                transferFunds(senderAccount, recepient.getActiveAccount(), transferFunds);
+                transferFunds(senderAccount, recepient.getActiveAccount(), transferAmount);
                 recepient.printReport();
 
             } catch (IOException | ClientNotFoundException | IllegalArgumentException | NotEnoughFundsException e) {
@@ -85,13 +84,12 @@ public class TransferCommand extends AbstractCommand {
     }
 
     @Override
-    public void printCommandInfo() {
-        System.out.println("Transfer funds from active account to another account (9999999 Money in max)");
+    public String toString() {
+        return "Transfer funds from active account to another account (9999999 Money in max)";
     }
 
     public void transferFunds(Account sender, Account recepient, Float amount) throws NotEnoughFundsException, IllegalArgumentException {
-        getBankService().withdrawFunds(sender, amount);
-        getBankService().depositeFunds(recepient, amount);
+        getAccountService().transferFunds(sender, recepient, amount);
         StringBuilder builder = new StringBuilder();
         builder.append("Transfer funds successfully completed");
         builder.append(System.getProperty("line.separator"));

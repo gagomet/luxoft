@@ -1,4 +1,4 @@
-package BankApplication.service.DAO.impl;
+package BankApplication.DAO.impl;
 
 import BankApplication.exceptions.ClientNotFoundException;
 import BankApplication.model.Account;
@@ -6,8 +6,8 @@ import BankApplication.model.impl.Bank;
 import BankApplication.model.impl.CheckingAccount;
 import BankApplication.model.impl.Client;
 import BankApplication.model.impl.SavingAccount;
-import BankApplication.service.DAO.AccountDAO;
-import BankApplication.service.DAO.ClientDAO;
+import BankApplication.DAO.AccountDAO;
+import BankApplication.DAO.ClientDAO;
 import BankApplication.type.Gender;
 
 import java.sql.Connection;
@@ -53,13 +53,13 @@ public class ClientDAOImpl extends BaseDAOImpl implements ClientDAO {
             HashSet<Account> accountSet = new HashSet<Account>(accountList);
             resultClient.setAccountsList(accountSet);
         } catch (SQLException e) {
-            e.printStackTrace();
+            handleSQLException(e);
         } finally {
             assert resultSet != null;
             try {
                 resultSet.close();
             } catch (SQLException e) {
-                e.printStackTrace();
+                handleSQLException(e);
             }
             closeConnection(connection);
         }
@@ -86,13 +86,13 @@ public class ClientDAOImpl extends BaseDAOImpl implements ClientDAO {
             resultClient.setAccountsList(accountSet);
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            handleSQLException(e);
         } finally {
             assert resultSet != null;
             try {
                 resultSet.close();
             } catch (SQLException e) {
-                e.printStackTrace();
+                handleSQLException(e);
             }
             closeConnection(connection);
         }
@@ -130,13 +130,13 @@ public class ClientDAOImpl extends BaseDAOImpl implements ClientDAO {
                 resultList.add(tempClient);
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            handleSQLException(e);
         } finally {
             assert resultSet != null;
             try {
                 resultSet.close();
             } catch (SQLException e) {
-                e.printStackTrace();
+                handleSQLException(e);
             }
             closeConnection(connection);
         }
@@ -182,7 +182,12 @@ public class ClientDAOImpl extends BaseDAOImpl implements ClientDAO {
                 accountDAO.addAccount(new CheckingAccount(client.getInitialOverdraft()), client);
             }
         } catch (SQLException | ClientNotFoundException e) {
-            e.printStackTrace();
+            try {
+                connection.rollback();
+            } catch (SQLException e1) {
+                handleSQLException(e1);
+            }
+            e.getMessage();
         }
     }
 
@@ -200,7 +205,12 @@ public class ClientDAOImpl extends BaseDAOImpl implements ClientDAO {
             connection.commit();
             connection.setAutoCommit(true);
         } catch (SQLException e) {
-            e.printStackTrace();
+            try {
+                connection.rollback();
+            } catch (SQLException e1) {
+                handleSQLException(e1);
+            }
+            handleSQLException(e);
         } finally {
             closeConnection(connection);
         }

@@ -31,7 +31,6 @@ public class Bank {
     }
 
     public Bank(List<ClientRegistrationListener> listenerList) {
-//        id = System.currentTimeMillis();
         this.listeners = listenerList;
         listeners.add(new ClientRegistrationListener() {
             @Override
@@ -73,6 +72,7 @@ public class Bank {
         return listeners;
     }
 
+    //TODO remove to service
     public void addClient(Client client) {
         clientsList.add(client);
     }

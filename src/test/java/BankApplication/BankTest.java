@@ -15,12 +15,15 @@ public class BankTest {
     private Bank testInstance;
 
     @Before
-
+    public void setUp(){
+        testInstance = new Bank();
+    }
 
     @Test
     public void testAddingNewClient() {
         int clientsNumber = testInstance.getClientsList().size();
         Client newbie = new Client();
+        newbie.setInitialOverdraft(0f);
         newbie.setName("Newbie");
         newbie.setSex(Gender.MALE);
         testInstance.addClient(newbie);
@@ -32,6 +35,7 @@ public class BankTest {
         Client toDeath = new Client();
         toDeath.setName("Newbie");
         toDeath.setSex(Gender.MALE);
+        toDeath.setInitialOverdraft(0f);
         testInstance.addClient(toDeath);
         int numberOfClients = testInstance.getClientsList().size();
         testInstance.removeClient(toDeath);

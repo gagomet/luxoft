@@ -1,5 +1,6 @@
-package BankApplication.service.impl;
+package BankApplication.commander.impl;
 
+import BankApplication.commander.impl.AbstractCommand;
 import BankApplication.network.console.Console;
 
 import java.io.BufferedReader;
@@ -46,7 +47,7 @@ public class ShowHelpCommand extends AbstractCommand {
     }
 
     @Override
-    public void printCommandInfo() {
-        System.out.println("Show help about system");
+    public String toString() {
+        return "Show help about system";
     }
 }

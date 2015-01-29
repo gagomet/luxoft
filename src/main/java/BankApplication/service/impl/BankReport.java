@@ -76,4 +76,25 @@ public class BankReport {
         });
         return result;
     }
+
+    public static Map<String, List<Client>> getClientsFromListToMapByCity(List<Client> clientList) {
+        Map<String, List<Client>> result = new TreeMap<>();
+        result.put("Unknown", new ArrayList<Client>());
+        for (Client client : clientList) {
+            if (client.getCity() != null) {
+                if (result.keySet().contains(client.getCity())) {
+                    result.get(client.getCity()).add(client);
+                } else {
+                    List<Client> tempClients = new ArrayList<>();
+                    tempClients.add(client);
+                    result.put(client.getCity(), tempClients);
+                }
+            } else {
+                List<Client> unknowns = result.get("Unknown");
+                unknowns.add(client);
+                result.put("Unknown", unknowns);
+            }
+        }
+        return result;
+    }
 }

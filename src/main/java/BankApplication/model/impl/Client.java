@@ -30,11 +30,10 @@ public class Client implements Report, Serializable {
     }
 
     public Client(Gender sex) throws BankApplication.exceptions.IllegalArgumentException {
-//            id = System.currentTimeMillis();
             this.sex = sex;
     }
 
-    public AbstractAccount parseFeed(Map<String, String> feedMap) throws IllegalArgumentException {
+    public Account parseFeed(Map<String, String> feedMap) throws IllegalArgumentException {
         AbstractAccount resultAccount = null;
         if (feedMap.get("accounttype").equalsIgnoreCase("c")) {
             resultAccount = new CheckingAccount();

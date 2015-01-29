@@ -1,17 +1,17 @@
-package BankApplication;
+package BankApplication.main;
 
+import BankApplication.commander.impl.*;
 import BankApplication.exceptions.ClientNotFoundException;
 import BankApplication.exceptions.IllegalArgumentException;
 import BankApplication.model.ClientRegistrationListener;
 import BankApplication.model.impl.Bank;
-import BankApplication.network.BankRemoteOffice;
 import BankApplication.service.BankFeedService;
-import BankApplication.service.BankService;
-import BankApplication.service.DAO.BankDAO;
-import BankApplication.service.DAO.impl.BankDAOImpl;
+import BankApplication.DAO.BankDAO;
+import BankApplication.DAO.impl.BankDAOImpl;
+import BankApplication.service.ClientService;
 import BankApplication.service.impl.*;
 import BankApplication.model.impl.Client;
-import BankApplication.service.Command;
+import BankApplication.commander.Command;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -21,12 +21,13 @@ import java.util.*;
 /**
  * Created by Kir Kolesnikov on 15.01.2015.
  */
-public class BankCommander {
+public class BankCommander implements StartPoint {
     public static Bank currentBank = null;
     public static Client currentClient = null;
     public static Map<String, Command> commandsMap = new TreeMap<>();
     private static final String FEED_FILES_FOLDER = "c:\\!toBankApplication\\";
     static String bankName = "MYBANK";
+
 
     //abstractCommand
 
@@ -39,6 +40,7 @@ public class BankCommander {
             new TransferCommand(), //5
             new AddClientCommand(), //6
             new RemoveClientCommand(),
+            new ReportCommand(),
             new ShowHelpCommand(), //7
             new Command() {
                 public void execute() {
@@ -89,7 +91,7 @@ public class BankCommander {
 
     public static void setCurrentClient(Client currentClient) {
         BankCommander.currentClient = currentClient;
-//        BankRemoteOffice.setCurrentClient(currentClient);
+//        BankRemoteOffice.setCurrentClient(currentClient);  //uncomment this to remote working
     }
 
     public void registerCommand(String name, Command command) {
@@ -116,13 +118,13 @@ NullPointerException - if the specified key is null and this map uses natural or
 
     private static void serializationTest() {
         try {
-            BankService service = new BankServiceImpl();
-            Client testClient = service.getClientByName(currentBank, "Beggar");
+            ClientService clientService = new ClientServiceImpl();
+            Client testClient = clientService.getClientByName(currentBank, "Beggar");
             testClient.printReport();
-            service.saveClientToFeedFile(testClient);
+            clientService.saveClientToFeedFile(testClient);
             System.out.println("Saving done!");
             System.out.println("Now reading from file");
-            Client readedClient = service.loadClientFromFeedFile();
+            Client readedClient = clientService.loadClientFromFeedFile();
             System.out.println("Reading done");
             readedClient.printReport();
         } catch (ClientNotFoundException e) {
@@ -133,18 +135,6 @@ NullPointerException - if the specified key is null and this map uses natural or
     public static void main(String args[]) {
         BankCommander bankCommander = new BankCommander();
 //        bankCommander.initialize();  uncomment this string to return to noDB impl
-
-        if (args[0].equals("report")) {
-            BankReport bankReport = new BankReport();
-            System.out.println("***");
-            System.out.println(bankReport.getAccountsNumber(currentBank));
-            System.out.println("***");
-            System.out.println(bankReport.getBankCreditSum(currentBank));
-            System.out.println("***");
-            System.out.println(bankReport.getNumberOfClients(currentBank));
-            System.out.println("***");
-            System.out.println(bankReport.getClientsByCity(currentBank));
-        }
 
 
         //serialization/deserialization
@@ -163,13 +153,22 @@ NullPointerException - if the specified key is null and this map uses natural or
             }
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
             try {
+                System.out.println("Active client now is: ");
+                if (getCurrentClient() == null) {
+                    System.out.println("N/A");
+                } else {
+                    System.out.println(getCurrentClient().getName());
+                }
                 System.out.println("Enter number of your choice: ");
 
                 String commandString = bufferedReader.readLine();
-                commandsMap.get(commandString).execute();
+                if (commandsMap.containsKey(commandString)) {
+                    commandsMap.get(commandString).execute();
+                } else {
+                    System.out.println("It's not a command! Try again!");
+                }
             } catch (IOException | IllegalArgumentException e) {
-                e.printStackTrace();
-                System.out.println("Not a command");
+                System.out.println(e.getMessage());
             }
         }
 

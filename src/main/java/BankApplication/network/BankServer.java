@@ -5,12 +5,8 @@ import BankApplication.exceptions.IllegalArgumentException;
 import BankApplication.model.ClientRegistrationListener;
 import BankApplication.model.impl.Bank;
 import BankApplication.model.impl.Client;
-import BankApplication.service.BankFeedService;
-import BankApplication.service.BankService;
-import BankApplication.service.Command;
-import BankApplication.service.impl.BankFeedServiceImpl;
-import BankApplication.BankCommander;
-import BankApplication.service.impl.BankServiceImpl;
+import BankApplication.service.*;
+import BankApplication.service.impl.*;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -20,7 +16,6 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * Created by Padonag on 20.01.2015.
@@ -35,6 +30,8 @@ public class BankServer {
     private Bank currentBank;
     private Client currentClient;
     private BankService bankService = new BankServiceImpl();
+    private ClientService clientService = new ClientServiceImpl();
+    private AccountService accountService = new AccountServiceImpl();
 
     private static final String FEED_FILES_FOLDER = "c:\\!toBankApplication\\";
 
@@ -75,7 +72,7 @@ public class BankServer {
                     StringBuilder builder = new StringBuilder();
                     sendMessage("Enter Client's Name: ");
                     message = receiveMessage();
-                    currentClient = bankService.getClientByName(currentBank, message);
+                    currentClient = clientService.getClientByName(currentBank, message);
                     //get active Client from BankClient
 
                     builder.append("Press 1 to deposit funds");
@@ -91,11 +88,11 @@ public class BankServer {
                     if(message.equals("1")){
                         sendMessage("Enter amount to deposit:");
                         message = receiveMessage();
-                        bankService.depositeFunds(currentClient.getActiveAccount(), Float.parseFloat(message));
+                        accountService.depositeFunds(currentClient.getActiveAccount(), Float.parseFloat(message));
                     } else if (message.equals("2")){
                         sendMessage("Enter amount to withdraw:");
                         message = receiveMessage();
-                        bankService.withdrawFunds(currentClient.getActiveAccount(), Float.parseFloat(message));
+                        accountService.withdrawFunds(currentClient.getActiveAccount(), Float.parseFloat(message));
                     } else if (message.equals("3")){
                         sendMessage(currentClient.toString());
                     } else if(message.equals("0")){

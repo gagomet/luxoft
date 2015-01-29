@@ -1,32 +1,28 @@
-package BankApplication.service.impl;
+package BankApplication.commander.impl;
 
-import BankApplication.BankCommander;
+import BankApplication.main.BankCommander;
+import BankApplication.exceptions.*;
 import BankApplication.exceptions.IllegalArgumentException;
 import BankApplication.model.impl.Client;
-import BankApplication.network.BankRemoteOffice;
 import BankApplication.network.console.Console;
-
 
 import java.io.IOException;
 
 /**
  * Created by Kir Kolesnikov on 15.01.2015.
  */
-public class DepositCommand extends AbstractCommand {
-
-    public DepositCommand() {
+public class WithdrawCommand extends AbstractCommand {
+    public WithdrawCommand() {
     }
 
-    public DepositCommand(Console console){
+    public WithdrawCommand(Console console){
         this.console = console;
     }
-
     @Override
-    //TODO refactor to remote console
-    public void execute() {
-        String clientName;
+    public void execute() throws IllegalArgumentException {
+
         Client currentClient = BankCommander.getCurrentClient()/*BankRemoteOffice.getCurrentClient()*/;
-        float amountToDeposit;
+        float amountToWithdraw;
         if (currentClient == null) {
             console.sendResponse(errorsBundle.getString("noActiveClient"));
             System.out.println(errorsBundle.getString("noActiveClient"));
@@ -34,15 +30,16 @@ public class DepositCommand extends AbstractCommand {
             try {
                 while (true) {
                     try {
-                        amountToDeposit = validateFunds(console.consoleResponse("How much do you want to deposit :"));
+                        amountToWithdraw = validateFunds(console.consoleResponse("How much do you want to withdraw :"));
                         break;
 
-                    } catch (IllegalArgumentException e) {
+                    } catch (BankApplication.exceptions.IllegalArgumentException e) {
                         System.out.println(errorsBundle.getString("wrongNumber"));
+                        console.sendResponse(errorsBundle.getString("wrongNumber"));
                     }
                 }
 
-                depositFunds(currentClient, amountToDeposit);
+                withdrawFunds(currentClient, amountToWithdraw);
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -52,24 +49,24 @@ public class DepositCommand extends AbstractCommand {
     }
 
     @Override
-    public void printCommandInfo() {
-        System.out.println("Deposit funds to account (9999999 Money in max)");
+    public String toString() {
+        return "Withdraw funds from account (9999999 Money in max)";
     }
 
-    private void depositFunds(Client client, float amountToDeposit) {
+    private void withdrawFunds(Client client, float amountToWithdraw) throws BankApplication.exceptions.IllegalArgumentException {
         try {
             StringBuilder builder = new StringBuilder();
             builder.append(errorsBundle.getString("separator"));
             builder.append(System.getProperty("line.separator"));
             builder.append(client.getActiveAccount().toString());
             builder.append(System.getProperty("line.separator"));
-            getBankService().depositeFunds(client.getActiveAccount(), amountToDeposit);
-            builder.append("Account was successfully refilled");
+            getAccountService().withdrawFunds(client.getActiveAccount(), amountToWithdraw);
+            builder.append("Account was successfully reduced");
             builder.append(System.getProperty("line.separator"));
             builder.append(client.getActiveAccount().toString());
             console.sendResponse(builder.toString());
-        } catch (IllegalArgumentException e) {
-            e.printStackTrace();
+        } catch (NotEnoughFundsException e) {
+            System.out.println(e.getMessage());
         }
     }
 }

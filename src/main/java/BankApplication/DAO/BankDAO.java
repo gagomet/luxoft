@@ -1,4 +1,4 @@
-package BankApplication.service.DAO;
+package BankApplication.DAO;
 
 import BankApplication.model.impl.Bank;
 import BankApplication.model.impl.BankInfo;
@@ -18,7 +18,9 @@ public interface BankDAO {
     /**
      * Should fill the BankInfo
      */
-    BankInfo getBankInfo();
+    BankInfo getBankInfo(Bank bank);
+
+
 
 }
 
