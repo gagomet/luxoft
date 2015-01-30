@@ -10,7 +10,6 @@ import BankApplication.service.impl.BankReport;
 
 
 import java.sql.*;
-import java.util.HashSet;
 import java.util.List;
 
 /**
@@ -53,12 +52,10 @@ public class BankDAOImpl extends BaseDAOImpl implements BankDAO {
         return resultBank;
     }
 
-
-    //TODO add command to use this method
     @Override
     public BankInfo getBankInfo(Bank bank) {
        BankInfo result = new BankInfo();
-        Connection connection = null;
+        Connection connection;
         int count = 0;
         float summ = 0f;
         try{
@@ -68,7 +65,7 @@ public class BankDAOImpl extends BaseDAOImpl implements BankDAO {
             while(resultSet.next()){
                 count = resultSet.getInt(1);
             }
-            result.setTotalAccounts(count);
+            result.setTotalClients(count);
             resultSet = statement.executeQuery(GET_TOTAL_FUNDS_STMT);
             while (resultSet.next()){
                 summ = resultSet.getFloat(1);

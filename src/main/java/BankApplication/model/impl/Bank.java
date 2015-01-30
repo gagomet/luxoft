@@ -1,5 +1,6 @@
 package BankApplication.model.impl;
 
+import BankApplication.annotation.NoDB;
 import BankApplication.exceptions.FeedException;
 import BankApplication.exceptions.IllegalArgumentException;
 import BankApplication.model.ClientRegistrationListener;
@@ -21,9 +22,13 @@ import java.util.TreeMap;
 public class Bank {
     private Long id;
     private String name;
+    @NoDB
     private Set<Client> clientsList = new HashSet<Client>();
+    @NoDB
     private List<ClientRegistrationListener> listeners = new ArrayList<ClientRegistrationListener>();
+    @NoDB
     private Map<String, Client> clientsNamesTable = new TreeMap<>();
+    @NoDB
     private static ResourceBundle errorsBundle = ResourceBundle.getBundle("errors");
 
     public Bank() {

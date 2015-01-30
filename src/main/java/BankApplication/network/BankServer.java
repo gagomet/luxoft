@@ -29,9 +29,6 @@ public class BankServer {
 
     private Bank currentBank;
     private Client currentClient;
-    private BankService bankService = new BankServiceImpl();
-    private ClientService clientService = new ClientServiceImpl();
-    private AccountService accountService = new AccountServiceImpl();
 
     private static final String FEED_FILES_FOLDER = "c:\\!toBankApplication\\";
 
@@ -61,7 +58,7 @@ public class BankServer {
     void run() {
      try {
             providerSocket = new ServerSocket(20004, 10);
-            System.out.println("Waiting for connection");
+            System.out.println("Waiting for clientSocket");
             connection = providerSocket.accept();
             System.out.println("Connection received from " + connection.getInetAddress().getHostName());
             out = new ObjectOutputStream(connection.getOutputStream());
@@ -72,7 +69,7 @@ public class BankServer {
                     StringBuilder builder = new StringBuilder();
                     sendMessage("Enter Client's Name: ");
                     message = receiveMessage();
-                    currentClient = clientService.getClientByName(currentBank, message);
+                    currentClient = ClientServiceImpl.getInstance().getClientByName(currentBank, message);
                     //get active Client from BankClient
 
                     builder.append("Press 1 to deposit funds");
@@ -88,11 +85,11 @@ public class BankServer {
                     if(message.equals("1")){
                         sendMessage("Enter amount to deposit:");
                         message = receiveMessage();
-                        accountService.depositeFunds(currentClient.getActiveAccount(), Float.parseFloat(message));
+                        AccountServiceImpl.getInstance().depositeFunds(currentClient.getActiveAccount(), Float.parseFloat(message));
                     } else if (message.equals("2")){
                         sendMessage("Enter amount to withdraw:");
                         message = receiveMessage();
-                        accountService.withdrawFunds(currentClient.getActiveAccount(), Float.parseFloat(message));
+                        AccountServiceImpl.getInstance().withdrawFunds(currentClient.getActiveAccount(), Float.parseFloat(message));
                     } else if (message.equals("3")){
                         sendMessage(currentClient.toString());
                     } else if(message.equals("0")){

@@ -1,10 +1,11 @@
 package BankApplication.commander.impl;
 
-import BankApplication.main.BankCommander;
 import BankApplication.exceptions.AccountNotFoundException;
 import BankApplication.model.Account;
 import BankApplication.model.impl.Client;
 import BankApplication.network.console.Console;
+import BankApplication.service.impl.AccountServiceImpl;
+import BankApplication.service.impl.ClientServiceImpl;
 
 import java.io.IOException;
 
@@ -23,9 +24,8 @@ public class GetAccountCommand extends AbstractCommand {
     }
 
     @Override
-    //TODO refactor to remote console
     public void execute() {
-        currentClient = BankCommander.getCurrentClient()/*BankRemoteOffice.getCurrentClient()*/;
+        currentClient = ClientServiceImpl.getInstance().getCurrentClient();
         if (currentClient == null) {
             System.out.println(errorsBundle.getString("noActiveClient"));
             console.sendResponse(errorsBundle.getString("noActiveClient"));
@@ -52,8 +52,8 @@ public class GetAccountCommand extends AbstractCommand {
                         }
                     }
 
-                    Account account = getAccountService().getAccountById(currentClient, clientId);
-                    BankCommander.getCurrentClient()/*BankRemoteOffice.getCurrentClient()*/.setActiveAccount(account);
+                    Account account = AccountServiceImpl.getInstance().getAccountById(currentClient, clientId);
+                    ClientServiceImpl.getInstance().getCurrentClient().setActiveAccount(account);
                     StringBuilder builder = new StringBuilder();
                     builder.append(account.toString());
                     builder.append("Account ");

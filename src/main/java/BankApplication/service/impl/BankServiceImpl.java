@@ -14,8 +14,35 @@ import BankApplication.service.BankService;
  * Created by Kir Kolesnikov on 29.01.2015.
  */
 public class BankServiceImpl implements BankService {
+    public static BankServiceImpl instance;
+    public static final String BANK_BY_DEFAULT = "MYBANK";
     private BankDAO bankDAO = new BankDAOImpl();
     private ClientDAO clientDAO = new ClientDAOImpl();
+    private Bank currentBank;
+
+    private BankServiceImpl(){
+        initBank();
+    }
+
+    public static BankServiceImpl getInstance() {
+        if (instance == null) {
+            instance = new BankServiceImpl();
+        }
+        return instance;
+    }
+
+    private void initBank(){
+        setCurrentBank(bankDAO.getBankByName(BANK_BY_DEFAULT));
+    }
+
+    public Bank getCurrentBank(){
+        return currentBank;
+    }
+
+
+    public void setCurrentBank(Bank currentBank) {
+        this.currentBank = currentBank;
+    }
 
     @Override
     public void addClient(Bank bank, Client client) throws ClientExceedsException {

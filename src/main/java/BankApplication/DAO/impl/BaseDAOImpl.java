@@ -17,7 +17,7 @@ public class BaseDAOImpl implements BaseDAO {
     @Override
     public Connection openConnection() {
         try {
-            Connection connection = null;
+            Connection connection;
             Class.forName(dbBundle.getString("driverClass")); // this is driver for H2
             connection = DriverManager.getConnection(dbBundle.getString("jdbcURL"),
                     "sa", // login

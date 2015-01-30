@@ -1,10 +1,10 @@
 package BankApplication.commander.impl;
 
-import BankApplication.main.BankCommander;
 import BankApplication.exceptions.ClientExceedsException;
 import BankApplication.exceptions.IllegalArgumentException;
 import BankApplication.model.impl.Client;
 import BankApplication.network.console.Console;
+import BankApplication.service.impl.BankServiceImpl;
 import BankApplication.type.Gender;
 
 import java.io.IOException;
@@ -131,7 +131,7 @@ public class AddClientCommand extends AbstractCommand {
             newClient.setCity(newClientsCity);
         }
         System.out.println(errorsBundle.getString("separator"));
-        getBankService().addClient(BankCommander.currentBank/*BankRemoteOffice.getCurrentBank()*/, newClient);
+        BankServiceImpl.getInstance().addClient(BankServiceImpl.getInstance().getCurrentBank(), newClient);
         System.out.println("New Client successfully added!");
         newClient.printReport();
         StringBuilder builder = new StringBuilder();

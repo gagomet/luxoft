@@ -18,9 +18,22 @@ import java.util.ResourceBundle;
  * Created by Kir Kolesnikov on 29.01.2015.
  */
 public class AccountServiceImpl implements AccountService {
+    public static AccountServiceImpl instance;
     private ClientDAO clientDAO = new ClientDAOImpl();
     private AccountDAO accountDAO = new AccountDAOImpl();
     protected static ResourceBundle errorsBundle = ResourceBundle.getBundle("errors");
+
+    private AccountServiceImpl() {
+
+    }
+
+    public static AccountServiceImpl getInstance() {
+        if (instance == null) {
+            return new AccountServiceImpl();
+        }
+        return instance;
+    }
+
     @Override
     public void depositeFunds(Account account, float amount) throws BankApplication.exceptions.IllegalArgumentException {
         try {
@@ -57,13 +70,13 @@ public class AccountServiceImpl implements AccountService {
         return result;
     }
 
-    public void transferFunds(Account sender, Account recipient, float amount){
+    public void transferFunds(Account sender, Account recipient, float amount) {
         accountDAO.transferFunds(sender, recipient, amount);
     }
 
     private void withdrawFromAccount(Account account, float amount) throws IllegalArgumentException, NotEnoughFundsException {
         float tempBalance = account.getBalance();
-        if(account instanceof CheckingAccount){
+        if (account instanceof CheckingAccount) {
             if (amount < 0) {
                 throw new BankApplication.exceptions.IllegalArgumentException(errorsBundle.getString("notNegative"));
             }
@@ -73,7 +86,7 @@ public class AccountServiceImpl implements AccountService {
                 throw new OverdraftLimitExceedException(errorsBundle.getString("notEnoughFunds"), account, amount);
             }
         } else {
-            if(amount<0){
+            if (amount < 0) {
                 throw new IllegalArgumentException(errorsBundle.getString("notNegative"));
             }
             if (account.getBalance() >= amount) {

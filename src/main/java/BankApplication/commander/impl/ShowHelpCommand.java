@@ -30,7 +30,6 @@ public class ShowHelpCommand extends AbstractCommand {
     }
 
     @Override
-    //TODO refactor to remote console
     public void execute() throws BankApplication.exceptions.IllegalArgumentException {
         ClassLoader classloader = Thread.currentThread().getContextClassLoader();
         InputStream inputStream = classloader.getResourceAsStream("help.txt");

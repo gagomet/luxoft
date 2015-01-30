@@ -1,9 +1,8 @@
 package BankApplication.commander.impl;
 
-import BankApplication.exceptions.*;
-import BankApplication.main.BankCommander;
 import BankApplication.model.impl.BankInfo;
 import BankApplication.network.console.Console;
+import BankApplication.service.impl.BankServiceImpl;
 
 /**
  * Created by Kir Kolesnikov on 29.01.2015.
@@ -19,7 +18,7 @@ public class ReportCommand extends AbstractCommand {
 
     @Override
     public void execute() throws BankApplication.exceptions.IllegalArgumentException {
-        BankInfo bankInfo = getBankService().getBankInfo(BankCommander.currentBank);
+        BankInfo bankInfo = BankServiceImpl.getInstance().getBankInfo(BankServiceImpl.getInstance().getCurrentBank());
         console.sendResponse(bankInfo.toString());
     }
 

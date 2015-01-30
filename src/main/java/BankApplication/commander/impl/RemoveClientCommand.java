@@ -1,11 +1,11 @@
 package BankApplication.commander.impl;
 
-import BankApplication.main.BankCommander;
 import BankApplication.exceptions.*;
 import BankApplication.exceptions.IllegalArgumentException;
 import BankApplication.model.impl.Client;
-import BankApplication.network.BankRemoteOffice;
 import BankApplication.network.console.Console;
+import BankApplication.service.impl.BankServiceImpl;
+import BankApplication.service.impl.ClientServiceImpl;
 
 import java.io.IOException;
 
@@ -49,8 +49,8 @@ public class RemoveClientCommand extends AbstractCommand {
 
     private void removeClientFromBank(String clientName){
         try {
-            Client client = getClientService().getClientByName(/*BankRemoteOffice.getCurrentBank()*/BankCommander.currentBank, clientName);
-            getBankService().removeClient(BankRemoteOffice.getCurrentBank(), client);
+            Client client = ClientServiceImpl.getInstance().getClientByName(BankServiceImpl.getInstance().getCurrentBank(), clientName);
+            BankServiceImpl.getInstance().removeClient(BankServiceImpl.getInstance().getCurrentBank(), client);
             console.sendResponse(client.toString() + " was removed.");
         } catch (ClientNotFoundException e) {
             e.printStackTrace();

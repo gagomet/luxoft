@@ -1,9 +1,10 @@
 package BankApplication.commander.impl;
 
-import BankApplication.main.BankCommander;
 import BankApplication.exceptions.IllegalArgumentException;
 import BankApplication.model.impl.Client;
 import BankApplication.network.console.Console;
+import BankApplication.service.impl.AccountServiceImpl;
+import BankApplication.service.impl.ClientServiceImpl;
 
 
 import java.io.IOException;
@@ -21,10 +22,8 @@ public class DepositCommand extends AbstractCommand {
     }
 
     @Override
-    //TODO refactor to remote console
     public void execute() {
-        String clientName;
-        Client currentClient = BankCommander.getCurrentClient()/*BankRemoteOffice.getCurrentClient()*/;
+        Client currentClient = ClientServiceImpl.getInstance().getCurrentClient();
         float amountToDeposit;
         if (currentClient == null) {
             console.sendResponse(errorsBundle.getString("noActiveClient"));
@@ -62,7 +61,7 @@ public class DepositCommand extends AbstractCommand {
             builder.append(System.getProperty("line.separator"));
             builder.append(client.getActiveAccount().toString());
             builder.append(System.getProperty("line.separator"));
-            getAccountService().depositeFunds(client.getActiveAccount(), amountToDeposit);
+            AccountServiceImpl.getInstance().depositeFunds(client.getActiveAccount(), amountToDeposit);
             builder.append("Account was successfully refilled");
             builder.append(System.getProperty("line.separator"));
             builder.append(client.getActiveAccount().toString());

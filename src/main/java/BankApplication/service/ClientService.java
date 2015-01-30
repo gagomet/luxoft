@@ -19,4 +19,8 @@ public interface ClientService {
     public void saveClientToFeedFile(Client client);
 
     public Client loadClientFromFeedFile();
+
+    public Client getCurrentClient();
+
+    public void setCurrentClient(Client client);
 }

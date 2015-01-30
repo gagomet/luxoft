@@ -1,17 +1,13 @@
 package BankApplication.main;
 
 import BankApplication.commander.impl.*;
-import BankApplication.exceptions.ClientNotFoundException;
 import BankApplication.exceptions.IllegalArgumentException;
-import BankApplication.model.ClientRegistrationListener;
 import BankApplication.model.impl.Bank;
-import BankApplication.service.BankFeedService;
 import BankApplication.DAO.BankDAO;
 import BankApplication.DAO.impl.BankDAOImpl;
-import BankApplication.service.ClientService;
-import BankApplication.service.impl.*;
 import BankApplication.model.impl.Client;
 import BankApplication.commander.Command;
+import BankApplication.service.impl.ClientServiceImpl;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -21,15 +17,12 @@ import java.util.*;
 /**
  * Created by Kir Kolesnikov on 15.01.2015.
  */
-public class BankCommander implements StartPoint {
-    public static Bank currentBank = null;
-    public static Client currentClient = null;
+public class BankCommander {
+//    public static Client currentClient = null;
     public static Map<String, Command> commandsMap = new TreeMap<>();
     private static final String FEED_FILES_FOLDER = "c:\\!toBankApplication\\";
     static String bankName = "MYBANK";
 
-
-    //abstractCommand
 
     static
     Command[] commands = {
@@ -55,44 +48,18 @@ public class BankCommander implements StartPoint {
 
 
     public BankCommander() {
-        BankDAO bankDAO = new BankDAOImpl();
-        currentBank = bankDAO.getBankByName(bankName);
         composeMapOfCommands();
     }
 
-    public void initialize() {
-        Bank.PrintClientListener printListener = new Bank.PrintClientListener();
-        Bank.EmailClientListener emailListener = new Bank.EmailClientListener();
-        List<ClientRegistrationListener> listenersList = new ArrayList<ClientRegistrationListener>();
-        listenersList.add(printListener);
-        listenersList.add(emailListener);
-        currentBank = new Bank(listenersList);
 
-        //initialize from feed files
-        BankFeedService feedService = new BankFeedServiceImpl();
-        List<String[]> feeds = feedService.loadFeeds(FEED_FILES_FOLDER);
-        for (String[] fileFeed : feeds) {
-            for (String tempFeedLine : fileFeed) {
-                Map<String, String> feedMap = feedService.parseFeed(tempFeedLine);
-                try {
-                    Client tempClient = currentBank.parseFeed(feedMap);
-                    currentBank.addClient(tempClient);
-                } catch (IllegalArgumentException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-    }
-
-
-    public static Client getCurrentClient() {
+/*    public static Client getCurrentClient() {
         return currentClient;
     }
 
     public static void setCurrentClient(Client currentClient) {
         BankCommander.currentClient = currentClient;
 //        BankRemoteOffice.setCurrentClient(currentClient);  //uncomment this to remote working
-    }
+    }*/
 
     public void registerCommand(String name, Command command) {
         commandsMap.put(name, command);
@@ -116,30 +83,9 @@ NullPointerException - if the specified key is null and this map uses natural or
         }
     }
 
-    private static void serializationTest() {
-        try {
-            ClientService clientService = new ClientServiceImpl();
-            Client testClient = clientService.getClientByName(currentBank, "Beggar");
-            testClient.printReport();
-            clientService.saveClientToFeedFile(testClient);
-            System.out.println("Saving done!");
-            System.out.println("Now reading from file");
-            Client readedClient = clientService.loadClientFromFeedFile();
-            System.out.println("Reading done");
-            readedClient.printReport();
-        } catch (ClientNotFoundException e) {
-            e.printStackTrace();
-        }
-    }
 
     public static void main(String args[]) {
         BankCommander bankCommander = new BankCommander();
-//        bankCommander.initialize();  uncomment this string to return to noDB impl
-
-
-        //serialization/deserialization
-//        serializationTest();
-
 
         while (true) {
             Iterator iterator = commandsMap.entrySet().iterator();
@@ -154,10 +100,10 @@ NullPointerException - if the specified key is null and this map uses natural or
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
             try {
                 System.out.println("Active client now is: ");
-                if (getCurrentClient() == null) {
+                if (ClientServiceImpl.getInstance().getCurrentClient() == null) {
                     System.out.println("N/A");
                 } else {
-                    System.out.println(getCurrentClient().getName());
+                    System.out.println(ClientServiceImpl.getInstance().getCurrentClient().getName());
                 }
                 System.out.println("Enter number of your choice: ");
 

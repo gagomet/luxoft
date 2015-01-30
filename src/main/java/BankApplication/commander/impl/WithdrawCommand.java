@@ -1,10 +1,11 @@
 package BankApplication.commander.impl;
 
-import BankApplication.main.BankCommander;
 import BankApplication.exceptions.*;
 import BankApplication.exceptions.IllegalArgumentException;
 import BankApplication.model.impl.Client;
 import BankApplication.network.console.Console;
+import BankApplication.service.impl.AccountServiceImpl;
+import BankApplication.service.impl.ClientServiceImpl;
 
 import java.io.IOException;
 
@@ -21,7 +22,7 @@ public class WithdrawCommand extends AbstractCommand {
     @Override
     public void execute() throws IllegalArgumentException {
 
-        Client currentClient = BankCommander.getCurrentClient()/*BankRemoteOffice.getCurrentClient()*/;
+        Client currentClient = ClientServiceImpl.getInstance().getCurrentClient();
         float amountToWithdraw;
         if (currentClient == null) {
             console.sendResponse(errorsBundle.getString("noActiveClient"));
@@ -60,7 +61,7 @@ public class WithdrawCommand extends AbstractCommand {
             builder.append(System.getProperty("line.separator"));
             builder.append(client.getActiveAccount().toString());
             builder.append(System.getProperty("line.separator"));
-            getAccountService().withdrawFunds(client.getActiveAccount(), amountToWithdraw);
+            AccountServiceImpl.getInstance().withdrawFunds(client.getActiveAccount(), amountToWithdraw);
             builder.append("Account was successfully reduced");
             builder.append(System.getProperty("line.separator"));
             builder.append(client.getActiveAccount().toString());

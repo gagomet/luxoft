@@ -1,74 +1,36 @@
 package BankApplication.network;
 
 
-import BankApplication.main.StartPoint;
-import BankApplication.model.ClientRegistrationListener;
-import BankApplication.model.impl.Bank;
-import BankApplication.model.impl.BankInfo;
-import BankApplication.model.impl.Client;
+import BankApplication.commander.impl.*;
 import BankApplication.network.console.Console;
 import BankApplication.network.console.RemoteConsoleImpl;
-import BankApplication.service.BankFeedService;
 import BankApplication.commander.Command;
-import BankApplication.commander.impl.AddClientCommand;
-import BankApplication.service.impl.BankFeedServiceImpl;
-import BankApplication.commander.impl.DepositCommand;
-import BankApplication.commander.impl.FindClientCommand;
-import BankApplication.commander.impl.GetAccountCommand;
-import BankApplication.commander.impl.RemoveClientCommand;
-import BankApplication.commander.impl.ShowHelpCommand;
-import BankApplication.commander.impl.TransferCommand;
-import BankApplication.commander.impl.WithdrawCommand;
+import BankApplication.service.impl.ClientServiceImpl;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
 /**
  * Created by Kir Kolesnikov on 20.01.2015.
  */
-public class BankRemoteOffice implements StartPoint {
+public class BankRemoteOffice {
     ServerSocket providerSocket;
-    Socket connection = null;
+    Socket clientSocket = null;
     ObjectOutputStream out;
     ObjectInputStream in;
     String message;
     Console console = new RemoteConsoleImpl(this);
 
-
-    private static Bank currentBank;
-    private static Client currentClient;
     private Map<String, Command> commandsMap = new TreeMap<>();
     private static final String FEED_FILES_FOLDER = "c:\\!toBankApplication\\";
 
     public void initialize() {
-        Bank.PrintClientListener printListener = new Bank.PrintClientListener();
-        Bank.EmailClientListener emailListener = new Bank.EmailClientListener();
-        List<ClientRegistrationListener> listenersList = new ArrayList<ClientRegistrationListener>();
-        listenersList.add(printListener);
-        listenersList.add(emailListener);
-        currentBank = new Bank(listenersList);
-
-        BankFeedService feedService = new BankFeedServiceImpl();
-        List<String[]> feeds = feedService.loadFeeds(FEED_FILES_FOLDER);
-        for (String[] fileFeed : feeds) {
-            for (String tempFeedLine : fileFeed) {
-                Map<String, String> feedMap = feedService.parseFeed(tempFeedLine);
-                try {
-                    Client tempClient = currentBank.parseFeed(feedMap);
-                    currentBank.addClient(tempClient);
-                } catch (BankApplication.exceptions.IllegalArgumentException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
 
         //init commands with remote console
         commandsMap.put("1", new FindClientCommand(console));
@@ -78,35 +40,32 @@ public class BankRemoteOffice implements StartPoint {
         commandsMap.put("5", new DepositCommand(console));
         commandsMap.put("6", new GetAccountCommand(console));
         commandsMap.put("7", new TransferCommand(console));
-        commandsMap.put("8", new ShowHelpCommand(console));
+        commandsMap.put("8", new ReportCommand(console));
+        commandsMap.put("9", new ShowHelpCommand(console));
 
     }
-
 
     void run() {
         try {
             providerSocket = new ServerSocket(20004, 10);
-            System.out.println("Waiting for connection");
-            connection = providerSocket.accept();
-            System.out.println("Connection received from " + connection.getInetAddress().getHostName());
-            out = new ObjectOutputStream(connection.getOutputStream());
+            System.out.println("Waiting for clientSocket");
+            clientSocket = providerSocket.accept();
+            System.out.println("Connection received from " + clientSocket.getInetAddress().getHostName());
+            out = new ObjectOutputStream(clientSocket.getOutputStream());
             out.flush();
-            in = new ObjectInputStream(connection.getInputStream());
+            in = new ObjectInputStream(clientSocket.getInputStream());
             do {
                 message = console.consoleResponse(composeUserMenu());
                 if (commandsMap.containsKey(message)) {
                     Command cmd = commandsMap.get(message);
                     cmd.execute();
-                } else if (message.equals("info")) {
-                    BankInfo bankInfo = new BankInfo(currentBank);
-                    out.writeObject(bankInfo);
-                } else if (message.equals("0")) {
+                }  else if (message.equals("0")) {
                     sendMessage("0");
                 }
                 System.out.println("Client> " + message);
 
 
-            } while (!message.equals("0"));
+            } while (!message.equals("exit"));
 
         } catch (IOException | BankApplication.exceptions.IllegalArgumentException e) {
             e.printStackTrace();
@@ -127,18 +86,6 @@ public class BankRemoteOffice implements StartPoint {
 
     public ObjectInputStream getIn() {
         return in;
-    }
-
-    public static Client getCurrentClient() {
-        return currentClient;
-    }
-
-    public static void setCurrentClient(Client currentClient) {
-        BankRemoteOffice.currentClient = currentClient;
-    }
-
-    public static Bank getCurrentBank() {
-        return currentBank;
     }
 
     public String receiveMessage() {
@@ -175,10 +122,10 @@ public class BankRemoteOffice implements StartPoint {
         Iterator iterator = commandsMap.entrySet().iterator();
         builder.append(System.getProperty("line.separator"));
         builder.append("Active client now is: ");
-        if (getCurrentClient() == null) {
+        if (ClientServiceImpl.getInstance().getCurrentClient() == null) {
             builder.append("N/A");
         } else {
-            builder.append(getCurrentClient().toString());
+            builder.append(ClientServiceImpl.getInstance().getCurrentClient().toString());
         }
         builder.append(System.getProperty("line.separator"));
         while (iterator.hasNext()) {
@@ -188,9 +135,8 @@ public class BankRemoteOffice implements StartPoint {
             builder.append(entry.getValue().toString());
             builder.append(System.getProperty("line.separator"));
         }
-        builder.append("info   -->    Get bank info");
         builder.append(System.getProperty("line.separator"));
-        builder.append("0      -->    Exit");
+        builder.append("exit      -->    Exit");
         return builder.toString();
     }
 }

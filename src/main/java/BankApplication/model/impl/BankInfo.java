@@ -3,6 +3,7 @@ package BankApplication.model.impl;
 import BankApplication.service.impl.BankReport;
 
 import java.io.Serializable;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -58,13 +59,31 @@ public class BankInfo implements Serializable {
         clientsByCities = bankReport.getClientsByCity(bank);
     }
 
+
     @Override
     public String toString() {
-        return "BankInfo{" +
-                "totalClients=" + totalClients +
-                ", totalAccounts=" + totalAccounts +
-                ", totalCredit=" + totalCredit +
-                ", clientsByCities=" + clientsByCities.toString() +
-                '}';
+        StringBuilder builder = new StringBuilder();
+        builder.append("Bank Info");
+        builder.append(System.getProperty("line.separator"));
+        builder.append("Total clients: ");
+        builder.append(totalClients);
+        builder.append(System.getProperty("line.separator"));
+        builder.append("Total funds: ");
+        builder.append(totalCredit);
+        builder.append(System.getProperty("line.separator"));
+        builder.append("Clients by cities: ");
+        builder.append(System.getProperty("line.separator"));
+        for(String key : clientsByCities.keySet()){
+            builder.append("City: ");
+            builder.append(key);
+            builder.append(System.getProperty("line.separator"));
+            List<Client> clientsFromCurrentCity = clientsByCities.get(key);
+            for(Client currentClient : clientsFromCurrentCity){
+                builder.append("     ");
+                builder.append(currentClient.toString());
+                builder.append(System.getProperty("line.separator"));
+            }
+        }
+        return builder.toString();
     }
 }

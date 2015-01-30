@@ -16,9 +16,31 @@ import java.io.*;
  * Created by Kir Kolesnikov on 29.01.2015.
  */
 public class ClientServiceImpl implements ClientService {
-
+    public static ClientServiceImpl instance;
     private ClientDAO clientDAO = new ClientDAOImpl();
     private AccountDAO accountDAO = new AccountDAOImpl();
+
+    private Client currentClient;
+
+    private ClientServiceImpl() {
+
+    }
+
+    public static ClientServiceImpl getInstance() {
+        if (instance == null) {
+            return new ClientServiceImpl();
+        }
+        return instance;
+    }
+
+    public Client getCurrentClient() {
+        return currentClient;
+    }
+
+    public void setCurrentClient(Client currentClient) {
+
+        this.currentClient = currentClient;
+    }
 
     @Override
     public void addAccount(Client client, Account account) {

@@ -16,5 +16,6 @@ public interface BankService {
 
     public BankInfo getBankInfo(Bank bank);
 
+    public Bank getCurrentBank();
 
 }
