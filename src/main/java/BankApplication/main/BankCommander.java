@@ -1,5 +1,6 @@
 package BankApplication.main;
 
+import BankApplication.DAO.impl.DAOFactory;
 import BankApplication.commander.impl.*;
 import BankApplication.exceptions.IllegalArgumentException;
 import BankApplication.model.impl.Bank;
@@ -7,7 +8,9 @@ import BankApplication.DAO.BankDAO;
 import BankApplication.DAO.impl.BankDAOImpl;
 import BankApplication.model.impl.Client;
 import BankApplication.commander.Command;
+import BankApplication.service.BankService;
 import BankApplication.service.impl.ClientServiceImpl;
+import BankApplication.service.impl.ServiceFactory;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -21,7 +24,7 @@ public class BankCommander {
 //    public static Client currentClient = null;
     public static Map<String, Command> commandsMap = new TreeMap<>();
     private static final String FEED_FILES_FOLDER = "c:\\!toBankApplication\\";
-    static String bankName = "MYBANK";
+    static String bankName = "MyBank";
 
 
     static
@@ -51,16 +54,6 @@ public class BankCommander {
         composeMapOfCommands();
     }
 
-
-/*    public static Client getCurrentClient() {
-        return currentClient;
-    }
-
-    public static void setCurrentClient(Client currentClient) {
-        BankCommander.currentClient = currentClient;
-//        BankRemoteOffice.setCurrentClient(currentClient);  //uncomment this to remote working
-    }*/
-
     public void registerCommand(String name, Command command) {
         commandsMap.put(name, command);
     }
@@ -86,6 +79,8 @@ NullPointerException - if the specified key is null and this map uses natural or
 
     public static void main(String args[]) {
         BankCommander bankCommander = new BankCommander();
+        Bank bank = DAOFactory.getBankDAO().getBankByName(bankName) ;
+        ServiceFactory.getBankService().setCurrentBank(bank);
 
         while (true) {
             Iterator iterator = commandsMap.entrySet().iterator();

@@ -17,11 +17,11 @@ import java.util.TreeSet;
  */
 public class BankReport {
     public int getNumberOfClients(Bank bank) {
-        return bank.getClientsList().size();
+        return bank.getClientSet().size();
     }
     public int getAccountsNumber(Bank bank) {
         int result = 0;
-        for (Client client : bank.getClientsList()) {
+        for (Client client : bank.getClientSet()) {
             for (Account account : client.getAccountsList()) {
                 result++;
             }
@@ -31,7 +31,7 @@ public class BankReport {
 
     public float getBankCreditSum(Bank bank) {
         float resultSum = 0;
-        for (Client client : bank.getClientsList()) {
+        for (Client client : bank.getClientSet()) {
             for (Account account : client.getAccountsList()) {
                 if (account.getBalance() < 0) {
                     resultSum += -account.getBalance();
@@ -44,7 +44,7 @@ public class BankReport {
     public Map<String, List<Client>> getClientsByCity(Bank bank) {
         Map<String, List<Client>> result = new TreeMap<>();
         result.put("Unknown", new ArrayList<Client>());
-        for (Client client : bank.getClientsList()) {
+        for (Client client : bank.getClientSet()) {
             if (client.getCity() != null) {
                 if (result.keySet().contains(client.getCity())) {
                     result.get(client.getCity()).add(client);

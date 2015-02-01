@@ -5,6 +5,7 @@ import BankApplication.model.impl.Client;
 import BankApplication.network.console.Console;
 import BankApplication.service.impl.AccountServiceImpl;
 import BankApplication.service.impl.ClientServiceImpl;
+import BankApplication.service.impl.ServiceFactory;
 
 
 import java.io.IOException;
@@ -23,9 +24,8 @@ public class DepositCommand extends AbstractCommand {
 
     @Override
     public void execute() {
-        Client currentClient = ClientServiceImpl.getInstance().getCurrentClient();
         float amountToDeposit;
-        if (currentClient == null) {
+        if (ServiceFactory.getClientService().getCurrentClient() == null) {
             console.sendResponse(errorsBundle.getString("noActiveClient"));
             System.out.println(errorsBundle.getString("noActiveClient"));
         } else {
@@ -40,7 +40,7 @@ public class DepositCommand extends AbstractCommand {
                     }
                 }
 
-                depositFunds(currentClient, amountToDeposit);
+                depositFunds(ServiceFactory.getClientService().getCurrentClient(), amountToDeposit);
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -61,7 +61,7 @@ public class DepositCommand extends AbstractCommand {
             builder.append(System.getProperty("line.separator"));
             builder.append(client.getActiveAccount().toString());
             builder.append(System.getProperty("line.separator"));
-            AccountServiceImpl.getInstance().depositeFunds(client.getActiveAccount(), amountToDeposit);
+            ServiceFactory.getAccountService().depositeFunds(client.getActiveAccount(), amountToDeposit);
             builder.append("Account was successfully refilled");
             builder.append(System.getProperty("line.separator"));
             builder.append(client.getActiveAccount().toString());

@@ -9,11 +9,11 @@ import java.util.concurrent.Executors;
 /**
  * Created by Kir Kolesnikov on 30.01.2015.
  */
-public class BankServerThread {
-    ServerSocket serverSocket;
-    ExecutorService pool = Executors.newFixedThreadPool(50);
+public class BankServerThreaded {
+    private ServerSocket serverSocket;
+    private ExecutorService pool = Executors.newFixedThreadPool(50);
 
-    public BankServerThread(){
+    public BankServerThreaded(){
         try {
             serverSocket = new ServerSocket(15000);
         } catch (IOException e) {
@@ -22,6 +22,7 @@ public class BankServerThread {
     }
 
     public void runServer(){
+        System.out.println("Waiting to connections");
         while (true) {
             Socket clientSocket = null;
             try {
@@ -31,5 +32,10 @@ public class BankServerThread {
                 e.printStackTrace();
             }
         }
+    }
+
+    public static void main(String[] args) {
+        BankServerThreaded bankServerThreaded = new BankServerThreaded();
+        bankServerThreaded.runServer();
     }
 }

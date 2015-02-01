@@ -23,30 +23,37 @@ import java.util.List;
  * Created by Kir Kolesnikov on 27.01.2015.
  */
 public class ClientDAOImpl extends BaseDAOImpl implements ClientDAO {
-    public static final String FIND_CLIENT_BY_NAME_STMT = "SELECT * FROM CLIENTS WHERE CLIENTS.BANK_ID=? AND CLIENTS.NAME=?";
-    public static final String FIND_CLIENT_BY_ID_STMT = "SELECT * FROM CLIENTS WHERE CLIENTS.ID=?";
-    public static final String GET_ALL_CLIENTS = "SELECT * FROM CLIENTS WHERE CLIENTS.BANK_ID=?";
-    public static final String REMOVE_CLIENT_FROM_DB = "DELETE FROM CLIENTS WHERE ID=?";
-    public static final String INSERT_CLIENT_INTO_DB = "INSERT INTO CLIENTS " +
+    private static ClientDAOImpl instance;
+    private static final String FIND_CLIENT_BY_NAME_STMT = "SELECT * FROM CLIENTS WHERE CLIENTS.BANK_ID=? AND CLIENTS.NAME=?";
+    private static final String FIND_CLIENT_BY_ID_STMT = "SELECT * FROM CLIENTS WHERE CLIENTS.ID=?";
+    private static final String GET_ALL_CLIENTS = "SELECT * FROM CLIENTS WHERE CLIENTS.BANK_ID=?";
+    private static final String REMOVE_CLIENT_FROM_DB = "DELETE FROM CLIENTS WHERE ID=?";
+    private static final String INSERT_CLIENT_INTO_DB = "INSERT INTO CLIENTS " +
             "(BANK_ID, NAME, OVERDRAFT, GENDER, EMAIL, CITY) VALUES (?, ?, ?, ?, ?, ?)";
-    public static final String UPDATE_CLIENT_IN_DB = "UPDATE CLIENTS SET " +
+    private static final String UPDATE_CLIENT_IN_DB = "UPDATE CLIENTS SET " +
             "BANK_ID=?, NAME=?, OVERDRAFT=?, GENDER=?, EMAIL=?, CITY=? WHERE ID=? ";
 
+    private ClientDAOImpl(){}
+
+    public static ClientDAOImpl getInstance(){
+        if (instance == null) {
+            return new ClientDAOImpl();
+        }
+        return instance;
+    }
 
     @Override
     public Client findClientByName(Bank bank, String name) throws ClientNotFoundException {
         Client resultClient = null;
-        Connection connection = null;
         ResultSet resultSet = null;
         try {
-            connection = openConnection();
-            PreparedStatement preparedStatement = connection.prepareStatement(FIND_CLIENT_BY_NAME_STMT);
+            setConnection(openConnection());
+            PreparedStatement preparedStatement = getConnection().prepareStatement(FIND_CLIENT_BY_NAME_STMT);
             preparedStatement.setLong(1, bank.getId());
             preparedStatement.setString(2, name);
             resultSet = preparedStatement.executeQuery();
             resultClient = parseResultSetToGetOneClient(resultSet);
-            AccountDAO accountDAO = new AccountDAOImpl();
-            List<Account> accountList = accountDAO.getClientAccounts(resultClient.getId());
+            List<Account> accountList = DAOFactory.getAccountDAO().getClientAccounts(resultClient.getId());
             if (accountList.size() == 1) {
                 resultClient.setActiveAccount(accountList.get(0));
             }
@@ -55,30 +62,22 @@ public class ClientDAOImpl extends BaseDAOImpl implements ClientDAO {
         } catch (SQLException e) {
             handleSQLException(e);
         } finally {
-            assert resultSet != null;
-            try {
-                resultSet.close();
-            } catch (SQLException e) {
-                handleSQLException(e);
-            }
-            closeConnection(connection);
+            closeConnection(getConnection());
         }
         return resultClient;
     }
 
     @Override
     public Client findClientById(long clientId) throws ClientNotFoundException {
-        Connection connection = null;
         ResultSet resultSet = null;
         Client resultClient = null;
         try {
-            connection = openConnection();
-            PreparedStatement preparedStatement = connection.prepareStatement(FIND_CLIENT_BY_ID_STMT);
+            setConnection(openConnection());
+            PreparedStatement preparedStatement = getConnection().prepareStatement(FIND_CLIENT_BY_ID_STMT);
             preparedStatement.setLong(1, clientId);
             resultSet = preparedStatement.executeQuery();
             resultClient = parseResultSetToGetOneClient(resultSet);
-            AccountDAO accountDAO = new AccountDAOImpl();
-            List<Account> accountList = accountDAO.getClientAccounts(resultClient.getId());
+            List<Account> accountList = DAOFactory.getAccountDAO().getClientAccounts(resultClient.getId());
             if (accountList.size() == 1) {
                 resultClient.setActiveAccount(accountList.get(0));
             }
@@ -94,7 +93,7 @@ public class ClientDAOImpl extends BaseDAOImpl implements ClientDAO {
             } catch (SQLException e) {
                 handleSQLException(e);
             }
-            closeConnection(connection);
+            closeConnection(getConnection());
         }
         return resultClient;
     }
@@ -102,11 +101,10 @@ public class ClientDAOImpl extends BaseDAOImpl implements ClientDAO {
     @Override
     public List<Client> getAllClients(Bank bank) {
         List<Client> resultList = new ArrayList<>();
-        Connection connection = null;
         ResultSet resultSet = null;
         try {
-            connection = openConnection();
-            PreparedStatement preparedStatement = connection.prepareStatement(GET_ALL_CLIENTS);
+            setConnection(openConnection());
+            PreparedStatement preparedStatement = getConnection().prepareStatement(GET_ALL_CLIENTS);
             preparedStatement.setLong(1, bank.getId());
             resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
@@ -123,8 +121,7 @@ public class ClientDAOImpl extends BaseDAOImpl implements ClientDAO {
                 tempClient.setEmail(resultSet.getString("EMAIL"));
                 tempClient.setPhone(resultSet.getString("PHONE"));
                 tempClient.setCity(resultSet.getString("CITY"));
-                AccountDAO accountDAO = new AccountDAOImpl();
-                List<Account> accountList = accountDAO.getClientAccounts(tempClient.getId());
+                List<Account> accountList = DAOFactory.getAccountDAO().getClientAccounts(tempClient.getId());
                 HashSet<Account> accountSet = new HashSet<Account>(accountList);
                 tempClient.setAccountsList(accountSet);
                 resultList.add(tempClient);
@@ -138,26 +135,25 @@ public class ClientDAOImpl extends BaseDAOImpl implements ClientDAO {
             } catch (SQLException e) {
                 handleSQLException(e);
             }
-            closeConnection(connection);
+            closeConnection(getConnection());
         }
         return resultList;
     }
 
     @Override
     public void save(Bank bank, Client client) {
-        Connection connection = null;
         try {
-            connection = openConnection();
-            connection.setAutoCommit(false);
+            setConnection(openConnection());
+            getConnection().setAutoCommit(false);
             Client currentClient = findClientById(client.getId());
             PreparedStatement preparedStatement;
 
             if (currentClient.getId() != 0) {
-                preparedStatement = connection.prepareStatement(UPDATE_CLIENT_IN_DB);
+                preparedStatement = getConnection().prepareStatement(UPDATE_CLIENT_IN_DB);
                 setPreparedStatementDataForClient(preparedStatement, client);
                 preparedStatement.setLong(7, client.getId());
             } else {
-                preparedStatement = connection.prepareStatement(INSERT_CLIENT_INTO_DB);
+                preparedStatement = getConnection().prepareStatement(INSERT_CLIENT_INTO_DB);
                 setPreparedStatementDataForClient(preparedStatement, client);
 
             }
@@ -172,18 +168,17 @@ public class ClientDAOImpl extends BaseDAOImpl implements ClientDAO {
                     }
                 }
             }
-            connection.commit();
-            connection.setAutoCommit(true);
+            getConnection().commit();
+            getConnection().setAutoCommit(true);
 
-            AccountDAO accountDAO = new AccountDAOImpl();
             if (client.getInitialOverdraft() == 0.0f) {
-                accountDAO.addAccount(new SavingAccount(), client);
+                DAOFactory.getAccountDAO().addAccount(new SavingAccount(), client);
             } else {
-                accountDAO.addAccount(new CheckingAccount(client.getInitialOverdraft()), client);
+                DAOFactory.getAccountDAO().addAccount(new CheckingAccount(client.getInitialOverdraft()), client);
             }
         } catch (SQLException | ClientNotFoundException e) {
             try {
-                connection.rollback();
+                getConnection().rollback();
             } catch (SQLException e1) {
                 handleSQLException(e1);
             }
@@ -193,26 +188,24 @@ public class ClientDAOImpl extends BaseDAOImpl implements ClientDAO {
 
     @Override
     public void remove(Client client) {
-        Connection connection = null;
         try {
-            connection = openConnection();
-            connection.setAutoCommit(false);
-            AccountDAO accountDAO = new AccountDAOImpl();
-            accountDAO.removeByClientId(client.getId());
-            PreparedStatement preparedStatement = connection.prepareStatement(REMOVE_CLIENT_FROM_DB);
+            setConnection(openConnection());
+            getConnection().setAutoCommit(false);
+            DAOFactory.getAccountDAO().removeByClientId(client.getId());
+            PreparedStatement preparedStatement = getConnection().prepareStatement(REMOVE_CLIENT_FROM_DB);
             preparedStatement.setLong(1, client.getId());
             preparedStatement.executeUpdate();
-            connection.commit();
-            connection.setAutoCommit(true);
+            getConnection().commit();
+            getConnection().setAutoCommit(true);
         } catch (SQLException e) {
             try {
-                connection.rollback();
+                getConnection().rollback();
             } catch (SQLException e1) {
                 handleSQLException(e1);
             }
             handleSQLException(e);
         } finally {
-            closeConnection(connection);
+            closeConnection(getConnection());
         }
     }
 

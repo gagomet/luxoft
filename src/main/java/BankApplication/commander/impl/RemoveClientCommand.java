@@ -6,6 +6,7 @@ import BankApplication.model.impl.Client;
 import BankApplication.network.console.Console;
 import BankApplication.service.impl.BankServiceImpl;
 import BankApplication.service.impl.ClientServiceImpl;
+import BankApplication.service.impl.ServiceFactory;
 
 import java.io.IOException;
 
@@ -49,8 +50,8 @@ public class RemoveClientCommand extends AbstractCommand {
 
     private void removeClientFromBank(String clientName){
         try {
-            Client client = ClientServiceImpl.getInstance().getClientByName(BankServiceImpl.getInstance().getCurrentBank(), clientName);
-            BankServiceImpl.getInstance().removeClient(BankServiceImpl.getInstance().getCurrentBank(), client);
+            Client client = ServiceFactory.getClientService().getClientByName(BankServiceImpl.getInstance().getCurrentBank(), clientName);
+            ServiceFactory.getBankService().removeClient(BankServiceImpl.getInstance().getCurrentBank(), client);
             console.sendResponse(client.toString() + " was removed.");
         } catch (ClientNotFoundException e) {
             e.printStackTrace();

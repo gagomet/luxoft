@@ -2,7 +2,6 @@ package BankApplication.service.impl;
 
 import BankApplication.annotation.NoDB;
 
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 
 /**
@@ -18,24 +17,26 @@ public class TestService {
      * также он должен уметь сравнивать коллекции.
      */
     public static boolean isEquals(Object o1, Object o2) {
-        Class instanceO1 = o1.getClass();
+        Class instance01 = o1.getClass();
         Class instance02 = o2.getClass();
-        if (instanceO1.getCanonicalName().equals(instance02.getCanonicalName())) {
-            Field[] fields01 = instanceO1.getDeclaredFields();
+
+        if (instance01.getCanonicalName().equals(instance02.getCanonicalName())) {
+            Field[] fields01 = instance01.getDeclaredFields();
             Field[] fields02 = instance02.getDeclaredFields();
+
             for (int i = 0; i < fields01.length; i++) {
                 Field field01 = fields01[i];
                 Field field02 = fields02[i];
-                if (field01.isAnnotationPresent(NoDB.class)) {
-//TODO finish this method
-                } else {
+                if (!field01.isAnnotationPresent(NoDB.class) && !field02.isAnnotationPresent(NoDB.class)) {
+                    field01.setAccessible(true);
+                    field02.setAccessible(true);
+                    Class typeField01 = field01.getType();
+                    Class typeField02 = field02.getType();
                     try {
-                        Object field01Value = field01.get(field01.getType());
-                        Object field02Value = field02.get(field01.getType());
-                        if (!field01Value.equals(field02Value)) {
+                        Object value01 = field01.get(o1);
+                        Object value02 = field02.get(o1);
+                        if (!value01.equals(value02)) {
                             return false;
-                        } else {
-
                         }
                     } catch (IllegalAccessException e) {
                         e.printStackTrace();
@@ -43,12 +44,15 @@ public class TestService {
 
                 }
             }
+        } else {
+            return false;
         }
-        return false;
+        return true;
     }
 
-    private boolean isFieldsEquals(){
-        //TODO
+    private boolean isFieldsEquals(Field field1, Field field2) {
+
+
         return false;
     }
 

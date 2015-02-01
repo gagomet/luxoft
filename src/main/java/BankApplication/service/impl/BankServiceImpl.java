@@ -1,9 +1,6 @@
 package BankApplication.service.impl;
 
-import BankApplication.DAO.BankDAO;
-import BankApplication.DAO.ClientDAO;
-import BankApplication.DAO.impl.BankDAOImpl;
-import BankApplication.DAO.impl.ClientDAOImpl;
+import BankApplication.DAO.impl.DAOFactory;
 import BankApplication.exceptions.ClientExceedsException;
 import BankApplication.model.impl.Bank;
 import BankApplication.model.impl.BankInfo;
@@ -14,14 +11,10 @@ import BankApplication.service.BankService;
  * Created by Kir Kolesnikov on 29.01.2015.
  */
 public class BankServiceImpl implements BankService {
-    public static BankServiceImpl instance;
-    public static final String BANK_BY_DEFAULT = "MYBANK";
-    private BankDAO bankDAO = new BankDAOImpl();
-    private ClientDAO clientDAO = new ClientDAOImpl();
-    private Bank currentBank;
+    private static BankServiceImpl instance;
+    private static Bank currentBank;
 
     private BankServiceImpl(){
-        initBank();
     }
 
     public static BankServiceImpl getInstance() {
@@ -29,10 +22,6 @@ public class BankServiceImpl implements BankService {
             instance = new BankServiceImpl();
         }
         return instance;
-    }
-
-    private void initBank(){
-        setCurrentBank(bankDAO.getBankByName(BANK_BY_DEFAULT));
     }
 
     public Bank getCurrentBank(){
@@ -46,16 +35,17 @@ public class BankServiceImpl implements BankService {
 
     @Override
     public void addClient(Bank bank, Client client) throws ClientExceedsException {
-        clientDAO.save(bank, client);
-    }
+        DAOFactory.getClientDAO().save(bank, client);
+    } //Update
 
     @Override
     public void removeClient(Bank bank, Client client) {
-        clientDAO.remove(client);
-    }
+        DAOFactory.getClientDAO().remove(client);
+    } //Update
 
     @Override
     public BankInfo getBankInfo(Bank bank) {
-        return bankDAO.getBankInfo(bank);
+        return DAOFactory.getBankDAO().getBankInfo(bank);
     }
+
 }

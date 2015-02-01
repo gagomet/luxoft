@@ -1,22 +1,23 @@
 package BankApplication.service.DAO;
 
+import BankApplication.DAO.BankDAO;
+import BankApplication.DAO.impl.DAOFactory;
 import BankApplication.model.impl.Bank;
-import BankApplication.DAO.impl.BankDAOImpl;
 import junit.framework.TestCase;
 import org.junit.Before;
 
 
 public class BankDAOImplTest extends TestCase {
-    private BankDAOImpl testInstance;
+    private BankDAO testInstance;
 
 
     @Before
     public void setUp(){
-        testInstance = new BankDAOImpl();
+        testInstance = DAOFactory.getBankDAO();
     }
 
     public void testGetBankByName() throws Exception {
-        Bank newBank = testInstance.getBankByName("MYBANK");
+        Bank newBank = testInstance.getBankByName("MyBank");
         assertFalse(newBank == null);
     }
 

@@ -23,7 +23,7 @@ public class Bank {
     private Long id;
     private String name;
     @NoDB
-    private Set<Client> clientsList = new HashSet<Client>();
+    private Set<Client> clientSet = new HashSet<Client>();
     @NoDB
     private List<ClientRegistrationListener> listeners = new ArrayList<ClientRegistrationListener>();
     @NoDB
@@ -65,12 +65,12 @@ public class Bank {
         this.name = name;
     }
 
-    public Set<Client> getClientsList() {
-        return Collections.unmodifiableSet(clientsList);
+    public Set<Client> getClientSet() {
+        return Collections.unmodifiableSet(clientSet);
     }
 
-    public void setClientsList(Set<Client> clientsList) {
-        this.clientsList = clientsList;
+    public void setClientSet(Set<Client> clientSet) {
+        this.clientSet = clientSet;
     }
 
     public List<ClientRegistrationListener> getListeners() {
@@ -79,11 +79,11 @@ public class Bank {
 
     //TODO remove to service
     public void addClient(Client client) {
-        clientsList.add(client);
+        clientSet.add(client);
     }
 
     public void removeClient(Client client) {
-        clientsList.remove(client);
+        clientSet.remove(client);
     }
 
     public void printReport() {
@@ -112,7 +112,7 @@ public class Bank {
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
-        for (Client client : clientsList) {
+        for (Client client : clientSet) {
             builder.append(client.toString());
             builder.append("\n");
         }

@@ -1,5 +1,6 @@
 package BankApplication.model.impl;
 
+import BankApplication.annotation.NoDB;
 import BankApplication.exceptions.IllegalArgumentException;
 import BankApplication.model.Account;
 import BankApplication.model.Report;
@@ -19,6 +20,7 @@ public class Client implements Report, Serializable {
     private long bankId;
     private String name;
     private Set<Account> accountsList = new HashSet<>();
+    @NoDB
     private transient Account activeAccount;
     private Float initialOverdraft;
     private Gender sex;

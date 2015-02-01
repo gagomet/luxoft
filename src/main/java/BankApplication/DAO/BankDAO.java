@@ -13,14 +13,18 @@ public interface BankDAO {
      * @param name
      * @return
      */
-    Bank getBankByName(String name);
+    public Bank getBankByName(String name);
 
     /**
      * Should fill the BankInfo
      */
-    BankInfo getBankInfo(Bank bank);
+    public BankInfo getBankInfo(Bank bank);
 
+    public void createNewBankInDB(Bank bank);
 
+    public void saveChangesToBank(Bank changedBank); //full greed update of existing Bank
+
+    public Bank getBankByID(long id); //greed getting of Bank instance
 
 }
 

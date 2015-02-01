@@ -5,6 +5,7 @@ import BankApplication.model.impl.CheckingAccount;
 import BankApplication.model.impl.Client;
 import BankApplication.model.impl.SavingAccount;
 import BankApplication.DAO.AccountDAO;
+import BankApplication.service.impl.AccountServiceImpl;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -14,31 +15,38 @@ import java.util.List;
  * Created by Kir Kolesnikov on 27.01.2015.
  */
 public class AccountDAOImpl extends BaseDAOImpl implements AccountDAO {
-    public static final String GET_CLIENTS_ACCOUNTS_STMT = "SELECT * FROM ACCOUNTS WHERE CLIENT_ID=?";
-    public static final String REMOVE_ALL_ACCOUNTS_BY_ID = "DELETE FROM ACCOUNTS WHERE CLIENT_ID=?";
-    public static final String SAVE_NEW_ACCOUNT_TO_DB_STMT = "INSERT INTO ACCOUNTS " +
+    private static AccountDAOImpl instance;
+    private static final String GET_CLIENTS_ACCOUNTS_STMT = "SELECT * FROM ACCOUNTS WHERE CLIENT_ID=?";
+    private static final String REMOVE_ALL_ACCOUNTS_BY_ID = "DELETE FROM ACCOUNTS WHERE CLIENT_ID=?";
+    private static final String SAVE_NEW_ACCOUNT_TO_DB_STMT = "INSERT INTO ACCOUNTS " +
             "(CLIENT_ID, OVERDRAFT, BALANCE) VALUES (?, ?, ?)";
-    public static final String UPDATE_ACCOUNT_IN_DB_STMT = "UPDATE ACCOUNTS " +
+    private static final String UPDATE_ACCOUNT_IN_DB_STMT = "UPDATE ACCOUNTS " +
             "SET BALANCE=? WHERE ID=?";
 
-    public AccountDAOImpl() {
+    private AccountDAOImpl() {
+    }
+
+    public static AccountDAOImpl getInstance(){
+        if (instance == null) {
+            return new AccountDAOImpl();
+        }
+        return instance;
     }
 
     @Override
     public void save(Account account, Client client) {
-        Connection connection = null;
         try {
-            connection = openConnection();
-            connection.setAutoCommit(false);
-            PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_ACCOUNT_IN_DB_STMT);
+            setConnection(openConnection());
+            getConnection().setAutoCommit(false);
+            PreparedStatement preparedStatement = getConnection().prepareStatement(UPDATE_ACCOUNT_IN_DB_STMT);
             preparedStatement.setFloat(1, account.getBalance());
             preparedStatement.setLong(2, account.getId());
             preparedStatement.executeUpdate();
-            connection.commit();
-            connection.setAutoCommit(true);
+            getConnection().commit();
+            getConnection().setAutoCommit(true);
         } catch (SQLException e) {
             try {
-                connection.rollback();
+                getConnection().rollback();
             } catch (SQLException e1) {
                 handleSQLException(e1);
             }
@@ -48,34 +56,32 @@ public class AccountDAOImpl extends BaseDAOImpl implements AccountDAO {
 
     @Override
     public void removeByClientId(long id) {
-        Connection connection = null;
         try {
-            connection = openConnection();
-            connection.setAutoCommit(false);
-            PreparedStatement preparedStatement = connection.prepareStatement(REMOVE_ALL_ACCOUNTS_BY_ID);
+            setConnection(openConnection());
+            getConnection().setAutoCommit(false);
+            PreparedStatement preparedStatement = getConnection().prepareStatement(REMOVE_ALL_ACCOUNTS_BY_ID);
             preparedStatement.setLong(1, id);
             preparedStatement.executeUpdate();
-            connection.commit();
-            connection.setAutoCommit(true);
+            getConnection().commit();
+            getConnection().setAutoCommit(true);
         } catch (SQLException e) {
             try {
-                connection.rollback();
+                getConnection().rollback();
             } catch (SQLException e1) {
                 handleSQLException(e1);
             }
             handleSQLException(e);
         } finally {
-            closeConnection(connection);
+            closeConnection(getConnection());
         }
     }
 
     @Override
     public List<Account> getClientAccounts(long id) {
         List<Account> resultList = new ArrayList<>();
-        Connection connection = null;
         try {
-            connection = openConnection();
-            PreparedStatement preparedStatement = connection.prepareStatement(GET_CLIENTS_ACCOUNTS_STMT);
+            setConnection(openConnection());
+            PreparedStatement preparedStatement = getConnection().prepareStatement(GET_CLIENTS_ACCOUNTS_STMT);
             preparedStatement.setLong(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet == null) {
@@ -94,25 +100,19 @@ public class AccountDAOImpl extends BaseDAOImpl implements AccountDAO {
                 resultList.add(tempAccount);
             }
         } catch (SQLException e) {
-            try {
-                connection.rollback();
-            } catch (SQLException e1) {
-                handleSQLException(e1);
-            }
             handleSQLException(e);
         } finally {
-            closeConnection(connection);
+            closeConnection(getConnection());
         }
         return resultList;
     }
 
     @Override
     public void addAccount(Account account, Client client) {
-        Connection connection = null;
         try {
-            connection = openConnection();
-            connection.setAutoCommit(false);
-            PreparedStatement preparedStatement = connection.prepareStatement(SAVE_NEW_ACCOUNT_TO_DB_STMT);
+            setConnection(openConnection());
+            getConnection().setAutoCommit(false);
+            PreparedStatement preparedStatement = getConnection().prepareStatement(SAVE_NEW_ACCOUNT_TO_DB_STMT);
             preparedStatement.setLong(1, client.getId());
             if (account instanceof CheckingAccount) {
                 CheckingAccount checkingAccount = (CheckingAccount) account;
@@ -131,42 +131,43 @@ public class AccountDAOImpl extends BaseDAOImpl implements AccountDAO {
                     }
                 }
             }
-            connection.commit();
-            connection.setAutoCommit(true);
+            getConnection().commit();
+            getConnection().setAutoCommit(true);
         } catch (SQLException e) {
             try {
-                connection.rollback();
+                getConnection().rollback();
             } catch (SQLException e1) {
                 handleSQLException(e1);
             }
             handleSQLException(e);
         } finally {
-            closeConnection(connection);
+            closeConnection(getConnection());
         }
     }
 
     public void transferFunds(Account sender, Account recipient, float amount) {
-        Connection connection = null;
         try {
-            connection = openConnection();
-            connection.setAutoCommit(false);
-            PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_ACCOUNT_IN_DB_STMT);
+            setConnection(openConnection());
+            getConnection().setAutoCommit(false);
+            PreparedStatement preparedStatement = getConnection().prepareStatement(UPDATE_ACCOUNT_IN_DB_STMT);
             preparedStatement.setFloat(1, sender.getBalance() - amount);
             preparedStatement.setLong(2, sender.getId());
             preparedStatement.executeUpdate();
             preparedStatement.setFloat(1, recipient.getBalance() + amount);
             preparedStatement.setLong(2, recipient.getId());
             preparedStatement.executeUpdate();
-            connection.commit();
-            connection.setAutoCommit(true);
+            getConnection().commit();
+            getConnection().setAutoCommit(true);
 
         } catch (SQLException e) {
             try {
-                connection.rollback();
+                getConnection().rollback();
             } catch (SQLException e1) {
                 handleSQLException(e1);
             }
             handleSQLException(e);
+        } finally {
+            closeConnection(getConnection());
         }
     }
 

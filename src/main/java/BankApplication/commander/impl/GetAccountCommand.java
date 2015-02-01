@@ -6,6 +6,7 @@ import BankApplication.model.impl.Client;
 import BankApplication.network.console.Console;
 import BankApplication.service.impl.AccountServiceImpl;
 import BankApplication.service.impl.ClientServiceImpl;
+import BankApplication.service.impl.ServiceFactory;
 
 import java.io.IOException;
 
@@ -25,7 +26,7 @@ public class GetAccountCommand extends AbstractCommand {
 
     @Override
     public void execute() {
-        currentClient = ClientServiceImpl.getInstance().getCurrentClient();
+        currentClient = ServiceFactory.getClientService().getCurrentClient();
         if (currentClient == null) {
             System.out.println(errorsBundle.getString("noActiveClient"));
             console.sendResponse(errorsBundle.getString("noActiveClient"));
@@ -52,8 +53,8 @@ public class GetAccountCommand extends AbstractCommand {
                         }
                     }
 
-                    Account account = AccountServiceImpl.getInstance().getAccountById(currentClient, clientId);
-                    ClientServiceImpl.getInstance().getCurrentClient().setActiveAccount(account);
+                    Account account = ServiceFactory.getAccountService().getAccountById(currentClient, clientId);
+                    ServiceFactory.getClientService().getCurrentClient().setActiveAccount(account);
                     StringBuilder builder = new StringBuilder();
                     builder.append(account.toString());
                     builder.append("Account ");

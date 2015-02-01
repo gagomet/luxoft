@@ -21,13 +21,13 @@ public class BankTest {
 
     @Test
     public void testAddingNewClient() {
-        int clientsNumber = testInstance.getClientsList().size();
+        int clientsNumber = testInstance.getClientSet().size();
         Client newbie = new Client();
         newbie.setInitialOverdraft(0f);
         newbie.setName("Newbie");
         newbie.setSex(Gender.MALE);
         testInstance.addClient(newbie);
-        assertTrue(testInstance.getClientsList().size() == clientsNumber + 1);
+        assertTrue(testInstance.getClientSet().size() == clientsNumber + 1);
     }
 
     @Test
@@ -37,9 +37,9 @@ public class BankTest {
         toDeath.setSex(Gender.MALE);
         toDeath.setInitialOverdraft(0f);
         testInstance.addClient(toDeath);
-        int numberOfClients = testInstance.getClientsList().size();
+        int numberOfClients = testInstance.getClientSet().size();
         testInstance.removeClient(toDeath);
-        assertTrue(testInstance.getClientsList().size() == numberOfClients - 1);
+        assertTrue(testInstance.getClientSet().size() == numberOfClients - 1);
     }
 
 }

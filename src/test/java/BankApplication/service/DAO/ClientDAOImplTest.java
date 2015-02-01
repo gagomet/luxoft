@@ -1,16 +1,18 @@
 package BankApplication.service.DAO;
 
+import BankApplication.DAO.ClientDAO;
 import BankApplication.DAO.impl.ClientDAOImpl;
+import BankApplication.DAO.impl.DAOFactory;
 import junit.framework.TestCase;
 import org.junit.Before;
 
 public class ClientDAOImplTest extends TestCase {
-    private ClientDAOImpl testInstance;
+    private ClientDAO testInstance;
 
 
     @Before
     public void setUp() {
-        testInstance = new ClientDAOImpl();
+        testInstance = DAOFactory.getClientDAO();
     }
 
     public void testFindClientByName() throws Exception {

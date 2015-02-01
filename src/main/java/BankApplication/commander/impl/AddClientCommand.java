@@ -5,6 +5,7 @@ import BankApplication.exceptions.IllegalArgumentException;
 import BankApplication.model.impl.Client;
 import BankApplication.network.console.Console;
 import BankApplication.service.impl.BankServiceImpl;
+import BankApplication.service.impl.ServiceFactory;
 import BankApplication.type.Gender;
 
 import java.io.IOException;
@@ -131,7 +132,7 @@ public class AddClientCommand extends AbstractCommand {
             newClient.setCity(newClientsCity);
         }
         System.out.println(errorsBundle.getString("separator"));
-        BankServiceImpl.getInstance().addClient(BankServiceImpl.getInstance().getCurrentBank(), newClient);
+        ServiceFactory.getBankService().addClient(BankServiceImpl.getInstance().getCurrentBank(), newClient);
         System.out.println("New Client successfully added!");
         newClient.printReport();
         StringBuilder builder = new StringBuilder();

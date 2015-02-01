@@ -18,4 +18,6 @@ public interface BankService {
 
     public Bank getCurrentBank();
 
+    public void setCurrentBank(Bank bank);
+
 }

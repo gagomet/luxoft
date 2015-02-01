@@ -1,9 +1,6 @@
 package BankApplication.service.impl;
 
-import BankApplication.DAO.AccountDAO;
-import BankApplication.DAO.ClientDAO;
-import BankApplication.DAO.impl.AccountDAOImpl;
-import BankApplication.DAO.impl.ClientDAOImpl;
+import BankApplication.DAO.impl.DAOFactory;
 import BankApplication.exceptions.*;
 import BankApplication.exceptions.IllegalArgumentException;
 import BankApplication.model.Account;
@@ -18,9 +15,7 @@ import java.util.ResourceBundle;
  * Created by Kir Kolesnikov on 29.01.2015.
  */
 public class AccountServiceImpl implements AccountService {
-    public static AccountServiceImpl instance;
-    private ClientDAO clientDAO = new ClientDAOImpl();
-    private AccountDAO accountDAO = new AccountDAOImpl();
+    private static AccountServiceImpl instance;
     protected static ResourceBundle errorsBundle = ResourceBundle.getBundle("errors");
 
     private AccountServiceImpl() {
@@ -39,8 +34,8 @@ public class AccountServiceImpl implements AccountService {
         try {
             account.deposit(amount);
 //            depositToAccount(account, amount);
-            Client client = clientDAO.findClientById(account.getClientId());
-            accountDAO.save(account, client);
+            Client client = DAOFactory.getClientDAO().findClientById(account.getClientId());
+            DAOFactory.getAccountDAO().save(account, client);
         } catch (ClientNotFoundException e) {
             System.out.println(e.getMessage());
         }
@@ -51,8 +46,8 @@ public class AccountServiceImpl implements AccountService {
         try {
             account.withdraw(amount);
 //            withdrawFromAccount(account, amount);
-            Client client = clientDAO.findClientById(account.getClientId());
-            accountDAO.save(account, client);
+            Client client = DAOFactory.getClientDAO().findClientById(account.getClientId());
+            DAOFactory.getAccountDAO().save(account, client);
         } catch (ClientNotFoundException e) {
             System.out.println(e.getMessage());
         }
@@ -60,7 +55,7 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public Account getAccountById(Client client, Long id) throws AccountNotFoundException {
-        List<Account> accountList = accountDAO.getClientAccounts(client.getId());
+        List<Account> accountList = DAOFactory.getAccountDAO().getClientAccounts(client.getId());
         Account result = null;
         for (Account account : accountList) {
             if (account.getId() == id) {
@@ -71,7 +66,7 @@ public class AccountServiceImpl implements AccountService {
     }
 
     public void transferFunds(Account sender, Account recipient, float amount) {
-        accountDAO.transferFunds(sender, recipient, amount);
+        DAOFactory.getAccountDAO().transferFunds(sender, recipient, amount);
     }
 
     private void withdrawFromAccount(Account account, float amount) throws IllegalArgumentException, NotEnoughFundsException {

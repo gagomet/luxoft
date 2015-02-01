@@ -1,9 +1,7 @@
 package BankApplication.service.impl;
 
-import BankApplication.DAO.AccountDAO;
-import BankApplication.DAO.ClientDAO;
-import BankApplication.DAO.impl.AccountDAOImpl;
-import BankApplication.DAO.impl.ClientDAOImpl;
+
+import BankApplication.DAO.impl.DAOFactory;
 import BankApplication.exceptions.ClientNotFoundException;
 import BankApplication.model.Account;
 import BankApplication.model.impl.Bank;
@@ -16,11 +14,8 @@ import java.io.*;
  * Created by Kir Kolesnikov on 29.01.2015.
  */
 public class ClientServiceImpl implements ClientService {
-    public static ClientServiceImpl instance;
-    private ClientDAO clientDAO = new ClientDAOImpl();
-    private AccountDAO accountDAO = new AccountDAOImpl();
-
-    private Client currentClient;
+    private static ClientServiceImpl instance;
+    private static Client currentClient;
 
     private ClientServiceImpl() {
 
@@ -44,7 +39,7 @@ public class ClientServiceImpl implements ClientService {
 
     @Override
     public void addAccount(Client client, Account account) {
-        accountDAO.save(account, client);
+        DAOFactory.getAccountDAO().save(account, client);
     }
 
     @Override
@@ -54,7 +49,7 @@ public class ClientServiceImpl implements ClientService {
 
     @Override
     public Client getClientByName(Bank bank, String clientsName) throws ClientNotFoundException {
-        return clientDAO.findClientByName(bank, clientsName);
+        return DAOFactory.getClientDAO().findClientByName(bank, clientsName);
     }
 
     @Override

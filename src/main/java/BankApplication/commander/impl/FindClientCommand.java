@@ -6,6 +6,7 @@ import BankApplication.model.impl.Client;
 import BankApplication.network.console.Console;
 import BankApplication.service.impl.BankServiceImpl;
 import BankApplication.service.impl.ClientServiceImpl;
+import BankApplication.service.impl.ServiceFactory;
 
 import java.io.IOException;
 
@@ -51,7 +52,7 @@ public class FindClientCommand extends AbstractCommand {
 
     private void findClientInBank(String clientName) {
         try {
-            Client client = ClientServiceImpl.getInstance().getClientByName(BankServiceImpl.getInstance().getCurrentBank()/*BankCommander.currentBank*/ /* BankRemoteOffice.getCurrentBank()*/, clientName);
+            Client client = ClientServiceImpl.getInstance().getClientByName(ServiceFactory.getBankService().getCurrentBank(), clientName);
             StringBuilder builder = new StringBuilder();
             builder.append("Client ");
             builder.append(client.getName());
@@ -60,7 +61,7 @@ public class FindClientCommand extends AbstractCommand {
             System.out.println(builder.toString());
             console.sendResponse(client.toString() + builder.toString());
             client.printReport();
-            ClientServiceImpl.getInstance().setCurrentClient(client);
+            ServiceFactory.getClientService().setCurrentClient(client);
         } catch (ClientNotFoundException e) {
             e.printStackTrace();
             console.sendResponse(errorsBundle.getString("clientNotFound"));

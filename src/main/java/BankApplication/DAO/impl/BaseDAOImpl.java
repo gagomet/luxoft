@@ -13,6 +13,15 @@ import java.util.ResourceBundle;
  */
 public class BaseDAOImpl implements BaseDAO {
     private ResourceBundle dbBundle = ResourceBundle.getBundle("db");
+    private static Connection connection;
+
+    public static Connection getConnection() {
+        return connection;
+    }
+
+    public static void setConnection(Connection connection) {
+        BaseDAOImpl.connection = connection;
+    }
 
     @Override
     public Connection openConnection() {

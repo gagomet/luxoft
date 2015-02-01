@@ -1,11 +1,14 @@
 package BankApplication.network;
 
 
+import BankApplication.DAO.impl.DAOFactory;
 import BankApplication.commander.impl.*;
+import BankApplication.model.impl.Bank;
 import BankApplication.network.console.Console;
 import BankApplication.network.console.RemoteConsoleImpl;
 import BankApplication.commander.Command;
 import BankApplication.service.impl.ClientServiceImpl;
+import BankApplication.service.impl.ServiceFactory;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -20,15 +23,16 @@ import java.util.TreeMap;
  * Created by Kir Kolesnikov on 20.01.2015.
  */
 public class BankRemoteOffice {
-    ServerSocket providerSocket;
-    Socket clientSocket = null;
-    ObjectOutputStream out;
-    ObjectInputStream in;
-    String message;
+    private ServerSocket providerSocket;
+    private Socket clientSocket = null;
+    private ObjectOutputStream out;
+    private ObjectInputStream in;
+    private String message;
     Console console = new RemoteConsoleImpl(this);
 
     private Map<String, Command> commandsMap = new TreeMap<>();
     private static final String FEED_FILES_FOLDER = "c:\\!toBankApplication\\";
+    private static String bankName = "MyBank";
 
     public void initialize() {
 
@@ -47,7 +51,7 @@ public class BankRemoteOffice {
 
     void run() {
         try {
-            providerSocket = new ServerSocket(20004, 10);
+            providerSocket = new ServerSocket(15000, 10);
             System.out.println("Waiting for clientSocket");
             clientSocket = providerSocket.accept();
             System.out.println("Connection received from " + clientSocket.getInetAddress().getHostName());
@@ -112,6 +116,8 @@ public class BankRemoteOffice {
 
     public static void main(String[] args) {
         BankRemoteOffice remoteOffice = new BankRemoteOffice();
+        Bank bank = DAOFactory.getBankDAO().getBankByName(bankName) ;
+        ServiceFactory.getBankService().setCurrentBank(bank);
         remoteOffice.initialize();
         remoteOffice.run();
     }

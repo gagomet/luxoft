@@ -9,6 +9,7 @@ import BankApplication.network.console.Console;
 import BankApplication.service.impl.AccountServiceImpl;
 import BankApplication.service.impl.BankServiceImpl;
 import BankApplication.service.impl.ClientServiceImpl;
+import BankApplication.service.impl.ServiceFactory;
 
 
 import java.io.IOException;
@@ -30,12 +31,12 @@ public class TransferCommand extends AbstractCommand {
 
     @Override
     public void execute() {
-        if (ClientServiceImpl.getInstance().getCurrentClient() == null) {
+        if (ServiceFactory.getClientService().getCurrentClient() == null) {
             System.out.println(errorsBundle.getString("noActiveClient"));
             console.sendResponse("Select active client first! Press enter to continue");
         } else {
             try {
-                Account senderAccount = ClientServiceImpl.getInstance().getCurrentClient().getActiveAccount();
+                Account senderAccount = ServiceFactory.getClientService().getCurrentClient().getActiveAccount();
                 while (true) {
                     try {
                         recepientName = validateClientsName(console.consoleResponse("Enter Client-recipient name, please"));
@@ -45,7 +46,7 @@ public class TransferCommand extends AbstractCommand {
                         console.sendResponse(errorsBundle.getString("wrongClientsName"));
                     }
                 }
-                Client recepient = ClientServiceImpl.getInstance().getClientByName(BankServiceImpl.getInstance().getCurrentBank()
+                Client recepient = ServiceFactory.getClientService().getClientByName(BankServiceImpl.getInstance().getCurrentBank()
                         , recepientName);
                 System.out.println("Recepient: " + recepient.getName() + " accounts ID ");
                 for (Account account : recepient.getAccountsList()) {
@@ -90,7 +91,7 @@ public class TransferCommand extends AbstractCommand {
     }
 
     public void transferFunds(Account sender, Account recepient, Float amount) throws NotEnoughFundsException, IllegalArgumentException {
-        AccountServiceImpl.getInstance().transferFunds(sender, recepient, amount);
+        ServiceFactory.getAccountService().transferFunds(sender, recepient, amount);
         StringBuilder builder = new StringBuilder();
         builder.append("Transfer funds successfully completed");
         builder.append(System.getProperty("line.separator"));
