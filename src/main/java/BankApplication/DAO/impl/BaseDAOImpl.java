@@ -16,7 +16,10 @@ public class BaseDAOImpl implements BaseDAO {
     private static Connection connection;
 
     public static Connection getConnection() {
-        return connection;
+        if (connection != null) {
+            return connection;
+        }
+        throw new DAOException("Connection is null");
     }
 
     public static void setConnection(Connection connection) {
@@ -56,7 +59,7 @@ public class BaseDAOImpl implements BaseDAO {
             SQLException nextException = e.getNextException();
             handleSQLException(nextException);
         } else {
-            System.out.println(e.getSQLState() + e.getMessage());
+            System.out.println(e.getSQLState() + "   " + e.getMessage());
         }
     }
 

@@ -92,29 +92,20 @@ public class BankDAOImpl extends BaseDAOImpl implements BankDAO {
         return result;
     }
 
-    public void saveChangesToBank(Bank changedBank){ //full greed update of existing Bank
+    public void saveChangesToBank(Bank changedBank) { //full greed update of existing Bank
         setConnection(openConnection());
         try {
             getConnection().setAutoCommit(false);
             PreparedStatement preparedStatement = getConnection().prepareStatement(UPDATE_BANK_STMT);
             preparedStatement.setString(1, changedBank.getName());
+            preparedStatement.setLong(2, changedBank.getId());
             int changes = preparedStatement.executeUpdate();
+
             if (changes != 0) {
-                try (ResultSet generatedKeys = preparedStatement.getGeneratedKeys()) {
-                    if (generatedKeys.next()) {
-                        changedBank.setId(generatedKeys.getLong(1));
-                    } else {
-                        throw new SQLException("Updating Bank failed, no ID obtained.");
-                    }
-                }
-                List<Client> clientList = DAOFactory.getClientDAO().getAllClients(changedBank);
-                for(Client tempClient : clientList){
-                    DAOFactory.getClientDAO().save(changedBank, tempClient);
-                }
+                changedBank.setId(preparedStatement.getGeneratedKeys().getInt(1));
             } else {
                 throw new DAOException("Can't update the Bank");
             }
-
             getConnection().commit();
             getConnection().setAutoCommit(true);
         } catch (SQLException e) {

@@ -1,34 +1,68 @@
 package BankApplication.service.DAO;
 
+import BankApplication.DAO.BaseDAO;
 import BankApplication.DAO.impl.BaseDAOImpl;
 import BankApplication.DAO.impl.DAOFactory;
 import BankApplication.model.impl.Bank;
 import BankApplication.model.impl.CheckingAccount;
 import BankApplication.model.impl.Client;
 import BankApplication.service.impl.TestService;
+import BankApplication.type.Gender;
+import com.ibatis.common.jdbc.ScriptRunner;
 import junit.framework.TestCase;
-import org.h2.jdbcx.JdbcConnectionPool;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import javax.sql.DataSource;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.net.URL;
 import java.sql.Connection;
 import java.sql.SQLException;
 
 
 public class BankDAOImplTest extends TestCase {
-     private Bank bank1, bank2;
+    private Bank bank1, bank2;
+    private BaseDAO testBaseDao;
+    private Connection dbConnection;
+    private InputStreamReader reader = null;
 
     @Before
     public void setUp() {
-        DataSource dataSource = JdbcConnectionPool.create("jdbc:h2:mem:test;DB_CLOSE_DELAY=-1", "user", "password");
+        testBaseDao = new BaseDAOImpl();
+        dbConnection = testBaseDao.openConnection();
+        String SQLScriptFilePath = "test.sql";
+        URL url = Thread.currentThread().getContextClassLoader().getResource(SQLScriptFilePath);
+        File file = new File(url.getPath());
         try {
-            Connection conn = dataSource.getConnection();
-
-        } catch (SQLException e) {
+            ScriptRunner scriptRunner = new ScriptRunner(dbConnection, false, false);
+            Reader reader = new BufferedReader(new FileReader(file));
+            scriptRunner.runScript(reader);
+        } catch (SQLException | IOException e) {
             e.printStackTrace();
         }
+    }
 
+    @After
+    public void closeUp() {
+        if (dbConnection != null) {
+            try {
+                dbConnection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        if (reader != null) {
+            try {
+                reader.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     @Test
@@ -42,12 +76,13 @@ public class BankDAOImplTest extends TestCase {
         bank1 = DAOFactory.getBankDAO().getBankByID(1);
         Client client = new Client();
         client.setName("Petr Petrov");
-        client.setCity("Jizzle");
+        client.setCity("JizzleTown");
+        client.setSex(Gender.FEMALE);
         client.setInitialOverdraft(100.0f);
-        client.addAccount(new CheckingAccount());
+        client = DAOFactory.getClientDAO().save(bank1, client);
         bank1.addClient(client);
-        DAOFactory.getBankDAO().saveChangesToBank(bank1);
         bank2 = DAOFactory.getBankDAO().getBankByID(1);
+
         assertTrue(TestService.isEquals(bank1, bank2));
     }
 

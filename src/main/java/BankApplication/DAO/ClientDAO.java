@@ -39,7 +39,7 @@ public interface ClientDAO {
      * or update client in database (if id!=null)
      * @param client
      */
-    void save(Bank bank, Client client);
+    Client save(Bank bank, Client client);
 
     /**
      * Method removes client from Database

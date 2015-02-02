@@ -27,7 +27,7 @@ public interface AccountDAO {
      */
     public List<Account> getClientAccounts(long id);
 
-    public void addAccount(Account account, Client client);
+    public Account addAccount(Account account, Client client);
 
     public void transferFunds(Account sender, Account recipient, float amount);
 }

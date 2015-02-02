@@ -1,16 +1,14 @@
 package BankApplication.DAO.impl;
 
+import BankApplication.DAO.ClientDAO;
 import BankApplication.exceptions.ClientNotFoundException;
 import BankApplication.model.Account;
 import BankApplication.model.impl.Bank;
 import BankApplication.model.impl.CheckingAccount;
 import BankApplication.model.impl.Client;
 import BankApplication.model.impl.SavingAccount;
-import BankApplication.DAO.AccountDAO;
-import BankApplication.DAO.ClientDAO;
 import BankApplication.type.Gender;
 
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -29,13 +27,14 @@ public class ClientDAOImpl extends BaseDAOImpl implements ClientDAO {
     private static final String GET_ALL_CLIENTS = "SELECT * FROM CLIENTS WHERE CLIENTS.BANK_ID=?";
     private static final String REMOVE_CLIENT_FROM_DB = "DELETE FROM CLIENTS WHERE ID=?";
     private static final String INSERT_CLIENT_INTO_DB = "INSERT INTO CLIENTS " +
-            "(BANK_ID, NAME, OVERDRAFT, GENDER, EMAIL, CITY) VALUES (?, ?, ?, ?, ?, ?)";
+            "(BANK_ID, NAME, OVERDRAFT, GENDER, EMAIL, CITY, PHONE) VALUES (?, ?, ?, ?, ?, ?, ?)";
     private static final String UPDATE_CLIENT_IN_DB = "UPDATE CLIENTS SET " +
-            "BANK_ID=?, NAME=?, OVERDRAFT=?, GENDER=?, EMAIL=?, CITY=? WHERE ID=? ";
+            "BANK_ID=?, NAME=?, OVERDRAFT=?, GENDER=?, EMAIL=?, CITY=?, PHONE=? WHERE ID=? ";
 
-    private ClientDAOImpl(){}
+    private ClientDAOImpl() {
+    }
 
-    public static ClientDAOImpl getInstance(){
+    public static ClientDAOImpl getInstance() {
         if (instance == null) {
             return new ClientDAOImpl();
         }
@@ -141,11 +140,16 @@ public class ClientDAOImpl extends BaseDAOImpl implements ClientDAO {
     }
 
     @Override
-    public void save(Bank bank, Client client) {
+    public Client save(Bank bank, Client client) {
+        Client currentClient = null;
         try {
             setConnection(openConnection());
             getConnection().setAutoCommit(false);
-            Client currentClient = findClientById(client.getId());
+            if (client.getId() == 0) {
+                currentClient = client;
+            } else {
+                currentClient = findClientById(client.getId());
+            }
             PreparedStatement preparedStatement;
 
             if (currentClient.getId() != 0) {
@@ -170,12 +174,13 @@ public class ClientDAOImpl extends BaseDAOImpl implements ClientDAO {
             }
             getConnection().commit();
             getConnection().setAutoCommit(true);
-
+            Account newAccount = null;
             if (client.getInitialOverdraft() == 0.0f) {
-                DAOFactory.getAccountDAO().addAccount(new SavingAccount(), client);
+                newAccount = DAOFactory.getAccountDAO().addAccount(new SavingAccount(), client);
             } else {
-                DAOFactory.getAccountDAO().addAccount(new CheckingAccount(client.getInitialOverdraft()), client);
+                newAccount = DAOFactory.getAccountDAO().addAccount(new CheckingAccount(client.getInitialOverdraft()), client);
             }
+            currentClient.addAccount(newAccount);
         } catch (SQLException | ClientNotFoundException e) {
             try {
                 getConnection().rollback();
@@ -184,6 +189,7 @@ public class ClientDAOImpl extends BaseDAOImpl implements ClientDAO {
             }
             e.getMessage();
         }
+        return currentClient;
     }
 
     @Override
@@ -235,6 +241,11 @@ public class ClientDAOImpl extends BaseDAOImpl implements ClientDAO {
             preparedStatement.setNull(6, Types.VARCHAR);
         } else {
             preparedStatement.setString(6, client.getCity());
+        }
+        if (client.getPhone() == null) {
+            preparedStatement.setNull(7, Types.VARCHAR);
+        } else {
+            preparedStatement.setString(7, client.getPhone());
         }
 
     }

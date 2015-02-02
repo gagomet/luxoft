@@ -108,7 +108,7 @@ public class AccountDAOImpl extends BaseDAOImpl implements AccountDAO {
     }
 
     @Override
-    public void addAccount(Account account, Client client) {
+    public Account addAccount(Account account, Client client) {
         try {
             setConnection(openConnection());
             getConnection().setAutoCommit(false);
@@ -143,6 +143,7 @@ public class AccountDAOImpl extends BaseDAOImpl implements AccountDAO {
         } finally {
             closeConnection(getConnection());
         }
+        return account;
     }
 
     public void transferFunds(Account sender, Account recipient, float amount) {

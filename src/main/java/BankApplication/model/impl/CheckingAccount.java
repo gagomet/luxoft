@@ -69,20 +69,18 @@ public class CheckingAccount extends AbstractAccount {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof CheckingAccount)) return false;
-        if (!super.equals(o)) return false;
 
         CheckingAccount that = (CheckingAccount) o;
-
-        if (Float.compare(that.overdraft, overdraft) != 0) return false;
-
+        if (Float.compare(that.overdraft, this.overdraft) != 0) return false;
+        if (Float.compare(that.balance, this.balance) != 0) return false;
         return true;
     }
 
     @Override
     public int hashCode() {
-        int result = super.hashCode();
-        result = 31 * result + (overdraft != +0.0f ? Float.floatToIntBits(overdraft) : 0);
+        int result = (super.balance != +0.0f ? Float.floatToIntBits(balance) : 0);
+        result = 31 * result + (int) (super.clientId ^ (super.clientId >>> 32));
+        result = (overdraft != +0.0f ? Float.floatToIntBits(overdraft) : 0);
         return result;
     }
-
 }

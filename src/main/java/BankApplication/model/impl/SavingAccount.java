@@ -43,10 +43,8 @@ public class SavingAccount extends AbstractAccount {
         if (!(o instanceof SavingAccount)) return false;
 
         SavingAccount that = (SavingAccount) o;
-
         if (Float.compare(that.balance, balance) != 0) return false;
         if (clientId != that.clientId) return false;
-        if (id != that.id) return false;
 
         return true;
     }
@@ -54,7 +52,6 @@ public class SavingAccount extends AbstractAccount {
     @Override
     public int hashCode() {
         int result = (super.balance != +0.0f ? Float.floatToIntBits(balance) : 0);
-        result = 31 * result + (int) (super.id ^ (super.id >>> 32));
         result = 31 * result + (int) (super.clientId ^ (super.clientId >>> 32));
         return result;
     }

@@ -171,14 +171,12 @@ public class Client implements Report, Serializable, Persistable {
 
         Client client = (Client) o;
 
-        if (bankId != client.bankId) return false;
-        if (id != client.id) return false;
-        if (Float.compare(client.initialOverdraft, initialOverdraft) != 0) return false;
         if (accountsList != null ? !accountsList.equals(client.accountsList) : client.accountsList != null)
             return false;
         if (city != null ? !city.equals(client.city) : client.city != null) return false;
         if (email != null ? !email.equals(client.email) : client.email != null) return false;
-        if (name != null ? !name.equals(client.name) : client.name != null) return false;
+        if (!initialOverdraft.equals(client.initialOverdraft)) return false;
+        if (!name.equals(client.name)) return false;
         if (phone != null ? !phone.equals(client.phone) : client.phone != null) return false;
         if (sex != client.sex) return false;
 
@@ -187,11 +185,9 @@ public class Client implements Report, Serializable, Persistable {
 
     @Override
     public int hashCode() {
-        int result = (int) (id ^ (id >>> 32));
-        result = 31 * result + (int) (bankId ^ (bankId >>> 32));
-        result = 31 * result + (name != null ? name.hashCode() : 0);
+        int result = name.hashCode();
         result = 31 * result + (accountsList != null ? accountsList.hashCode() : 0);
-        result = 31 * result + (initialOverdraft != +0.0f ? Float.floatToIntBits(initialOverdraft) : 0);
+        result = 31 * result + initialOverdraft.hashCode();
         result = 31 * result + (sex != null ? sex.hashCode() : 0);
         result = 31 * result + (city != null ? city.hashCode() : 0);
         result = 31 * result + (email != null ? email.hashCode() : 0);
