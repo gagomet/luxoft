@@ -227,10 +227,14 @@ public class ClientDAOImpl extends BaseDAOImpl implements ClientDAO {
         } else {
             preparedStatement.setFloat(3, client.getInitialOverdraft());
         }
-        if (client.getSex() == Gender.MALE) {
-            preparedStatement.setInt(4, 1);
+        if (client.getSex() != null) {
+            if (client.getSex() == Gender.MALE) {
+                preparedStatement.setInt(4, 1);
+            } else {
+                preparedStatement.setInt(4, 0);
+            }
         } else {
-            preparedStatement.setInt(4, 0);
+            preparedStatement.setNull(4, Types.TINYINT);
         }
         if (client.getEmail() == null) {
             preparedStatement.setNull(5, Types.VARCHAR);
