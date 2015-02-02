@@ -1,8 +1,13 @@
 package BankApplication.service.impl;
 
 import BankApplication.annotation.NoDB;
+import BankApplication.service.Persistable;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+import java.util.Collection;
+import java.util.Iterator;
 
 /**
  * Created by Kir Kolesnikov on 30.01.2015.
@@ -17,44 +22,63 @@ public class TestService {
      * также он должен уметь сравнивать коллекции.
      */
     public static boolean isEquals(Object o1, Object o2) {
-        Class instance01 = o1.getClass();
-        Class instance02 = o2.getClass();
-
-        if (instance01.getCanonicalName().equals(instance02.getCanonicalName())) {
-            Field[] fields01 = instance01.getDeclaredFields();
-            Field[] fields02 = instance02.getDeclaredFields();
-
-            for (int i = 0; i < fields01.length; i++) {
-                Field field01 = fields01[i];
-                Field field02 = fields02[i];
-                if (!field01.isAnnotationPresent(NoDB.class) && !field02.isAnnotationPresent(NoDB.class)) {
-                    field01.setAccessible(true);
-                    field02.setAccessible(true);
-                    Class typeField01 = field01.getType();
-                    Class typeField02 = field02.getType();
-                    try {
-                        Object value01 = field01.get(o1);
-                        Object value02 = field02.get(o1);
-                        if (!value01.equals(value02)) {
-                            return false;
-                        }
-                    } catch (IllegalAccessException e) {
-                        e.printStackTrace();
-                    }
-
-                }
-            }
+        if (!Persistable.class.isAssignableFrom(o1.getClass()) || !Persistable.class.isAssignableFrom(o2.getClass())) {
+            return o1.equals(o2);
         } else {
-            return false;
+
+            if (o1 == o2) {
+                return true;
+            }
+
+            if (o1.getClass().getCanonicalName().equals(o2.getClass().getCanonicalName())) {
+                Field[] fields01 = o1.getClass().getDeclaredFields();
+                Field[] fields02 = o2.getClass().getDeclaredFields();
+
+                for (int i = 0; i < fields01.length; i++) {
+                    Field field01 = fields01[i];
+                    Field field02 = fields02[i];
+                    if (!field01.isAnnotationPresent(NoDB.class)) {
+                        field01.setAccessible(true);
+                        field02.setAccessible(true);
+                        try {
+                            if (Collection.class.isAssignableFrom(field01.getType())) {
+                                Collection collectionFieldFromObject1 = (Collection) field01.get(o1);
+                                Collection collectionFieldFromObject2 = (Collection) field02.get(o2);
+                                if (collectionFieldFromObject1.size() != collectionFieldFromObject2.size()) {
+                                    return false;
+                                } else {
+                                    if (!isCollectionEquals(collectionFieldFromObject1, collectionFieldFromObject2)) {
+                                        return false;
+                                    }
+                                }
+                            } else {
+                                Object value01 = field01.get(o1);
+                                Object value02 = field02.get(o2);
+                                if (!value01.equals(value02)) {
+                                    return false;
+                                }
+                            }
+                        } catch (IllegalAccessException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            } else {
+                return false;
+            }
+            return true;
+        }
+    }
+
+    private static boolean isCollectionEquals(Collection collection1, Collection collection2) {
+        Iterator iterator1 = collection1.iterator();
+        Iterator iterator2 = collection2.iterator();
+        while (iterator1.hasNext()) {
+            if (!TestService.isEquals(iterator1.next(), iterator2.next())) ;
+            {
+                return false;
+            }
         }
         return true;
     }
-
-    private boolean isFieldsEquals(Field field1, Field field2) {
-
-
-        return false;
-    }
-
-
 }

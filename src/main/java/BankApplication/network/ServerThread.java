@@ -40,7 +40,8 @@ public class ServerThread implements Runnable {
 
     private Map<String, Command> commandsMap = new TreeMap<>();
     private static final String FEED_FILES_FOLDER = "c:\\!toBankApplication\\";
-    private static String bankName = "MyBank";
+//    private static String bankName = "MyBank";
+        static String bankName = "MYBANK";
 
     public void initialize() {
 

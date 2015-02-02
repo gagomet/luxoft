@@ -3,6 +3,7 @@ package BankApplication.model.impl;
 import BankApplication.model.Account;
 import BankApplication.exceptions.IllegalArgumentException;
 import BankApplication.exceptions.NotEnoughFundsException;
+import BankApplication.service.Persistable;
 
 import java.io.Serializable;
 import java.util.Map;
@@ -11,7 +12,7 @@ import java.util.ResourceBundle;
 /**
  * Created by Kir Kolesnikov on 14.01.2015.
  */
-public abstract class AbstractAccount implements Account, Serializable {
+public abstract class AbstractAccount implements Account, Serializable, Persistable {
     protected static ResourceBundle errorsBundle = ResourceBundle.getBundle("errors");
     protected float balance;
     protected long id;

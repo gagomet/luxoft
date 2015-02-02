@@ -1,47 +1,42 @@
 package BankApplication.service.impl;
 
+import BankApplication.model.Account;
 import BankApplication.model.impl.Bank;
 import BankApplication.model.impl.CheckingAccount;
 import BankApplication.model.impl.Client;
 import junit.framework.TestCase;
 import org.junit.Before;
+import org.junit.Test;
 
 public class TestServiceTest extends TestCase {
-Client client, client2;
+    Bank bank1, bank2;
+
     @Before
-    public void  setUp(){
-        Client client = new Client ();
+    public void initBanks() {
+
+        Account newAccount = new CheckingAccount(10000);
+        bank1 = new Bank();
+        bank1.setId(1);
+        bank1.setName("My Bank");
+        Client client = new Client();
         client.setName("Ivan Ivanov");
         client.setCity("Kiev");
-        client.setActiveAccount(new CheckingAccount(1000));
-        // add some fields from Client
-        // marked as @NoDB, with different values
-        // for client and client2
+        client.addAccount(newAccount);
+        client.setActiveAccount(newAccount);
+        bank1.addClient(client);
 
-        Client client2 = new Client ();
+        bank2 = new Bank();
+        bank2.setId(2);
+        bank2.setName("My Bank");
+        Client client2 = new Client();
         client2.setName("Ivan Ivanov");
         client2.setCity("Kiev");
-        client2.setActiveAccount(new CheckingAccount(100000));
-        // add some fields from Client
-        // marked as @NoDB, with different values
-        // for client and client2
+        client2.addAccount(newAccount);
+        bank2.addClient(client2);
     }
 
-    public void testIsEquals() throws Exception {
-        Client client = new Client ();
-        client.setName("Ivan Ivanov");
-        client.setCity("Kiev");
-        client.setActiveAccount(new CheckingAccount(1000));
-        // add some fields from Client
-        // marked as @NoDB, with different values
-        // for client and client2
-
-        Client client2 = new Client ();
-        client2.setName("Ivan Ivanov");
-        client2.setCity("Kiev");
-        client2.setActiveAccount(new CheckingAccount(100000));
-        // add some fields from Client
-        // marked as @NoDB, with different values
-        // for client and client2
+    @Test
+    public void testEquals() {
+        assertTrue(TestService.isEquals(bank1, bank2));
     }
 }

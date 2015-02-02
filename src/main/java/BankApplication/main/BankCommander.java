@@ -24,7 +24,8 @@ public class BankCommander {
 //    public static Client currentClient = null;
     public static Map<String, Command> commandsMap = new TreeMap<>();
     private static final String FEED_FILES_FOLDER = "c:\\!toBankApplication\\";
-    static String bankName = "MyBank";
+//    static String bankName = "MyBank";
+      static String bankName = "MYBANK";
 
 
     static

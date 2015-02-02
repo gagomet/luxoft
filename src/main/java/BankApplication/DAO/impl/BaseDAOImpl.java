@@ -23,6 +23,9 @@ public class BaseDAOImpl implements BaseDAO {
         BaseDAOImpl.connection = connection;
     }
 
+    public BaseDAOImpl() {
+    }
+
     @Override
     public Connection openConnection() {
         try {
@@ -34,7 +37,6 @@ public class BaseDAOImpl implements BaseDAO {
             );
             return connection;
         } catch (ClassNotFoundException | SQLException e) {
-            System.out.println(e.getMessage());
             System.out.println(e.getMessage());
         }
         throw new DAOException("Can't reach the connection to DB");
@@ -49,8 +51,8 @@ public class BaseDAOImpl implements BaseDAO {
         }
     }
 
-    protected void handleSQLException(SQLException e){
-        if(e.getNextException() != null){
+    protected void handleSQLException(SQLException e) {
+        if (e.getNextException() != null) {
             SQLException nextException = e.getNextException();
             handleSQLException(nextException);
         } else {

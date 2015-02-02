@@ -4,6 +4,7 @@ import BankApplication.annotation.NoDB;
 import BankApplication.exceptions.IllegalArgumentException;
 import BankApplication.model.Account;
 import BankApplication.model.Report;
+import BankApplication.service.Persistable;
 import BankApplication.type.Gender;
 
 import java.io.Serializable;
@@ -15,7 +16,7 @@ import java.util.Set;
 /**
  * Created by Kir Kolesnikov on 14.01.2015.
  */
-public class Client implements Report, Serializable {
+public class Client implements Report, Serializable, Persistable {
     private long id;
     private long bankId;
     private String name;
@@ -88,6 +89,10 @@ public class Client implements Report, Serializable {
 
     public void setAccountsList(Set<Account> accountsList) {
         this.accountsList = accountsList;
+    }
+
+    public void addAccount(Account account){
+        accountsList.add(account);
     }
 
     public float getFullClientBalance() {
