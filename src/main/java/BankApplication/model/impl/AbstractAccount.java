@@ -1,5 +1,6 @@
 package BankApplication.model.impl;
 
+import BankApplication.annotation.NoDB;
 import BankApplication.model.Account;
 import BankApplication.exceptions.IllegalArgumentException;
 import BankApplication.exceptions.NotEnoughFundsException;
@@ -15,6 +16,7 @@ import java.util.ResourceBundle;
 public abstract class AbstractAccount implements Account, Serializable, Persistable, Comparable<AbstractAccount> {
     protected static ResourceBundle errorsBundle = ResourceBundle.getBundle("errors");
     protected float balance;
+    @NoDB
     protected long id;
     protected long clientId;
 

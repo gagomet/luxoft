@@ -111,7 +111,7 @@ public abstract class AbstractCommand implements Command {
     }
 
     protected boolean isPhone(String phone) {
-        return phone.matches("[0-9]{4,15}");
+        return phone.matches("[+0-9]{4,15}");
     }
 
     protected boolean isEmail(String email) {

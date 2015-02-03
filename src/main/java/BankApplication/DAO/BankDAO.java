@@ -20,9 +20,7 @@ public interface BankDAO {
      */
     public BankInfo getBankInfo(Bank bank);
 
-    public void createNewBankInDB(Bank bank);
-
-    public void saveChangesToBank(Bank changedBank); //full greed update of existing Bank
+    public Bank saveChangesToBank(Bank changedBank); //full greed update of existing Bank
 
     public Bank getBankByID(long id); //greed getting of Bank instance
 

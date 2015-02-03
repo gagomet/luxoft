@@ -13,9 +13,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by Kir Kolesnikov on 27.01.2015.
@@ -56,7 +54,7 @@ public class ClientDAOImpl extends BaseDAOImpl implements ClientDAO {
             if (accountList.size() == 1) {
                 resultClient.setActiveAccount(accountList.get(0));
             }
-            HashSet<Account> accountSet = new HashSet<Account>(accountList);
+            TreeSet<Account> accountSet = new TreeSet<>(accountList);
             resultClient.setAccountsList(accountSet);
         } catch (SQLException e) {
             handleSQLException(e);
@@ -121,7 +119,7 @@ public class ClientDAOImpl extends BaseDAOImpl implements ClientDAO {
                 tempClient.setPhone(resultSet.getString("PHONE"));
                 tempClient.setCity(resultSet.getString("CITY"));
                 List<Account> accountList = DAOFactory.getAccountDAO().getClientAccounts(tempClient.getId());
-                HashSet<Account> accountSet = new HashSet<Account>(accountList);
+                Set<Account> accountSet = new TreeSet<Account>(accountList);
                 tempClient.setAccountsList(accountSet);
                 resultList.add(tempClient);
             }
@@ -142,6 +140,7 @@ public class ClientDAOImpl extends BaseDAOImpl implements ClientDAO {
     @Override
     public Client save(Bank bank, Client client) {
         Client currentClient = null;
+        PreparedStatement preparedStatement;
         try {
             setConnection(openConnection());
             getConnection().setAutoCommit(false);
@@ -150,23 +149,21 @@ public class ClientDAOImpl extends BaseDAOImpl implements ClientDAO {
             } else {
                 currentClient = findClientById(client.getId());
             }
-            PreparedStatement preparedStatement;
-
             if (currentClient.getId() != 0) {
                 preparedStatement = getConnection().prepareStatement(UPDATE_CLIENT_IN_DB);
-                setPreparedStatementDataForClient(preparedStatement, client);
-                preparedStatement.setLong(7, client.getId());
+                setPreparedStatementDataForClient(preparedStatement, currentClient, bank);
+                preparedStatement.setLong(8, client.getId());
             } else {
                 preparedStatement = getConnection().prepareStatement(INSERT_CLIENT_INTO_DB);
-                setPreparedStatementDataForClient(preparedStatement, client);
-
+                setPreparedStatementDataForClient(preparedStatement, currentClient, bank);
             }
-            preparedStatement.setLong(1, bank.getId());
+
             int changes = preparedStatement.executeUpdate();
+
             if (changes != 0) {
                 try (ResultSet generatedKeys = preparedStatement.getGeneratedKeys()) {
                     if (generatedKeys.next()) {
-                        client.setId(generatedKeys.getLong(1));
+                        currentClient.setId(generatedKeys.getLong(1));
                     } else {
                         throw new SQLException("Creating user failed, no ID obtained.");
                     }
@@ -174,7 +171,8 @@ public class ClientDAOImpl extends BaseDAOImpl implements ClientDAO {
             }
             getConnection().commit();
             getConnection().setAutoCommit(true);
-            Account newAccount = null;
+
+            Account newAccount;
             if (client.getInitialOverdraft() == 0.0f) {
                 newAccount = DAOFactory.getAccountDAO().addAccount(new SavingAccount(), client);
             } else {
@@ -182,12 +180,13 @@ public class ClientDAOImpl extends BaseDAOImpl implements ClientDAO {
             }
             currentClient.addAccount(newAccount);
         } catch (SQLException | ClientNotFoundException e) {
+            e.getMessage();
             try {
                 getConnection().rollback();
             } catch (SQLException e1) {
                 handleSQLException(e1);
             }
-            e.getMessage();
+
         }
         return currentClient;
     }
@@ -198,6 +197,7 @@ public class ClientDAOImpl extends BaseDAOImpl implements ClientDAO {
             setConnection(openConnection());
             getConnection().setAutoCommit(false);
             DAOFactory.getAccountDAO().removeByClientId(client.getId());
+            setConnection(openConnection());
             PreparedStatement preparedStatement = getConnection().prepareStatement(REMOVE_CLIENT_FROM_DB);
             preparedStatement.setLong(1, client.getId());
             preparedStatement.executeUpdate();
@@ -215,7 +215,12 @@ public class ClientDAOImpl extends BaseDAOImpl implements ClientDAO {
         }
     }
 
-    private void setPreparedStatementDataForClient(PreparedStatement preparedStatement, Client client) throws SQLException {
+    private void setPreparedStatementDataForClient(PreparedStatement preparedStatement, Client client, Bank bank) throws SQLException {
+        if(client.getBankId() == 0){
+            preparedStatement.setLong(1, bank.getId());
+        } else {
+            preparedStatement.setLong(1, client.getBankId());
+        }
 
         if (client.getName() == null) {
             preparedStatement.setNull(2, Types.VARCHAR);
@@ -251,6 +256,7 @@ public class ClientDAOImpl extends BaseDAOImpl implements ClientDAO {
         } else {
             preparedStatement.setString(7, client.getPhone());
         }
+
 
     }
 

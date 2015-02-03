@@ -18,6 +18,7 @@ import java.util.TreeSet;
  * Created by Kir Kolesnikov on 14.01.2015.
  */
 public class Client implements Report, Serializable, Persistable {
+    @NoDB
     private long id;
     private long bankId;
     private String name;
@@ -34,7 +35,7 @@ public class Client implements Report, Serializable, Persistable {
     }
 
     public Client(Gender sex) throws BankApplication.exceptions.IllegalArgumentException {
-            this.sex = sex;
+        this.sex = sex;
     }
 
     public Account parseFeed(Map<String, String> feedMap) throws IllegalArgumentException {
@@ -92,16 +93,16 @@ public class Client implements Report, Serializable, Persistable {
         this.accountsList = accountsList;
     }
 
-    public void addAccount(Account account){
+    public void addAccount(Account account) {
         accountsList.add(account);
     }
 
     public float getFullClientBalance() {
-            float result = 0.0f;
-            for (Account acc : accountsList) {
-                result += acc.getBalance();
-            }
-            return result;
+        float result = 0.0f;
+        for (Account acc : accountsList) {
+            result += acc.getBalance();
+        }
+        return result;
     }
 
     public String getCity() {
@@ -164,7 +165,7 @@ public class Client implements Report, Serializable, Persistable {
     public void setPhone(String phone) {
         this.phone = phone;
     }
-
+/*INSERT INTO CLIENTS (BANK_ID, NAME, OVERDRAFT, GENDER, EMAIL, CITY, PHONE) VALUES (1,'Newbie' , 1000, 0, null, null, 'Ololoevsk');*/
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -172,12 +173,14 @@ public class Client implements Report, Serializable, Persistable {
 
         Client client = (Client) o;
 
+        if (bankId != client.bankId) return false;
         if (accountsList != null ? !accountsList.equals(client.accountsList) : client.accountsList != null)
             return false;
         if (city != null ? !city.equals(client.city) : client.city != null) return false;
         if (email != null ? !email.equals(client.email) : client.email != null) return false;
-        if (!initialOverdraft.equals(client.initialOverdraft)) return false;
-        if (!name.equals(client.name)) return false;
+        if (initialOverdraft != null ? !initialOverdraft.equals(client.initialOverdraft) : client.initialOverdraft != null)
+            return false;
+        if (name != null ? !name.equals(client.name) : client.name != null) return false;
         if (phone != null ? !phone.equals(client.phone) : client.phone != null) return false;
         if (sex != client.sex) return false;
 
@@ -186,14 +189,14 @@ public class Client implements Report, Serializable, Persistable {
 
     @Override
     public int hashCode() {
-        int result = name.hashCode();
+        int result = (int) (bankId ^ (bankId >>> 32));
+        result = 31 * result + (name != null ? name.hashCode() : 0);
         result = 31 * result + (accountsList != null ? accountsList.hashCode() : 0);
-        result = 31 * result + initialOverdraft.hashCode();
+        result = 31 * result + (initialOverdraft != null ? initialOverdraft.hashCode() : 0);
         result = 31 * result + (sex != null ? sex.hashCode() : 0);
         result = 31 * result + (city != null ? city.hashCode() : 0);
         result = 31 * result + (email != null ? email.hashCode() : 0);
         result = 31 * result + (phone != null ? phone.hashCode() : 0);
         return result;
     }
-
 }

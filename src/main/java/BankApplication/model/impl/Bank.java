@@ -21,8 +21,10 @@ import java.util.TreeMap;
  * Created by Kir Kolesnikov on 14.01.2015.
  */
 public class Bank implements Persistable{
+    @NoDB
     private Long id;
     private String name;
+    @NoDB
     private Set<Client> clientSet = new HashSet<Client>();
     @NoDB
     private List<ClientRegistrationListener> listeners = new ArrayList<ClientRegistrationListener>();

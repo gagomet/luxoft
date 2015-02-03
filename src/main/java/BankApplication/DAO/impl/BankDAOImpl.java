@@ -13,7 +13,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Created by Kir Kolesnikov on 27.01.2015.
@@ -36,33 +35,6 @@ public class BankDAOImpl extends BaseDAOImpl implements BankDAO {
             return new BankDAOImpl();
         }
         return instance;
-    }
-
-    @Override
-    public void createNewBankInDB(Bank bank) {
-        setConnection(openConnection());
-        try {
-            getConnection().setAutoCommit(false);
-
-            PreparedStatement preparedStatement = getConnection().prepareStatement(INSERT_NEW_BANK);
-            preparedStatement.setString(1, bank.getName());
-            preparedStatement.executeUpdate();
-            Set<Client> newBankClients = bank.getClientSet();
-            for (Client client : newBankClients) {
-                DAOFactory.getClientDAO().save(bank, client);
-            }
-            getConnection().commit();
-            getConnection().setAutoCommit(false);
-        } catch (SQLException e) {
-            try {
-                getConnection().rollback();
-            } catch (SQLException e1) {
-                handleSQLException(e1);
-            }
-            handleSQLException(e);
-        } finally {
-            closeConnection(getConnection());
-        }
     }
 
     public Bank getBankByID(long id) { //greed getting of Bank instance
@@ -92,7 +64,7 @@ public class BankDAOImpl extends BaseDAOImpl implements BankDAO {
         return result;
     }
 
-    public void saveChangesToBank(Bank changedBank) { //full greed update of existing Bank
+    public Bank saveChangesToBank(Bank changedBank) { //full greed update of existing Bank
         setConnection(openConnection());
         try {
             getConnection().setAutoCommit(false);
@@ -116,6 +88,7 @@ public class BankDAOImpl extends BaseDAOImpl implements BankDAO {
             }
             handleSQLException(e);
         }
+        return changedBank;
     }
 
     @Override

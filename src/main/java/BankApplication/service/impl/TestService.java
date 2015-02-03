@@ -45,8 +45,13 @@ public class TestService {
                             if (Collection.class.isAssignableFrom(field01.getType())) {
                                 Collection collectionFieldFromObject1 = (Collection) field01.get(o1);
                                 Collection collectionFieldFromObject2 = (Collection) field02.get(o2);
-                                if(!collectionFieldFromObject1.containsAll(collectionFieldFromObject2)){
+                                if (collectionFieldFromObject1.size() != collectionFieldFromObject2.size()) {
                                     return false;
+                                }
+                                Iterator iterator1 = collectionFieldFromObject1.iterator();
+                                Iterator iterator2 = collectionFieldFromObject2.iterator();
+                                while (iterator1.hasNext()) {
+                                    isEquals(iterator1.next(), iterator2.next());
                                 }
                             } else {
                                 Object value01 = field01.get(o1);
@@ -58,6 +63,8 @@ public class TestService {
                         } catch (IllegalAccessException e) {
                             e.printStackTrace();
                         }
+                    } else {
+                        continue;
                     }
                 }
             } else {

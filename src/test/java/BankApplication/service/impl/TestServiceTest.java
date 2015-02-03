@@ -4,11 +4,11 @@ import BankApplication.model.Account;
 import BankApplication.model.impl.Bank;
 import BankApplication.model.impl.CheckingAccount;
 import BankApplication.model.impl.Client;
-import junit.framework.TestCase;
+import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 
-public class TestServiceTest extends TestCase {
+public class TestServiceTest  {
     Bank bank1, bank2;
 
     @Before
@@ -33,6 +33,7 @@ public class TestServiceTest extends TestCase {
         client2.setCity("Kiev");
         client2.addAccount(newAccount);
         bank2.addClient(client2);
+        bank2.addClient(client);
     }
 
     @Test

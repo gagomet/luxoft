@@ -1,54 +1,46 @@
-package BankApplication.service.DAO;
+package BankApplication.DAO;
 
-import BankApplication.DAO.BaseDAO;
 import BankApplication.DAO.impl.BaseDAOImpl;
 import BankApplication.DAO.impl.DAOFactory;
+import BankApplication.SqlScripRunner;
 import BankApplication.model.impl.Bank;
-import BankApplication.model.impl.CheckingAccount;
 import BankApplication.model.impl.Client;
 import BankApplication.service.impl.TestService;
 import BankApplication.type.Gender;
-import com.ibatis.common.jdbc.ScriptRunner;
-import junit.framework.TestCase;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.*;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.Reader;
-import java.net.URL;
 import java.sql.Connection;
 import java.sql.SQLException;
+import static org.junit.Assert.*;
 
 
-public class BankDAOImplTest extends TestCase {
+public class BankDAOImplTest {
     private Bank bank1, bank2;
-    private BaseDAO testBaseDao;
-    private Connection dbConnection;
-    private InputStreamReader reader = null;
+    private static BaseDAO testBaseDao;
+    private static Connection dbConnection;
+    private static InputStreamReader reader = null;
+
+    @BeforeClass
+    public static void preSetUp(){
+        testBaseDao = new BaseDAOImpl();
+        dbConnection = testBaseDao.openConnection();
+        SqlScripRunner.runSqlScript(dbConnection, "create.sql");
+    }
 
     @Before
     public void setUp() {
-        testBaseDao = new BaseDAOImpl();
-        dbConnection = testBaseDao.openConnection();
-        String SQLScriptFilePath = "test.sql";
-        URL url = Thread.currentThread().getContextClassLoader().getResource(SQLScriptFilePath);
-        File file = new File(url.getPath());
-        try {
-            ScriptRunner scriptRunner = new ScriptRunner(dbConnection, false, false);
-            Reader reader = new BufferedReader(new FileReader(file));
-            scriptRunner.runScript(reader);
-        } catch (SQLException | IOException e) {
-            e.printStackTrace();
-        }
+        SqlScripRunner.runSqlScript(dbConnection, "stubs.sql");
     }
 
     @After
     public void closeUp() {
+        SqlScripRunner.runSqlScript(dbConnection, "clear.sql");
+    }
+
+    @AfterClass
+    public static void afterUse(){
         if (dbConnection != null) {
             try {
                 dbConnection.close();
@@ -66,13 +58,13 @@ public class BankDAOImplTest extends TestCase {
     }
 
     @Test
-    public void testGetBankByName() throws Exception {
+    public void getBankByNameTest() throws Exception {
         Bank newBank = DAOFactory.getBankDAO().getBankByName("MyBank");
         assertFalse(newBank == null);
     }
 
     @Test
-    public void testInsert() {
+    public void insertTest() {
         bank1 = DAOFactory.getBankDAO().getBankByID(1);
         Client client = new Client();
         client.setName("Petr Petrov");
@@ -83,8 +75,29 @@ public class BankDAOImplTest extends TestCase {
         bank1.addClient(client);
         bank2 = DAOFactory.getBankDAO().getBankByID(1);
 
-//        assertEquals(bank1, bank2);
         assertTrue(TestService.isEquals(bank1, bank2));
+
     }
+
+    @Test
+    public void getBankByIDTest(){
+        Bank bank = DAOFactory.getBankDAO().getBankByID(1);
+        assertFalse(bank == null);
+    }
+
+    @Test
+    public void saveChangesToBank(){
+        Bank bank = DAOFactory.getBankDAO().getBankByID(1);
+        Client client = new Client();
+        client.setName("Newbie");
+        client.setInitialOverdraft(0.0f);
+        client.setSex(Gender.MALE);
+        bank.addClient(client);
+        Bank changed = DAOFactory.getBankDAO().saveChangesToBank(bank);
+
+        assertEquals(bank, changed);
+    }
+
+
 
 }
