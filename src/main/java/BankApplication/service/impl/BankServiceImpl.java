@@ -11,19 +11,19 @@ import BankApplication.service.BankService;
  * Created by Kir Kolesnikov on 29.01.2015.
  */
 public class BankServiceImpl implements BankService {
-    private static BankServiceImpl instance;
+
     private static Bank currentBank;
 
     private BankServiceImpl(){
     }
 
-    public static BankServiceImpl getInstance() {
-        if (instance == null) {
-            instance = new BankServiceImpl();
-        }
-        return instance;
+    private static class LazyHolder {
+        private static final BankServiceImpl INSTANCE = new BankServiceImpl();
     }
 
+    public static BankServiceImpl getInstance() {
+        return LazyHolder.INSTANCE;
+    }
     public Bank getCurrentBank(){
         return currentBank;
     }

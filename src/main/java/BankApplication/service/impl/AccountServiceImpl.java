@@ -15,18 +15,18 @@ import java.util.ResourceBundle;
  * Created by Kir Kolesnikov on 29.01.2015.
  */
 public class AccountServiceImpl implements AccountService {
-    private static AccountServiceImpl instance;
     protected static ResourceBundle errorsBundle = ResourceBundle.getBundle("errors");
 
     private AccountServiceImpl() {
 
     }
 
+    private static class LazyHolder {
+        private static final AccountServiceImpl INSTANCE = new AccountServiceImpl();
+    }
+
     public static AccountServiceImpl getInstance() {
-        if (instance == null) {
-            return new AccountServiceImpl();
-        }
-        return instance;
+        return LazyHolder.INSTANCE;
     }
 
     @Override

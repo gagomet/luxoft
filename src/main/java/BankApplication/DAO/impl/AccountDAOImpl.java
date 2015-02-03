@@ -14,7 +14,6 @@ import java.util.List;
  * Created by Kir Kolesnikov on 27.01.2015.
  */
 public class AccountDAOImpl extends BaseDAOImpl implements AccountDAO {
-    private static AccountDAOImpl instance;
     private static final String GET_CLIENTS_ACCOUNTS_STMT = "SELECT * FROM ACCOUNTS WHERE CLIENT_ID=?";
     private static final String GET_ACCOUNT_BY_ID_STMT = "SELECT * FROM ACCOUNTS WHERE ID=?";
     private static final String REMOVE_ALL_ACCOUNTS_BY_ID = "DELETE FROM ACCOUNTS WHERE CLIENT_ID=?";
@@ -26,12 +25,14 @@ public class AccountDAOImpl extends BaseDAOImpl implements AccountDAO {
     private AccountDAOImpl() {
     }
 
-    public static AccountDAOImpl getInstance(){
-        if (instance == null) {
-            return new AccountDAOImpl();
-        }
-        return instance;
+    private static class LazyHolder {
+        private static final AccountDAOImpl INSTANCE = new AccountDAOImpl();
     }
+
+    public static AccountDAOImpl getInstance() {
+        return LazyHolder.INSTANCE;
+    }
+
 
     @Override
     public void save(Account account, Client client) {

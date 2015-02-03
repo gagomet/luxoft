@@ -18,7 +18,6 @@ import java.util.List;
  * Created by Kir Kolesnikov on 27.01.2015.
  */
 public class BankDAOImpl extends BaseDAOImpl implements BankDAO {
-    private static BankDAOImpl instance;
     private static final String GET_BANK_BY_ID_STMT = "SELECT * FROM BANKS WHERE BANKS.ID = ? ";
     private static final String GET_BANK_BY_NAME_STMT = "SELECT * FROM BANKS WHERE BANKS.NAME = ? ";
     private static final String GET_NUMBER_OF_CLIENTS_STMT = "SELECT COUNT(ID) FROM CLIENTS";
@@ -30,11 +29,12 @@ public class BankDAOImpl extends BaseDAOImpl implements BankDAO {
 
     }
 
+    private static class LazyHolder {
+        private static final BankDAOImpl INSTANCE = new BankDAOImpl();
+    }
+
     public static BankDAOImpl getInstance() {
-        if (instance == null) {
-            return new BankDAOImpl();
-        }
-        return instance;
+        return LazyHolder.INSTANCE;
     }
 
     public Bank getBankByID(long id) { //greed getting of Bank instance
