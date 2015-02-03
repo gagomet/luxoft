@@ -12,6 +12,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeSet;
 
 /**
  * Created by Kir Kolesnikov on 14.01.2015.
@@ -20,7 +21,7 @@ public class Client implements Report, Serializable, Persistable {
     private long id;
     private long bankId;
     private String name;
-    private Set<Account> accountsList = new HashSet<>();
+    private Set<Account> accountsList = new TreeSet<>();
     @NoDB
     private transient Account activeAccount;
     private Float initialOverdraft;
@@ -194,4 +195,5 @@ public class Client implements Report, Serializable, Persistable {
         result = 31 * result + (phone != null ? phone.hashCode() : 0);
         return result;
     }
+
 }

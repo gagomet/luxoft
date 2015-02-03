@@ -45,12 +45,8 @@ public class TestService {
                             if (Collection.class.isAssignableFrom(field01.getType())) {
                                 Collection collectionFieldFromObject1 = (Collection) field01.get(o1);
                                 Collection collectionFieldFromObject2 = (Collection) field02.get(o2);
-                                if (collectionFieldFromObject1.size() != collectionFieldFromObject2.size()) {
+                                if(!collectionFieldFromObject1.containsAll(collectionFieldFromObject2)){
                                     return false;
-                                } else {
-                                    if (!isCollectionEquals(collectionFieldFromObject1, collectionFieldFromObject2)) {
-                                        return false;
-                                    }
                                 }
                             } else {
                                 Object value01 = field01.get(o1);
@@ -69,17 +65,5 @@ public class TestService {
             }
             return true;
         }
-    }
-
-    private static boolean isCollectionEquals(Collection collection1, Collection collection2) {
-        Iterator iterator1 = collection1.iterator();
-        Iterator iterator2 = collection2.iterator();
-        while (iterator1.hasNext()) {
-            if (!TestService.isEquals(iterator1.next(), iterator2.next())) ;
-            {
-                return false;
-            }
-        }
-        return true;
     }
 }

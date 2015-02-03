@@ -12,7 +12,7 @@ import java.util.ResourceBundle;
 /**
  * Created by Kir Kolesnikov on 14.01.2015.
  */
-public abstract class AbstractAccount implements Account, Serializable, Persistable {
+public abstract class AbstractAccount implements Account, Serializable, Persistable, Comparable<AbstractAccount> {
     protected static ResourceBundle errorsBundle = ResourceBundle.getBundle("errors");
     protected float balance;
     protected long id;
@@ -76,6 +76,16 @@ public abstract class AbstractAccount implements Account, Serializable, Persista
         builder.append(" ");
         builder.append(this.getBalance());
         return builder.toString();
+    }
+
+    @Override
+    public int compareTo(AbstractAccount o){
+        if(balance > o.balance){
+            return 1;
+        } else if(balance < o.balance){
+            return -1;
+        }
+        return 0;
     }
 
 }

@@ -83,6 +83,7 @@ public class BankDAOImplTest extends TestCase {
         bank1.addClient(client);
         bank2 = DAOFactory.getBankDAO().getBankByID(1);
 
+//        assertEquals(bank1, bank2);
         assertTrue(TestService.isEquals(bank1, bank2));
     }
 
