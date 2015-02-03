@@ -33,7 +33,6 @@ public class AccountServiceImpl implements AccountService {
     public void depositeFunds(Account account, float amount) throws BankApplication.exceptions.IllegalArgumentException {
         try {
             account.deposit(amount);
-//            depositToAccount(account, amount);
             Client client = DAOFactory.getClientDAO().findClientById(account.getClientId());
             DAOFactory.getAccountDAO().save(account, client);
         } catch (ClientNotFoundException e) {
@@ -45,7 +44,6 @@ public class AccountServiceImpl implements AccountService {
     public void withdrawFunds(Account account, float amount) throws NotEnoughFundsException, IllegalArgumentException {
         try {
             account.withdraw(amount);
-//            withdrawFromAccount(account, amount);
             Client client = DAOFactory.getClientDAO().findClientById(account.getClientId());
             DAOFactory.getAccountDAO().save(account, client);
         } catch (ClientNotFoundException e) {
@@ -67,36 +65,5 @@ public class AccountServiceImpl implements AccountService {
 
     public void transferFunds(Account sender, Account recipient, float amount) {
         DAOFactory.getAccountDAO().transferFunds(sender, recipient, amount);
-    }
-
-    private void withdrawFromAccount(Account account, float amount) throws IllegalArgumentException, NotEnoughFundsException {
-        float tempBalance = account.getBalance();
-        if (account instanceof CheckingAccount) {
-            if (amount < 0) {
-                throw new BankApplication.exceptions.IllegalArgumentException(errorsBundle.getString("notNegative"));
-            }
-            if (tempBalance + ((CheckingAccount) account).getOverdraft() >= amount) {
-                account.setBalance(tempBalance - amount);
-            } else {
-                throw new OverdraftLimitExceedException(errorsBundle.getString("notEnoughFunds"), account, amount);
-            }
-        } else {
-            if (amount < 0) {
-                throw new IllegalArgumentException(errorsBundle.getString("notNegative"));
-            }
-            if (account.getBalance() >= amount) {
-                account.setBalance(tempBalance - amount);
-            } else {
-                throw new NotEnoughFundsException(errorsBundle.getString("notEnoughFunds"));
-            }
-        }
-    }
-
-    private void depositToAccount(Account account, float amount) throws IllegalArgumentException {
-        if (amount <= 0) {
-            throw new IllegalArgumentException();
-        }
-        float currentBalance = account.getBalance();
-        account.setBalance(currentBalance + amount);
     }
 }

@@ -1,15 +1,18 @@
-package BankApplication.DAO.impl;
+package BankApplication.DAO;
 
-import BankApplication.DAO.BaseDAO;
+import BankApplication.DAO.impl.BaseDAOImpl;
+import BankApplication.DAO.impl.DAOFactory;
 import BankApplication.SqlScripRunner;
-import static org.junit.Assert.*;
-
 import BankApplication.model.Account;
 import BankApplication.model.impl.CheckingAccount;
 import BankApplication.model.impl.Client;
 import BankApplication.service.impl.TestService;
 import BankApplication.type.Gender;
-import org.junit.*;
+import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -18,13 +21,16 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 public class AccountDAOImplTest {
     private static BaseDAO testBaseDao;
     private static Connection dbConnection;
     private static InputStreamReader reader = null;
 
     @BeforeClass
-    public static void preSetUp(){
+    public static void preSetUp() {
         testBaseDao = new BaseDAOImpl();
         dbConnection = testBaseDao.openConnection();
         SqlScripRunner.runSqlScript(dbConnection, "create.sql");
@@ -41,7 +47,7 @@ public class AccountDAOImplTest {
     }
 
     @AfterClass
-    public static void afterUse(){
+    public static void afterUse() {
         if (dbConnection != null) {
             try {
                 dbConnection.close();
@@ -106,6 +112,7 @@ public class AccountDAOImplTest {
 
 
     }
+
     @Test
     public void testGetClientAccounts() throws Exception {
         Client client = new Client();
@@ -131,12 +138,67 @@ public class AccountDAOImplTest {
 
         assertEquals(stationaryList, accountsFromDB);
     }
+
     @Test
     public void testAddAccount() throws Exception {
+        Client client = new Client();
+        client.setBankId(1);
+        client.setId(1);
+        client.setName("Ivan Ivanov");
+        client.setInitialOverdraft(1000.0f);
+        client.setSex(Gender.MALE);
+        client.setEmail("ivan@server.mail");
+        client.setPhone("+3801234567");
+        client.setCity("Hatsapetovka");
+        Account account1 = new CheckingAccount(client.getInitialOverdraft());
+        account1.setBalance(-100f);
+        account1.setClientId(1);
+        Account account2 = new CheckingAccount(client.getInitialOverdraft());
+        account2.setBalance(2222f);
+        account2.setClientId(1);
+        client.addAccount(account2);
+        client.addAccount(account1);
+        Account account3 = new CheckingAccount(client.getInitialOverdraft());
+        account3.setBalance(7777f);
+        account3.setClientId(1);
+
+        DAOFactory.getAccountDAO().addAccount(account3, client);
+
+        client.addAccount(account3);
+
+        List<Account> stationaryList = new ArrayList<>(client.getAccountsList());
+
+        List<Account> accountsFromDB = DAOFactory.getAccountDAO().getClientAccounts(1);
+
+        assertEquals(stationaryList, accountsFromDB);
+
 
     }
+
     @Test
     public void testTransferFunds() throws Exception {
 
+        Account sender = DAOFactory.getAccountDAO().getAccountById(2);
+        Account recipient = DAOFactory.getAccountDAO().getAccountById(3);
+
+        DAOFactory.getAccountDAO().transferFunds(sender, recipient, 100);
+
+        Account senderAfterTransfer = DAOFactory.getAccountDAO().getAccountById(2);
+        Account recipientAfterTransfer = DAOFactory.getAccountDAO().getAccountById(3);
+
+        assertEquals((sender.getBalance() - senderAfterTransfer.getBalance()), 100, 0.001);
+        assertEquals((recipientAfterTransfer.getBalance() - recipient.getBalance()), 100, 0.001);
+
+    }
+
+    @Test
+    public void testGetAccountById() {
+        Account account1 = new CheckingAccount(1000.0f);
+        account1.setBalance(-100f);
+        account1.setClientId(1);
+
+        Account accountFromDB = DAOFactory.getAccountDAO().getAccountById(1);
+
+        assertTrue(TestService.isEquals(account1, accountFromDB));
     }
 }

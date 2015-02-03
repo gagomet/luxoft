@@ -5,7 +5,6 @@ import BankApplication.model.impl.CheckingAccount;
 import BankApplication.model.impl.Client;
 import BankApplication.model.impl.SavingAccount;
 import BankApplication.DAO.AccountDAO;
-import BankApplication.service.impl.AccountServiceImpl;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -17,6 +16,7 @@ import java.util.List;
 public class AccountDAOImpl extends BaseDAOImpl implements AccountDAO {
     private static AccountDAOImpl instance;
     private static final String GET_CLIENTS_ACCOUNTS_STMT = "SELECT * FROM ACCOUNTS WHERE CLIENT_ID=?";
+    private static final String GET_ACCOUNT_BY_ID_STMT = "SELECT * FROM ACCOUNTS WHERE ID=?";
     private static final String REMOVE_ALL_ACCOUNTS_BY_ID = "DELETE FROM ACCOUNTS WHERE CLIENT_ID=?";
     private static final String SAVE_NEW_ACCOUNT_TO_DB_STMT = "INSERT INTO ACCOUNTS " +
             "(CLIENT_ID, OVERDRAFT, BALANCE) VALUES (?, ?, ?)";
@@ -170,6 +170,33 @@ public class AccountDAOImpl extends BaseDAOImpl implements AccountDAO {
         } finally {
             closeConnection(getConnection());
         }
+    }
+
+    @Override
+    public Account getAccountById(long id) {
+        Account result = null;
+        try{
+            setConnection(openConnection());
+            PreparedStatement preparedStatement = getConnection().prepareStatement(GET_ACCOUNT_BY_ID_STMT);
+            preparedStatement.setLong(1, id);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet == null) {
+                return null;
+            }
+            while (resultSet.next()) {
+                if (resultSet.getFloat("OVERDRAFT") == 0.0f) {
+                    result = new SavingAccount();
+                } else {
+                    result = new CheckingAccount(resultSet.getFloat("OVERDRAFT"));
+                }
+                result.setId(resultSet.getLong("ID"));
+                result.setClientId(resultSet.getLong("CLIENT_ID"));
+                result.setBalance(resultSet.getFloat("BALANCE"));
+            }
+        } catch (SQLException e) {
+            handleSQLException(e);
+        }
+        return result;
     }
 
 }

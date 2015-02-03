@@ -30,4 +30,6 @@ public interface AccountDAO {
     public Account addAccount(Account account, Client client);
 
     public void transferFunds(Account sender, Account recipient, float amount);
+
+    public Account getAccountById(long id);
 }
