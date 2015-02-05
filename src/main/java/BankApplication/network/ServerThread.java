@@ -38,11 +38,12 @@ public class ServerThread implements Runnable {
 
     private Map<String, Command> commandsMap = new TreeMap<>();
     private static final String FEED_FILES_FOLDER = "c:\\!toBankApplication\\";
-    private static String bankName = "MyBank";
-//        static String bankName = "MYBANK";
+    private static String bankName = "MyBank"; /*home*/
+//        static String bankName = "MYBANK";  /*work*/
 
     public ServerThread(Socket socket) {
         this.clientSocket = socket;
+        BankServerThreaded.getWaitForConnection().getAndIncrement();
     }
 
     public void initialize() {
@@ -60,21 +61,19 @@ public class ServerThread implements Runnable {
 
     }
 
-
-
     @Override
     public void run() {
+        BankServerThreaded.getWaitForConnection().decrementAndGet();
         initialize();
         Bank bank = DAOFactory.getBankDAO().getBankByName(bankName);
         ServiceFactory.getBankService().setCurrentBank(bank);
         try {
-//            providerSocket = new ServerSocket(15555);
             System.out.println("ServerThread connected");
-//            clientSocket = providerSocket.accept();
             System.out.println("Connection received from " + clientSocket.getInetAddress().getHostName());
             out = new ObjectOutputStream(clientSocket.getOutputStream());
             out.flush();
             in = new ObjectInputStream(clientSocket.getInputStream());
+
             do {
                 message = console.consoleResponse(composeUserMenu());
                 if (commandsMap.containsKey(message)) {
@@ -85,8 +84,7 @@ public class ServerThread implements Runnable {
                 }
                 System.out.println("Client> " + message);
 
-
-            } while (!message.equals("exit"));
+            } while (!message.equals("0"));
 
         } catch (IOException | IllegalArgumentException e) {
             e.printStackTrace();
@@ -94,7 +92,7 @@ public class ServerThread implements Runnable {
             try {
                 in.close();
                 out.close();
-//                providerSocket.close();
+                clientSocket.close();
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -108,18 +106,6 @@ public class ServerThread implements Runnable {
 
     public ObjectInputStream getIn() {
         return in;
-    }
-
-    public String receiveMessage() {
-        String result = null;
-        try {
-            result = (String) in.readObject();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            System.err.println("Data received in unknown format");
-        }
-        return result;
     }
 
     void sendMessage(final String msg) {

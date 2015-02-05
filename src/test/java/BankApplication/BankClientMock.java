@@ -1,4 +1,4 @@
-package BankApplication.network;
+package BankApplication;
 
 import BankApplication.model.impl.BankInfo;
 
@@ -11,9 +11,9 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 
 /**
- * Created by Padonag on 20.01.2015.
+ * Created by Padonag on 05.02.2015.
  */
-public class BankClient {
+public class BankClientMock {
     Socket requestSocket;
     ObjectOutputStream out;
     ObjectInputStream in;
@@ -33,12 +33,9 @@ public class BankClient {
             in = new ObjectInputStream(requestSocket.getInputStream());
             // 3: Communicating with the server
             do {
-                message = in.readObject().toString();
-                System.out.println("Server> " + message);
-                if (!message.equals("0")) {
-                    String command = bufferedReader.readLine();
-                    out.writeObject(command);
-                }
+                out.writeObject("1");
+                out.writeObject("Petra Petrova");
+                //TODO complete this class
 
             } while (!message.equals("0"));
         } catch (UnknownHostException unknownHost) {
@@ -67,7 +64,7 @@ public class BankClient {
     }
 
     public static void main(final String args[]) {
-        BankClient client = new BankClient();
+        BankClientMock client = new BankClientMock();
         client.run();
     }
 }

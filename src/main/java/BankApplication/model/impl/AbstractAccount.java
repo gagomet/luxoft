@@ -21,7 +21,6 @@ public abstract class AbstractAccount implements Account, Serializable, Persista
 
 
     public AbstractAccount() {
-//        this.id = System.currentTimeMillis();
     }
 
     public float getBalance() {

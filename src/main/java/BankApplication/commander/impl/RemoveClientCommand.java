@@ -20,7 +20,7 @@ public class RemoveClientCommand extends AbstractCommand {
         this.console = console;
     }
     @Override
-    public void execute() throws IllegalArgumentException {
+    public void execute()  {
         String clientName;
         try {
             while (true) {

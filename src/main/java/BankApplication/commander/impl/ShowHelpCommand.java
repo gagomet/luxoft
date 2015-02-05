@@ -30,7 +30,7 @@ public class ShowHelpCommand extends AbstractCommand {
     }
 
     @Override
-    public void execute() throws IllegalArgumentException {
+    public void execute() {
         ClassLoader classloader = Thread.currentThread().getContextClassLoader();
         InputStream inputStream = classloader.getResourceAsStream("help.txt");
         StringBuilder builder = new StringBuilder();

@@ -11,12 +11,17 @@ import java.util.concurrent.atomic.AtomicInteger;
  * Created by Kir Kolesnikov on 30.01.2015.
  */
 public class BankServerThreaded {
+    private static final int POOL_SIZE = 10;
     private ServerSocket serverSocket;
-    private ExecutorService pool = Executors.newFixedThreadPool(50);
-    private static AtomicInteger connectedNow = new AtomicInteger();
+    private ExecutorService pool = Executors.newFixedThreadPool(POOL_SIZE);
+    private static AtomicInteger waitForConnection = new AtomicInteger();
 
-    public static int getConnectedNow() {
-        return connectedNow.get();
+    public static AtomicInteger getWaitForConnection() {
+        return waitForConnection;
+    }
+
+    public static void setWaitForConnection(AtomicInteger waitForConnection) {
+        BankServerThreaded.waitForConnection = waitForConnection;
     }
 
     public BankServerThreaded(){
@@ -28,14 +33,16 @@ public class BankServerThreaded {
     }
 
     public void runServer(){
+        Thread bankMonitor = new Thread(new BankServerMonitor());
+        bankMonitor.setDaemon(true);
+        bankMonitor.start();
         System.out.println("Waiting to connections");
         while (true) {
             Socket clientSocket = null;
             try {
                 clientSocket = serverSocket.accept();
                 pool.execute(new ServerThread(clientSocket));
-                connectedNow.incrementAndGet();
-                System.out.println(connectedNow.toString());
+                System.out.println(waitForConnection.toString());
             } catch (IOException e) {
                 e.printStackTrace();
                 pool.shutdown();

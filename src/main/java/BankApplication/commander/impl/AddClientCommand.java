@@ -28,7 +28,7 @@ public class AddClientCommand extends AbstractCommand {
     }
 
     @Override
-    public void execute() throws IllegalArgumentException {
+    public void execute()  {
         try {
 
             while (true) {

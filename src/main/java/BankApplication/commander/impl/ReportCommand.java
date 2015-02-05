@@ -18,7 +18,7 @@ public class ReportCommand extends AbstractCommand {
     }
 
     @Override
-    public void execute() throws IllegalArgumentException {
+    public void execute()  {
         BankInfo bankInfo = ServiceFactory.getBankService().getBankInfo(ServiceFactory.getBankService().getCurrentBank());
         console.sendResponse(bankInfo.toString());
     }
