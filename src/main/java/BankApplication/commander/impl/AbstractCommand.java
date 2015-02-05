@@ -1,6 +1,5 @@
 package BankApplication.commander.impl;
 
-import BankApplication.exceptions.IllegalArgumentException;
 import BankApplication.network.console.ConsoleImpl;
 import BankApplication.type.Gender;
 import BankApplication.commander.Command;

@@ -1,8 +1,6 @@
 package BankApplication.model.impl;
 
 import BankApplication.exceptions.*;
-import BankApplication.exceptions.IllegalArgumentException;
-
 import java.util.Map;
 
 
@@ -29,9 +27,9 @@ public class CheckingAccount extends AbstractAccount {
     }
 
     @Override
-    public void withdraw(float amount) throws NotEnoughFundsException, IllegalArgumentException {
+    public void withdraw(float amount) throws NotEnoughFundsException {
         if (amount < 0) {
-            throw new BankApplication.exceptions.IllegalArgumentException(errorsBundle.getString("notNegative"));
+            throw new IllegalArgumentException(errorsBundle.getString("notNegative"));
         }
         if (balance + overdraft >= amount) {
             balance -= amount;

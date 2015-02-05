@@ -23,12 +23,13 @@ public class NotEnoughFundsException extends BankException {
         this.account = account;
     }
 
-    public float getAmount() {
-        return amount;
-    }
-
-    public float getPossiblyFunds() {
-        return account.getBalance();
+    public String getMessage() {
+        StringBuilder builder = new StringBuilder();
+        builder.append("Not enough funds! Your amount: ");
+        builder.append(amount);
+        builder.append("  Your funds is: ");
+        builder.append(account.getBalance());
+        return builder.toString();
     }
 
 }

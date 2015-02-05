@@ -48,7 +48,7 @@ public class GetAccountCommand extends AbstractCommand {
                             clientId = validateId(console.consoleResponse("Enter an account's ID please:"));
                             break;
 
-                        } catch (BankApplication.exceptions.IllegalArgumentException e) {
+                        } catch (IllegalArgumentException e) {
                             System.out.println(errorsBundle.getString("wrongNumber"));
                         }
                     }

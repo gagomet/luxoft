@@ -2,7 +2,6 @@ package BankApplication.model.impl;
 
 import BankApplication.annotation.NoDB;
 import BankApplication.exceptions.FeedException;
-import BankApplication.exceptions.IllegalArgumentException;
 import BankApplication.model.ClientRegistrationListener;
 import BankApplication.service.Persistable;
 import BankApplication.type.Gender;
@@ -102,7 +101,7 @@ public class Bank implements Persistable{
         System.out.println(toString());
     }
 
-    public Client parseFeed(Map<String, String> feedMap) throws IllegalArgumentException {
+    public Client parseFeed(Map<String, String> feedMap) {
         Client resultClient = null;
         if (clientsNamesTable.get(feedMap.get("name")) == null) {
             if (feedMap.containsKey("gender")) {

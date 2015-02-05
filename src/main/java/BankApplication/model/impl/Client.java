@@ -1,7 +1,6 @@
 package BankApplication.model.impl;
 
 import BankApplication.annotation.NoDB;
-import BankApplication.exceptions.IllegalArgumentException;
 import BankApplication.model.Account;
 import BankApplication.model.Report;
 import BankApplication.service.Persistable;
@@ -34,11 +33,11 @@ public class Client implements Report, Serializable, Persistable {
     public Client() {
     }
 
-    public Client(Gender sex) throws BankApplication.exceptions.IllegalArgumentException {
+    public Client(Gender sex) throws IllegalArgumentException {
         this.sex = sex;
     }
 
-    public Account parseFeed(Map<String, String> feedMap) throws IllegalArgumentException {
+    public Account parseFeed(Map<String, String> feedMap) {
         AbstractAccount resultAccount = null;
         if (feedMap.get("accounttype").equalsIgnoreCase("c")) {
             resultAccount = new CheckingAccount();
@@ -165,7 +164,6 @@ public class Client implements Report, Serializable, Persistable {
     public void setPhone(String phone) {
         this.phone = phone;
     }
-/*INSERT INTO CLIENTS (BANK_ID, NAME, OVERDRAFT, GENDER, EMAIL, CITY, PHONE) VALUES (1,'Newbie' , 1000, 0, null, null, 'Ololoevsk');*/
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

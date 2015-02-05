@@ -2,7 +2,6 @@ package BankApplication.service.impl;
 
 import BankApplication.DAO.impl.DAOFactory;
 import BankApplication.exceptions.*;
-import BankApplication.exceptions.IllegalArgumentException;
 import BankApplication.model.Account;
 import BankApplication.model.impl.CheckingAccount;
 import BankApplication.model.impl.Client;
@@ -30,7 +29,7 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public void depositeFunds(Account account, float amount) throws BankApplication.exceptions.IllegalArgumentException {
+    public void depositeFunds(Account account, float amount) throws IllegalArgumentException {
         try {
             account.deposit(amount);
 //            depositToAccount(account, amount);
@@ -73,7 +72,7 @@ public class AccountServiceImpl implements AccountService {
         float tempBalance = account.getBalance();
         if (account instanceof CheckingAccount) {
             if (amount < 0) {
-                throw new BankApplication.exceptions.IllegalArgumentException(errorsBundle.getString("notNegative"));
+                throw new IllegalArgumentException(errorsBundle.getString("notNegative"));
             }
             if (tempBalance + ((CheckingAccount) account).getOverdraft() >= amount) {
                 account.setBalance(tempBalance - amount);

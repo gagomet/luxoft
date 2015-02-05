@@ -30,6 +30,8 @@ public class BankServerThreaded {
                 pool.execute(new ServerThread(clientSocket));
             } catch (IOException e) {
                 e.printStackTrace();
+            } finally{
+                pool.shutdown();
             }
         }
     }

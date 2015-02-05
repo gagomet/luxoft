@@ -2,13 +2,8 @@ package BankApplication.main;
 
 import BankApplication.DAO.impl.DAOFactory;
 import BankApplication.commander.impl.*;
-import BankApplication.exceptions.IllegalArgumentException;
 import BankApplication.model.impl.Bank;
-import BankApplication.DAO.BankDAO;
-import BankApplication.DAO.impl.BankDAOImpl;
-import BankApplication.model.impl.Client;
 import BankApplication.commander.Command;
-import BankApplication.service.BankService;
 import BankApplication.service.impl.ClientServiceImpl;
 import BankApplication.service.impl.ServiceFactory;
 

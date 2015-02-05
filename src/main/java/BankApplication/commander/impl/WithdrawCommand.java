@@ -1,11 +1,8 @@
 package BankApplication.commander.impl;
 
 import BankApplication.exceptions.*;
-import BankApplication.exceptions.IllegalArgumentException;
 import BankApplication.model.impl.Client;
 import BankApplication.network.console.Console;
-import BankApplication.service.impl.AccountServiceImpl;
-import BankApplication.service.impl.ClientServiceImpl;
 import BankApplication.service.impl.ServiceFactory;
 
 import java.io.IOException;
@@ -35,7 +32,7 @@ public class WithdrawCommand extends AbstractCommand {
                         amountToWithdraw = validateFunds(console.consoleResponse("How much do you want to withdraw :"));
                         break;
 
-                    } catch (BankApplication.exceptions.IllegalArgumentException e) {
+                    } catch (IllegalArgumentException e) {
                         System.out.println(errorsBundle.getString("wrongNumber"));
                         console.sendResponse(errorsBundle.getString("wrongNumber"));
                     }
@@ -55,7 +52,7 @@ public class WithdrawCommand extends AbstractCommand {
         return "Withdraw funds from account (9999999 Money in max)";
     }
 
-    private void withdrawFunds(Client client, float amountToWithdraw) throws BankApplication.exceptions.IllegalArgumentException {
+    private void withdrawFunds(Client client, float amountToWithdraw) throws IllegalArgumentException {
         try {
             StringBuilder builder = new StringBuilder();
             builder.append(errorsBundle.getString("separator"));

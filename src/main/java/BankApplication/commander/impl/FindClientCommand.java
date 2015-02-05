@@ -1,10 +1,8 @@
 package BankApplication.commander.impl;
 
 import BankApplication.exceptions.ClientNotFoundException;
-import BankApplication.exceptions.IllegalArgumentException;
 import BankApplication.model.impl.Client;
 import BankApplication.network.console.Console;
-import BankApplication.service.impl.BankServiceImpl;
 import BankApplication.service.impl.ClientServiceImpl;
 import BankApplication.service.impl.ServiceFactory;
 

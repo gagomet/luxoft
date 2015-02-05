@@ -21,17 +21,11 @@ public class OverdraftLimitExceedException extends NotEnoughFundsException {
     public OverdraftLimitExceedException(String message, Account account, float amount) {
         super(message, account, amount);
         this.checkingAccount = (CheckingAccount) account;
-        String oldMessage = getMessage();
-        StringBuilder builder = new StringBuilder();
-        builder.append(oldMessage);
-        builder.append(" to withdraw ");
-        builder.append(getAmount());
-        builder.append(" can withdraw ");
-        builder.append(getPossiblyFunds());
-        setMessage(builder.toString());
     }
 
-    public float getPossiblyFunds() {
-        return checkingAccount.getBalance() + checkingAccount.getOverdraft();
+    @Override
+    public String getMessage() {
+        return super.getMessage();
     }
+
 }

@@ -1,7 +1,6 @@
 package BankApplication.model;
 
 import BankApplication.exceptions.*;
-import BankApplication.exceptions.IllegalArgumentException;
 import BankApplication.model.Report;
 
 /**

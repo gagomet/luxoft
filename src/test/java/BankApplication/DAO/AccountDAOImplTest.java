@@ -1,6 +1,8 @@
-package BankApplication.DAO.impl;
+package BankApplication.DAO;
 
 import BankApplication.DAO.BaseDAO;
+import BankApplication.DAO.impl.BaseDAOImpl;
+import BankApplication.DAO.impl.DAOFactory;
 import BankApplication.SqlScripRunner;
 import static org.junit.Assert.*;
 

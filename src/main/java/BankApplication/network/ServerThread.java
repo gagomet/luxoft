@@ -88,7 +88,7 @@ public class ServerThread implements Runnable {
 
             } while (!message.equals("exit"));
 
-        } catch (IOException | BankApplication.exceptions.IllegalArgumentException e) {
+        } catch (IOException | IllegalArgumentException e) {
             e.printStackTrace();
         } finally {
             try {

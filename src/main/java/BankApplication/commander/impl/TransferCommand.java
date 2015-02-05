@@ -1,14 +1,12 @@
 package BankApplication.commander.impl;
 
+
 import BankApplication.exceptions.ClientNotFoundException;
-import BankApplication.exceptions.IllegalArgumentException;
 import BankApplication.exceptions.NotEnoughFundsException;
 import BankApplication.model.Account;
 import BankApplication.model.impl.Client;
 import BankApplication.network.console.Console;
-import BankApplication.service.impl.AccountServiceImpl;
 import BankApplication.service.impl.BankServiceImpl;
-import BankApplication.service.impl.ClientServiceImpl;
 import BankApplication.service.impl.ServiceFactory;
 
 
@@ -57,7 +55,7 @@ public class TransferCommand extends AbstractCommand {
                         recepientAccountId = validateId(console.consoleResponse("Enter recipient account ID"));
                         break;
 
-                    } catch (BankApplication.exceptions.IllegalArgumentException e) {
+                    } catch (IllegalArgumentException e) {
                         System.out.println(errorsBundle.getString("wrongNumber"));
                         console.sendResponse(errorsBundle.getString("wrongNumber"));
                     }
@@ -68,7 +66,7 @@ public class TransferCommand extends AbstractCommand {
                         transferAmount = validateFunds(console.consoleResponse("How much do you want to transfer :"));
                         break;
 
-                    } catch (BankApplication.exceptions.IllegalArgumentException e) {
+                    } catch (IllegalArgumentException e) {
                         System.out.println(errorsBundle.getString("wrongNumber"));
                         console.sendResponse(errorsBundle.getString("wrongNumber"));
                     }

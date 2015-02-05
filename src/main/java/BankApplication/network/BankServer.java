@@ -1,7 +1,6 @@
 package BankApplication.network;
 
 import BankApplication.exceptions.*;
-import BankApplication.exceptions.IllegalArgumentException;
 import BankApplication.model.ClientRegistrationListener;
 import BankApplication.model.impl.Bank;
 import BankApplication.model.impl.Client;

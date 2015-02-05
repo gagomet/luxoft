@@ -1,7 +1,6 @@
 package BankApplication.model.impl;
 
 import BankApplication.exceptions.*;
-import BankApplication.exceptions.IllegalArgumentException;
 
 import java.util.Map;
 
@@ -20,7 +19,7 @@ public class SavingAccount extends AbstractAccount {
     }
 
     @Override
-    public void withdraw(float amount) throws NotEnoughFundsException, IllegalArgumentException {
+    public void withdraw(float amount) throws NotEnoughFundsException {
         {
             if(amount<0){
                 throw new IllegalArgumentException(errorsBundle.getString("notNegative"));

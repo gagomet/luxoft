@@ -2,7 +2,6 @@ package BankApplication.model.impl;
 
 import BankApplication.annotation.NoDB;
 import BankApplication.model.Account;
-import BankApplication.exceptions.IllegalArgumentException;
 import BankApplication.exceptions.NotEnoughFundsException;
 import BankApplication.service.Persistable;
 
@@ -51,14 +50,14 @@ public abstract class AbstractAccount implements Account, Serializable, Persista
 
     public abstract void parseFeed(Map<String, String> feedMap);
 
-    public void deposit(float amount) throws IllegalArgumentException {
+    public void deposit(float amount) {
         if (amount <= 0) {
             throw new IllegalArgumentException();
         }
         this.balance += amount;
     }
 
-    public abstract void withdraw(float amount) throws NotEnoughFundsException, IllegalArgumentException;
+    public abstract void withdraw(float amount) throws NotEnoughFundsException;
 
     public void balanceDecimalValue() {
         System.out.println(Math.round(balance));
