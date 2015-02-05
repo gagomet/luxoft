@@ -14,25 +14,24 @@ import java.util.ResourceBundle;
  * Created by Kir Kolesnikov on 29.01.2015.
  */
 public class AccountServiceImpl implements AccountService {
-    private static AccountServiceImpl instance;
     protected static ResourceBundle errorsBundle = ResourceBundle.getBundle("errors");
 
     private AccountServiceImpl() {
 
     }
 
+    private static class LazyHolder {
+        private static final AccountServiceImpl INSTANCE = new AccountServiceImpl();
+    }
+
     public static AccountServiceImpl getInstance() {
-        if (instance == null) {
-            return new AccountServiceImpl();
-        }
-        return instance;
+        return LazyHolder.INSTANCE;
     }
 
     @Override
     public void depositeFunds(Account account, float amount) throws IllegalArgumentException {
         try {
             account.deposit(amount);
-//            depositToAccount(account, amount);
             Client client = DAOFactory.getClientDAO().findClientById(account.getClientId());
             DAOFactory.getAccountDAO().save(account, client);
         } catch (ClientNotFoundException e) {
@@ -44,7 +43,6 @@ public class AccountServiceImpl implements AccountService {
     public void withdrawFunds(Account account, float amount) throws NotEnoughFundsException, IllegalArgumentException {
         try {
             account.withdraw(amount);
-//            withdrawFromAccount(account, amount);
             Client client = DAOFactory.getClientDAO().findClientById(account.getClientId());
             DAOFactory.getAccountDAO().save(account, client);
         } catch (ClientNotFoundException e) {
@@ -72,7 +70,7 @@ public class AccountServiceImpl implements AccountService {
         float tempBalance = account.getBalance();
         if (account instanceof CheckingAccount) {
             if (amount < 0) {
-                throw new IllegalArgumentException(errorsBundle.getString("notNegative"));
+                throw new BankApplication.exceptions.IllegalArgumentException(errorsBundle.getString("notNegative"));
             }
             if (tempBalance + ((CheckingAccount) account).getOverdraft() >= amount) {
                 account.setBalance(tempBalance - amount);

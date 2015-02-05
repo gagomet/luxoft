@@ -1,17 +1,17 @@
 package BankApplication.DAO;
 
 import BankApplication.DAO.BaseDAO;
-import BankApplication.DAO.impl.BaseDAOImpl;
-import BankApplication.DAO.impl.DAOFactory;
 import BankApplication.SqlScripRunner;
-import static org.junit.Assert.*;
-
 import BankApplication.model.Account;
 import BankApplication.model.impl.CheckingAccount;
 import BankApplication.model.impl.Client;
 import BankApplication.service.impl.TestService;
 import BankApplication.type.Gender;
-import org.junit.*;
+import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -20,13 +20,16 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 public class AccountDAOImplTest {
     private static BaseDAO testBaseDao;
     private static Connection dbConnection;
     private static InputStreamReader reader = null;
 
     @BeforeClass
-    public static void preSetUp(){
+    public static void preSetUp() {
         testBaseDao = new BaseDAOImpl();
         dbConnection = testBaseDao.openConnection();
         SqlScripRunner.runSqlScript(dbConnection, "create.sql");

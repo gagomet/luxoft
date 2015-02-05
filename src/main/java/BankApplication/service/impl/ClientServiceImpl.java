@@ -14,18 +14,18 @@ import java.io.*;
  * Created by Kir Kolesnikov on 29.01.2015.
  */
 public class ClientServiceImpl implements ClientService {
-    private static ClientServiceImpl instance;
     private static Client currentClient;
 
     private ClientServiceImpl() {
 
     }
 
+    private static class LazyHolder {
+        private static final ClientServiceImpl INSTANCE = new ClientServiceImpl();
+    }
+
     public static ClientServiceImpl getInstance() {
-        if (instance == null) {
-            return new ClientServiceImpl();
-        }
-        return instance;
+        return LazyHolder.INSTANCE;
     }
 
     public Client getCurrentClient() {

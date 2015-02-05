@@ -19,7 +19,6 @@ import java.util.*;
  * Created by Kir Kolesnikov on 27.01.2015.
  */
 public class ClientDAOImpl extends BaseDAOImpl implements ClientDAO {
-    private static ClientDAOImpl instance;
     private static final String FIND_CLIENT_BY_NAME_STMT = "SELECT * FROM CLIENTS WHERE CLIENTS.BANK_ID=? AND CLIENTS.NAME=?";
     private static final String FIND_CLIENT_BY_ID_STMT = "SELECT * FROM CLIENTS WHERE CLIENTS.ID=?";
     private static final String GET_ALL_CLIENTS = "SELECT * FROM CLIENTS WHERE CLIENTS.BANK_ID=?";
@@ -32,11 +31,12 @@ public class ClientDAOImpl extends BaseDAOImpl implements ClientDAO {
     private ClientDAOImpl() {
     }
 
+    private static class LazyHolder {
+        private static final ClientDAOImpl INSTANCE = new ClientDAOImpl();
+    }
+
     public static ClientDAOImpl getInstance() {
-        if (instance == null) {
-            return new ClientDAOImpl();
-        }
-        return instance;
+        return LazyHolder.INSTANCE;
     }
 
     @Override
