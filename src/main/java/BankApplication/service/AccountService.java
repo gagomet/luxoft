@@ -1,7 +1,6 @@
 package BankApplication.service;
 
 import BankApplication.exceptions.*;
-import BankApplication.exceptions.IllegalArgumentException;
 import BankApplication.model.Account;
 import BankApplication.model.impl.Client;
 
@@ -10,9 +9,9 @@ import BankApplication.model.impl.Client;
  */
 public interface AccountService {
 
-    public void depositeFunds(Account account, float amount) throws BankApplication.exceptions.IllegalArgumentException;
+    public void depositeFunds(Account account, float amount) ;
 
-    public void withdrawFunds(Account account, float amount) throws NotEnoughFundsException, IllegalArgumentException;
+    public void withdrawFunds(Account account, float amount) throws NotEnoughFundsException;
 
     public Account getAccountById(Client client, Long id) throws AccountNotFoundException;
 

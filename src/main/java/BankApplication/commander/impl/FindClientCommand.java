@@ -28,13 +28,11 @@ public class FindClientCommand extends AbstractCommand {
             while (true) {
                 try {
                     clientName = validateClientsName(console.consoleResponse("Enter client's name: "));
-                    break;
+                    findClientInBank(clientName);
                 } catch (IllegalArgumentException e) {
                     System.out.println(errorsBundle.getString("wrongClientsName"));
                 }
             }
-
-            findClientInBank(clientName);
         } catch (IOException e) {
             e.printStackTrace();
             console.sendResponse(e.getMessage());

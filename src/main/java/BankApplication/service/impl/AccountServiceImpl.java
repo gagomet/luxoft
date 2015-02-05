@@ -9,12 +9,15 @@ import BankApplication.service.AccountService;
 
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * Created by Kir Kolesnikov on 29.01.2015.
  */
 public class AccountServiceImpl implements AccountService {
     protected static ResourceBundle errorsBundle = ResourceBundle.getBundle("errors");
+    private final Lock reentrantLock = new ReentrantLock();
 
     private AccountServiceImpl() {
 
@@ -30,23 +33,30 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public void depositeFunds(Account account, float amount) throws IllegalArgumentException {
+
         try {
+            reentrantLock.lock();
             account.deposit(amount);
             Client client = DAOFactory.getClientDAO().findClientById(account.getClientId());
             DAOFactory.getAccountDAO().save(account, client);
+            reentrantLock.unlock();
         } catch (ClientNotFoundException e) {
             System.out.println(e.getMessage());
+            reentrantLock.unlock();
         }
     }
 
     @Override
     public void withdrawFunds(Account account, float amount) throws NotEnoughFundsException, IllegalArgumentException {
         try {
+            reentrantLock.lock();
             account.withdraw(amount);
             Client client = DAOFactory.getClientDAO().findClientById(account.getClientId());
             DAOFactory.getAccountDAO().save(account, client);
+            reentrantLock.unlock();
         } catch (ClientNotFoundException e) {
             System.out.println(e.getMessage());
+            reentrantLock.unlock();
         }
     }
 
@@ -64,36 +74,5 @@ public class AccountServiceImpl implements AccountService {
 
     public void transferFunds(Account sender, Account recipient, float amount) {
         DAOFactory.getAccountDAO().transferFunds(sender, recipient, amount);
-    }
-
-    private void withdrawFromAccount(Account account, float amount) throws IllegalArgumentException, NotEnoughFundsException {
-        float tempBalance = account.getBalance();
-        if (account instanceof CheckingAccount) {
-            if (amount < 0) {
-                throw new BankApplication.exceptions.IllegalArgumentException(errorsBundle.getString("notNegative"));
-            }
-            if (tempBalance + ((CheckingAccount) account).getOverdraft() >= amount) {
-                account.setBalance(tempBalance - amount);
-            } else {
-                throw new OverdraftLimitExceedException(errorsBundle.getString("notEnoughFunds"), account, amount);
-            }
-        } else {
-            if (amount < 0) {
-                throw new IllegalArgumentException(errorsBundle.getString("notNegative"));
-            }
-            if (account.getBalance() >= amount) {
-                account.setBalance(tempBalance - amount);
-            } else {
-                throw new NotEnoughFundsException(errorsBundle.getString("notEnoughFunds"));
-            }
-        }
-    }
-
-    private void depositToAccount(Account account, float amount) throws IllegalArgumentException {
-        if (amount <= 0) {
-            throw new IllegalArgumentException();
-        }
-        float currentBalance = account.getBalance();
-        account.setBalance(currentBalance + amount);
     }
 }

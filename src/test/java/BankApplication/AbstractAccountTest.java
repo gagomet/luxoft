@@ -1,6 +1,5 @@
 package BankApplication;
 
-import BankApplication.exceptions.IllegalArgumentException;
 import BankApplication.exceptions.NotEnoughFundsException;
 import BankApplication.model.impl.AbstractAccount;
 import org.junit.Before;

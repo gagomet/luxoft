@@ -30,8 +30,6 @@ import java.util.TreeMap;
  * Created by Kir Kolesnikov on 30.01.2015.
  */
 public class ServerThread implements Runnable {
-    //    private Socket socket;
-    private ServerSocket providerSocket;
     private Socket clientSocket = null;
     private ObjectOutputStream out;
     private ObjectInputStream in;
@@ -40,8 +38,12 @@ public class ServerThread implements Runnable {
 
     private Map<String, Command> commandsMap = new TreeMap<>();
     private static final String FEED_FILES_FOLDER = "c:\\!toBankApplication\\";
-//    private static String bankName = "MyBank";
-        static String bankName = "MYBANK";
+    private static String bankName = "MyBank";
+//        static String bankName = "MYBANK";
+
+    public ServerThread(Socket socket) {
+        this.clientSocket = socket;
+    }
 
     public void initialize() {
 
@@ -58,9 +60,7 @@ public class ServerThread implements Runnable {
 
     }
 
-    public ServerThread(Socket socket) {
-        this.clientSocket = socket;
-    }
+
 
     @Override
     public void run() {
@@ -68,7 +68,7 @@ public class ServerThread implements Runnable {
         Bank bank = DAOFactory.getBankDAO().getBankByName(bankName);
         ServiceFactory.getBankService().setCurrentBank(bank);
         try {
-//            providerSocket = new ServerSocket(15000);
+//            providerSocket = new ServerSocket(15555);
             System.out.println("ServerThread connected");
 //            clientSocket = providerSocket.accept();
             System.out.println("Connection received from " + clientSocket.getInetAddress().getHostName());
@@ -152,7 +152,7 @@ public class ServerThread implements Runnable {
             builder.append(System.getProperty("line.separator"));
         }
         builder.append(System.getProperty("line.separator"));
-        builder.append("exit      -->    Exit");
+        builder.append("0      -->    0");
         return builder.toString();
     }
 }

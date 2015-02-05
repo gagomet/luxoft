@@ -19,7 +19,7 @@ public class SavingAccount extends AbstractAccount {
     }
 
     @Override
-    public void withdraw(float amount) throws NotEnoughFundsException {
+    public synchronized void withdraw(float amount) throws NotEnoughFundsException {
         {
             if(amount<0){
                 throw new IllegalArgumentException(errorsBundle.getString("notNegative"));

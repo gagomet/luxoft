@@ -25,7 +25,7 @@ public class BankClient {
     void run() {
         try {
             // 1. creating a socket to connect to the server
-            requestSocket = new Socket(SERVER, 15000);
+            requestSocket = new Socket(SERVER, 15555);
             System.out.println("Connected to localhost in port 15000");
             // 2. get Input and Output streams
             out = new ObjectOutputStream(requestSocket.getOutputStream());

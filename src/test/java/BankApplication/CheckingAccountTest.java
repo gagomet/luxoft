@@ -1,7 +1,6 @@
 package BankApplication;
 
 import BankApplication.exceptions.*;
-import BankApplication.exceptions.IllegalArgumentException;
 import BankApplication.model.impl.CheckingAccount;
 import org.junit.Before;
 import org.junit.Test;

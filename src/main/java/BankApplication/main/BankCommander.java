@@ -104,7 +104,7 @@ NullPointerException - if the specified key is null and this map uses natural or
                 } else {
                     System.out.println("It's not a command! Try again!");
                 }
-            } catch (IOException | IllegalArgumentException e) {
+            } catch (IOException e) {
                 System.out.println(e.getMessage());
             }
         }
