@@ -1,5 +1,6 @@
 package BankApplication.commander.impl;
 
+import BankApplication.commander.CommandsManager;
 import BankApplication.exceptions.ClientExceedsException;
 import BankApplication.model.impl.Client;
 import BankApplication.network.console.Console;
@@ -23,10 +24,10 @@ public class AddClientCommand extends AbstractCommand {
     public AddClientCommand() {
     }
 
-    public AddClientCommand(Console console) {
+    public AddClientCommand(Console console, CommandsManager manager) {
         this.console = console;
+        setManager(manager);
     }
-
     @Override
     public void execute()  {
         try {
@@ -110,7 +111,7 @@ public class AddClientCommand extends AbstractCommand {
         return "Add client to Bank System";
     }
 
-    private void addClient() throws IllegalArgumentException, ClientExceedsException {
+    private void addClient() throws ClientExceedsException {
 
         Client newClient = new Client();
 
@@ -138,6 +139,7 @@ public class AddClientCommand extends AbstractCommand {
         builder.append("Client ");
         builder.append(newClient.getName());
         builder.append(" is active now");
+        getManager().setCurrentClient(newClient);
         System.out.println(builder.toString());
         console.sendResponse(builder.toString());
     }

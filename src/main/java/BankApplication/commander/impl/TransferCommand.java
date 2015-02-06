@@ -1,6 +1,7 @@
 package BankApplication.commander.impl;
 
 
+import BankApplication.commander.CommandsManager;
 import BankApplication.exceptions.ClientNotFoundException;
 import BankApplication.exceptions.NotEnoughFundsException;
 import BankApplication.model.Account;
@@ -23,18 +24,19 @@ public class TransferCommand extends AbstractCommand {
     public TransferCommand() {
     }
 
-    public TransferCommand(Console console) {
+    public TransferCommand(Console console, CommandsManager manager) {
         this.console = console;
+        setManager(manager);
     }
 
     @Override
     public void execute() {
-        if (ServiceFactory.getClientService().getCurrentClient() == null) {
+        if (getManager().getCurrentClient() == null) {
             System.out.println(errorsBundle.getString("noActiveClient"));
             console.sendResponse("Select active client first! Press enter to continue");
         } else {
             try {
-                Account senderAccount = ServiceFactory.getClientService().getCurrentClient().getActiveAccount();
+                Account senderAccount = getManager().getCurrentClient().getActiveAccount();
                 while (true) {
                     try {
                         recepientName = validateClientsName(console.consoleResponse("Enter Client-recipient name, please"));

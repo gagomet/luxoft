@@ -1,5 +1,8 @@
 package BankApplication.commander.impl;
 
+import BankApplication.commander.CommandsManager;
+import BankApplication.model.impl.Client;
+import BankApplication.network.ServerThread;
 import BankApplication.network.console.ConsoleImpl;
 import BankApplication.type.Gender;
 import BankApplication.commander.Command;
@@ -14,13 +17,23 @@ public abstract class AbstractCommand implements Command {
     protected Console console;
     protected ResourceBundle errorsBundle = ResourceBundle.getBundle("errors");
     private final String EMPTY_STRING = "";
+    private CommandsManager manager;
 
+    @Override
     public void printCommandInfo(){
         System.out.println(toString());
     }
 
     public AbstractCommand() {
         this.console = new ConsoleImpl();
+    }
+
+    public CommandsManager getManager() {
+        return manager;
+    }
+
+    public void setManager(CommandsManager manager) {
+        this.manager = manager;
     }
 
     protected Gender validateClientsSex(String input) throws IllegalArgumentException {

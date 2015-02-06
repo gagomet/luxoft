@@ -1,9 +1,11 @@
 package BankApplication.main;
 
 import BankApplication.DAO.impl.DAOFactory;
+import BankApplication.commander.CommandsManager;
 import BankApplication.commander.impl.*;
 import BankApplication.model.impl.Bank;
 import BankApplication.commander.Command;
+import BankApplication.model.impl.Client;
 import BankApplication.service.impl.ClientServiceImpl;
 import BankApplication.service.impl.ServiceFactory;
 
@@ -15,8 +17,8 @@ import java.util.*;
 /**
  * Created by Kir Kolesnikov on 15.01.2015.
  */
-public class BankCommander {
-//    public static Client currentClient = null;
+public class BankCommander implements CommandsManager {
+    private static Client currentClient;
     public static Map<String, Command> commandsMap = new TreeMap<>();
     private static final String FEED_FILES_FOLDER = "c:\\!toBankApplication\\";
 //    static String bankName = "MyBank";
@@ -91,10 +93,10 @@ NullPointerException - if the specified key is null and this map uses natural or
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
             try {
                 System.out.println("Active client now is: ");
-                if (ClientServiceImpl.getInstance().getCurrentClient() == null) {
+                if (currentClient == null) {
                     System.out.println("N/A");
                 } else {
-                    System.out.println(ClientServiceImpl.getInstance().getCurrentClient().getName());
+                    System.out.println(currentClient.getName());
                 }
                 System.out.println("Enter number of your choice: ");
 
@@ -111,4 +113,13 @@ NullPointerException - if the specified key is null and this map uses natural or
 
     }
 
+    @Override
+    public Client getCurrentClient() {
+        return currentClient;
+    }
+
+    @Override
+    public void setCurrentClient(Client client) {
+        currentClient = client;
+    }
 }

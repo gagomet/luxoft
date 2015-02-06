@@ -1,5 +1,6 @@
 package BankApplication.commander.impl;
 
+import BankApplication.commander.CommandsManager;
 import BankApplication.commander.impl.AbstractCommand;
 import BankApplication.network.console.Console;
 
@@ -25,8 +26,9 @@ public class ShowHelpCommand extends AbstractCommand {
     public ShowHelpCommand() {
     }
 
-    public ShowHelpCommand(Console console) {
+    public ShowHelpCommand(Console console, CommandsManager manager) {
         this.console = console;
+        setManager(manager);
     }
 
     @Override

@@ -1,5 +1,6 @@
 package BankApplication.commander.impl;
 
+import BankApplication.commander.CommandsManager;
 import BankApplication.model.impl.BankInfo;
 import BankApplication.network.console.Console;
 import BankApplication.service.impl.BankServiceImpl;
@@ -13,8 +14,9 @@ public class ReportCommand extends AbstractCommand {
     public ReportCommand() {
     }
 
-    public ReportCommand(Console console) {
+    public ReportCommand(Console console, CommandsManager manager) {
         this.console = console;
+        setManager(manager);
     }
 
     @Override

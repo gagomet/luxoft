@@ -1,5 +1,6 @@
 package BankApplication.commander.impl;
 
+import BankApplication.commander.CommandsManager;
 import BankApplication.exceptions.AccountNotFoundException;
 import BankApplication.model.Account;
 import BankApplication.model.impl.Client;
@@ -20,13 +21,14 @@ public class GetAccountCommand extends AbstractCommand {
     public GetAccountCommand() {
     }
 
-    public GetAccountCommand(Console console) {
+    public GetAccountCommand(Console console, CommandsManager manager) {
         this.console = console;
+        setManager(manager);
     }
 
     @Override
     public void execute() {
-        currentClient = ServiceFactory.getClientService().getCurrentClient();
+        currentClient = getManager().getCurrentClient();
         if (currentClient == null) {
             System.out.println(errorsBundle.getString("noActiveClient"));
             console.sendResponse(errorsBundle.getString("noActiveClient"));
@@ -54,7 +56,7 @@ public class GetAccountCommand extends AbstractCommand {
                     }
 
                     Account account = ServiceFactory.getAccountService().getAccountById(currentClient, clientId);
-                    ServiceFactory.getClientService().getCurrentClient().setActiveAccount(account);
+                    getManager().getCurrentClient().setActiveAccount(account);
                     StringBuilder builder = new StringBuilder();
                     builder.append(account.toString());
                     builder.append("Account ");

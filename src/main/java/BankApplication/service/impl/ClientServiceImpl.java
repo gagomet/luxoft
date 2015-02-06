@@ -14,7 +14,7 @@ import java.io.*;
  * Created by Kir Kolesnikov on 29.01.2015.
  */
 public class ClientServiceImpl implements ClientService {
-    private static Client currentClient;
+//    private static Client currentClient;
 
     private ClientServiceImpl() {
 
@@ -28,14 +28,14 @@ public class ClientServiceImpl implements ClientService {
         return LazyHolder.INSTANCE;
     }
 
-    public Client getCurrentClient() {
+/*    public Client getCurrentClient() {
         return currentClient;
     }
 
     public void setCurrentClient(Client currentClient) {
 
         this.currentClient = currentClient;
-    }
+    }*/
 
     @Override
     public void addAccount(Client client, Account account) {

@@ -23,32 +23,39 @@ public abstract class AbstractAccount implements Account, Serializable, Persista
     public AbstractAccount() {
     }
 
+    @Override
     public float getBalance() {
         return this.balance;
     }
 
+    @Override
     public void setBalance(float balance) {
         this.balance = balance;
     }
 
+    @Override
     public long getId() {
         return id;
     }
 
+    @Override
     public void setId(long id) {
         this.id = id;
     }
 
+    @Override
     public long getClientId() {
         return clientId;
     }
 
+    @Override
     public void setClientId(long clientId) {
         this.clientId = clientId;
     }
 
     public abstract void parseFeed(Map<String, String> feedMap);
 
+    @Override
     public void deposit(float amount) {
         if (amount <= 0) {
             throw new IllegalArgumentException();
@@ -56,6 +63,7 @@ public abstract class AbstractAccount implements Account, Serializable, Persista
         this.balance += amount;
     }
 
+    @Override
     public abstract void withdraw(float amount) throws NotEnoughFundsException;
 
     public void balanceDecimalValue() {

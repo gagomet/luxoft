@@ -1,5 +1,6 @@
 package BankApplication.commander.impl;
 
+import BankApplication.commander.CommandsManager;
 import BankApplication.model.impl.Client;
 import BankApplication.network.console.Console;
 import BankApplication.service.impl.ServiceFactory;
@@ -15,29 +16,24 @@ public class DepositCommand extends AbstractCommand {
     public DepositCommand() {
     }
 
-    public DepositCommand(Console console){
+    public DepositCommand(Console console, CommandsManager manager) {
         this.console = console;
+        setManager(manager);
     }
 
     @Override
     public void execute() {
         float amountToDeposit;
-        if (ServiceFactory.getClientService().getCurrentClient() == null) {
+        if (getManager().getCurrentClient() == null) {
             console.sendResponse(errorsBundle.getString("noActiveClient"));
             System.out.println(errorsBundle.getString("noActiveClient"));
         } else {
             try {
                 while (true) {
-                    try {
                         amountToDeposit = validateFunds(console.consoleResponse("How much do you want to deposit :"));
                         break;
-
-                    } catch (IllegalArgumentException e) {
-                        System.out.println(errorsBundle.getString("wrongNumber"));
-                    }
                 }
-
-                depositFunds(ServiceFactory.getClientService().getCurrentClient(), amountToDeposit);
+                depositFunds(getManager().getCurrentClient(), amountToDeposit);
 
             } catch (IOException e) {
                 e.printStackTrace();

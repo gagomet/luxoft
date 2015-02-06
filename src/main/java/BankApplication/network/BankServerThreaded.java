@@ -20,10 +20,6 @@ public class BankServerThreaded {
         return waitForConnection;
     }
 
-    public static void setWaitForConnection(AtomicInteger waitForConnection) {
-        BankServerThreaded.waitForConnection = waitForConnection;
-    }
-
     public BankServerThreaded(){
         try {
             serverSocket = new ServerSocket(15555);

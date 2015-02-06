@@ -20,7 +20,7 @@ public interface ClientService {
 
     public Client loadClientFromFeedFile();
 
-    public Client getCurrentClient();
+/*    public Client getCurrentClient();
 
-    public void setCurrentClient(Client client);
+    public void setCurrentClient(Client client);*/
 }

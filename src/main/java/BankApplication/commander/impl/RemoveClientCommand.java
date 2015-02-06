@@ -1,5 +1,6 @@
 package BankApplication.commander.impl;
 
+import BankApplication.commander.CommandsManager;
 import BankApplication.exceptions.*;
 import BankApplication.model.impl.Client;
 import BankApplication.network.console.Console;
@@ -16,8 +17,9 @@ public class RemoveClientCommand extends AbstractCommand {
     public RemoveClientCommand() {
     }
 
-    public RemoveClientCommand(Console console){
+    public RemoveClientCommand(Console console, CommandsManager manager) {
         this.console = console;
+        setManager(manager);
     }
     @Override
     public void execute()  {
@@ -50,7 +52,8 @@ public class RemoveClientCommand extends AbstractCommand {
         try {
             Client client = ServiceFactory.getClientService().getClientByName(BankServiceImpl.getInstance().getCurrentBank(), clientName);
             ServiceFactory.getBankService().removeClient(BankServiceImpl.getInstance().getCurrentBank(), client);
-            console.sendResponse(client.toString() + " was removed.");
+            console.sendResponse(client.toString() + " was removed. Current client set to null");
+            getManager().setCurrentClient(null);
         } catch (ClientNotFoundException e) {
             e.printStackTrace();
             console.sendResponse(errorsBundle.getString("clientNotFound"));

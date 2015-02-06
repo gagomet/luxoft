@@ -40,7 +40,7 @@ public class BankClientMock {
             } while (!message.equals("0"));
         } catch (UnknownHostException unknownHost) {
             System.err.println("You are trying to connect to an unknown host!");
-        } catch (IOException | ClassNotFoundException ioException) {
+        } catch (IOException ioException) {
             ioException.printStackTrace();
         } finally {
             // 4: Closing connection

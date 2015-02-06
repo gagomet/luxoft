@@ -1,5 +1,6 @@
 package BankApplication.commander.impl;
 
+import BankApplication.commander.CommandsManager;
 import BankApplication.exceptions.*;
 import BankApplication.model.impl.Client;
 import BankApplication.network.console.Console;
@@ -14,13 +15,14 @@ public class WithdrawCommand extends AbstractCommand {
     public WithdrawCommand() {
     }
 
-    public WithdrawCommand(Console console){
+    public WithdrawCommand(Console console, CommandsManager manager) {
         this.console = console;
+        setManager(manager);
     }
     @Override
     public void execute() throws IllegalArgumentException {
 
-        Client currentClient = ServiceFactory.getClientService().getCurrentClient();
+        Client currentClient = getManager().getCurrentClient();
         float amountToWithdraw;
         if (currentClient == null) {
             console.sendResponse(errorsBundle.getString("noActiveClient"));

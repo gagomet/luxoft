@@ -1,7 +1,9 @@
 package BankApplication.commander.impl;
 
+import BankApplication.commander.CommandsManager;
 import BankApplication.exceptions.ClientNotFoundException;
 import BankApplication.model.impl.Client;
+import BankApplication.network.ServerThread;
 import BankApplication.network.console.Console;
 import BankApplication.service.impl.ClientServiceImpl;
 import BankApplication.service.impl.ServiceFactory;
@@ -17,9 +19,11 @@ public class FindClientCommand extends AbstractCommand {
 
     }
 
-    public FindClientCommand(Console console) {
+    public FindClientCommand(Console console, CommandsManager manager) {
         this.console = console;
+        setManager(manager);
     }
+
 
     @Override
     public void execute() {
@@ -55,11 +59,12 @@ public class FindClientCommand extends AbstractCommand {
             builder.append("Client ");
             builder.append(client.getName());
             builder.append(" is active now.");
+            getManager().setCurrentClient(client);
             builder.append(System.getProperty("line.separator"));
             System.out.println(builder.toString());
             console.sendResponse(client.toString() + builder.toString());
             client.printReport();
-            ServiceFactory.getClientService().setCurrentClient(client);
+//            ServiceFactory.getClientService().setCurrentClient(client);
         } catch (ClientNotFoundException e) {
             e.printStackTrace();
             console.sendResponse(errorsBundle.getString("clientNotFound"));

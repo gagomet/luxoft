@@ -2,6 +2,7 @@ package BankApplication.network;
 
 import BankApplication.DAO.impl.DAOFactory;
 import BankApplication.commander.Command;
+import BankApplication.commander.CommandsManager;
 import BankApplication.commander.impl.AddClientCommand;
 import BankApplication.commander.impl.DepositCommand;
 import BankApplication.commander.impl.FindClientCommand;
@@ -12,6 +13,7 @@ import BankApplication.commander.impl.ShowHelpCommand;
 import BankApplication.commander.impl.TransferCommand;
 import BankApplication.commander.impl.WithdrawCommand;
 import BankApplication.model.impl.Bank;
+import BankApplication.model.impl.Client;
 import BankApplication.network.console.Console;
 import BankApplication.network.console.MultithreadServerConsoleImpl;
 import BankApplication.service.impl.ClientServiceImpl;
@@ -29,35 +31,38 @@ import java.util.TreeMap;
 /**
  * Created by Kir Kolesnikov on 30.01.2015.
  */
-public class ServerThread implements Runnable {
+public class ServerThread implements Runnable, CommandsManager {
     private Socket clientSocket = null;
     private ObjectOutputStream out;
     private ObjectInputStream in;
     private String message;
     private Console console = new MultithreadServerConsoleImpl(this);
+    private Client currentClient;
+    //TODO add commands as inner classess
 
     private Map<String, Command> commandsMap = new TreeMap<>();
     private static final String FEED_FILES_FOLDER = "c:\\!toBankApplication\\";
-    private static String bankName = "MyBank"; /*home*/
-//        static String bankName = "MYBANK";  /*work*/
+//    private static String bankName = "MyBank"; /*home*/
+        static String bankName = "MYBANK";  /*work*/
 
     public ServerThread(Socket socket) {
         this.clientSocket = socket;
         BankServerThreaded.getWaitForConnection().getAndIncrement();
     }
 
+
     public void initialize() {
 
         //init commands with remote console
-        commandsMap.put("1", new FindClientCommand(console));
-        commandsMap.put("2", new AddClientCommand(console));
-        commandsMap.put("3", new RemoveClientCommand(console));
-        commandsMap.put("4", new WithdrawCommand(console));
-        commandsMap.put("5", new DepositCommand(console));
-        commandsMap.put("6", new GetAccountCommand(console));
-        commandsMap.put("7", new TransferCommand(console));
-        commandsMap.put("8", new ReportCommand(console));
-        commandsMap.put("9", new ShowHelpCommand(console));
+        commandsMap.put("1", new FindClientCommand(console, this));
+        commandsMap.put("2", new AddClientCommand(console, this));
+        commandsMap.put("3", new RemoveClientCommand(console, this));
+        commandsMap.put("4", new WithdrawCommand(console, this));
+        commandsMap.put("5", new DepositCommand(console, this));
+        commandsMap.put("6", new GetAccountCommand(console, this));
+        commandsMap.put("7", new TransferCommand(console, this));
+        commandsMap.put("8", new ReportCommand(console, this));
+        commandsMap.put("9", new ShowHelpCommand(console, this));
 
     }
 
@@ -83,7 +88,6 @@ public class ServerThread implements Runnable {
                     sendMessage("0");
                 }
                 System.out.println("Client> " + message);
-
             } while (!message.equals("0"));
 
         } catch (IOException | IllegalArgumentException e) {
@@ -124,10 +128,10 @@ public class ServerThread implements Runnable {
         Iterator iterator = commandsMap.entrySet().iterator();
         builder.append(System.getProperty("line.separator"));
         builder.append("Active client now is: ");
-        if (ClientServiceImpl.getInstance().getCurrentClient() == null) {
+        if (currentClient == null) {
             builder.append("N/A");
         } else {
-            builder.append(ClientServiceImpl.getInstance().getCurrentClient().toString());
+            builder.append(currentClient.toString());
         }
         builder.append(System.getProperty("line.separator"));
         while (iterator.hasNext()) {
@@ -138,7 +142,18 @@ public class ServerThread implements Runnable {
             builder.append(System.getProperty("line.separator"));
         }
         builder.append(System.getProperty("line.separator"));
-        builder.append("0      -->    0");
+        builder.append("0      -->    exit");
         return builder.toString();
+    }
+
+
+    @Override
+    public Client getCurrentClient() {
+        return currentClient;
+    }
+
+    @Override
+    public void setCurrentClient(Client client) {
+        currentClient = client;
     }
 }
