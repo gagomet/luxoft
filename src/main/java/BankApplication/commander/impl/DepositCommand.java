@@ -5,7 +5,6 @@ import BankApplication.model.impl.Client;
 import BankApplication.network.console.Console;
 import BankApplication.service.impl.ServiceFactory;
 
-
 import java.io.IOException;
 
 /**
@@ -25,17 +24,18 @@ public class DepositCommand extends AbstractCommand {
     public void execute() {
         float amountToDeposit;
         if (getManager().getCurrentClient() == null) {
-            console.sendResponse(errorsBundle.getString("noActiveClient"));
-            System.out.println(errorsBundle.getString("noActiveClient"));
+                console.sendResponse(errorsBundle.getString("noActiveClient"));
+                System.out.println(errorsBundle.getString("noActiveClient"));
         } else {
             try {
                 while (true) {
-                        amountToDeposit = validateFunds(console.consoleResponse("How much do you want to deposit :"));
-                        break;
+                    console.consoleResponse("How much do you want to deposit :");
+                    amountToDeposit = validateFunds(console.getMessageFromClient());
+                    break;
                 }
                 depositFunds(getManager().getCurrentClient(), amountToDeposit);
 
-            } catch (IOException e) {
+            } catch (IOException | ClassNotFoundException e) {
                 e.printStackTrace();
             }
         }

@@ -1,7 +1,7 @@
 package BankApplication.commander.impl;
 
 import BankApplication.commander.CommandsManager;
-import BankApplication.exceptions.*;
+import BankApplication.exceptions.ClientNotFoundException;
 import BankApplication.model.impl.Client;
 import BankApplication.network.console.Console;
 import BankApplication.service.impl.BankServiceImpl;
@@ -17,21 +17,26 @@ public class RemoveClientCommand extends AbstractCommand {
     public RemoveClientCommand() {
     }
 
+    //TODO continue from here. Don't forget exceptions handling
     public RemoveClientCommand(Console console, CommandsManager manager) {
         this.console = console;
         setManager(manager);
     }
+
     @Override
-    public void execute()  {
+    public void execute() {
         String clientName;
         try {
             while (true) {
                 try {
-                    clientName = validateClientsName(console.consoleResponse("Enter client's name: "));
+                    console.consoleResponse("Enter client's name: ");
+                    clientName = validateClientsName(console.getMessageFromClient());
                     break;
                 } catch (IllegalArgumentException e) {
                     System.out.println(errorsBundle.getString("wrongClientsName"));
                     console.sendResponse(errorsBundle.getString("wrongClientsName"));
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
                 }
             }
 
@@ -48,7 +53,7 @@ public class RemoveClientCommand extends AbstractCommand {
         return "Remove client";
     }
 
-    private void removeClientFromBank(String clientName){
+    private void removeClientFromBank(String clientName) {
         try {
             Client client = ServiceFactory.getClientService().getClientByName(BankServiceImpl.getInstance().getCurrentBank(), clientName);
             ServiceFactory.getBankService().removeClient(BankServiceImpl.getInstance().getCurrentBank(), client);

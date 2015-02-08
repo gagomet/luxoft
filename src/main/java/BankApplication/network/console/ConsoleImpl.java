@@ -11,16 +11,20 @@ import java.net.Socket;
  * Created by Kir Kolesnikov on 21.01.2015.
  */
 public class ConsoleImpl implements Console {
-    BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
+    private BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
     @Override
-    public String consoleResponse(String consoleRequest) throws IOException {
+    public void consoleResponse(String consoleRequest) throws IOException {
         System.out.println(consoleRequest);
-        return bufferedReader.readLine();
     }
 
     @Override
     public void sendResponse(String response) {
         System.out.println(response);
+    }
+
+    @Override
+    public String getMessageFromClient() throws IOException, ClassNotFoundException {
+        return bufferedReader.readLine();
     }
 
 

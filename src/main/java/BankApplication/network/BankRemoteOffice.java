@@ -54,18 +54,20 @@ public class BankRemoteOffice implements CommandsManager {
 
     void run() {
         try {
-            providerSocket = new ServerSocket(15000, 10);
+            providerSocket = new ServerSocket(15555, 10);
             System.out.println("Waiting for clientSocket");
             clientSocket = providerSocket.accept();
             System.out.println("Connection received from " + clientSocket.getInetAddress().getHostName());
             out = new ObjectOutputStream(clientSocket.getOutputStream());
             out.flush();
             in = new ObjectInputStream(clientSocket.getInputStream());
+            console.consoleResponse(composeUserMenu());
             do {
-                message = console.consoleResponse(composeUserMenu());
+                message = console.getMessageFromClient();
                 if (commandsMap.containsKey(message)) {
                     Command cmd = commandsMap.get(message);
                     cmd.execute();
+                    console.consoleResponse(composeUserMenu());
                 }  else if (message.equals("0")) {
                     sendMessage("0");
                 }
@@ -74,7 +76,7 @@ public class BankRemoteOffice implements CommandsManager {
 
             } while (!message.equals("exit"));
 
-        } catch (IOException | IllegalArgumentException e) {
+        } catch (IOException | IllegalArgumentException | ClassNotFoundException e) {
             e.printStackTrace();
         } finally {
             try {

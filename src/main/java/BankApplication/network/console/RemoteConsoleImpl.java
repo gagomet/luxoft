@@ -9,30 +9,33 @@ import java.io.*;
  * Created by Padonag on 15.01.2015.
  */
 public class RemoteConsoleImpl implements Console {
-    BankRemoteOffice bankRemoteOffice;
+    private BankRemoteOffice bankRemoteOffice;
     private static String PRESS_ENTER= "   Press Enter to continue";
     public RemoteConsoleImpl(BankRemoteOffice bankRemoteOffice) {
         this.bankRemoteOffice = bankRemoteOffice;
     }
 
     @Override
-    public String consoleResponse(String consoleRequest) throws IOException {
-        String result = null;
+    public void consoleResponse(String consoleRequest) throws IOException {
         bankRemoteOffice.getOut().writeObject(consoleRequest);
-        try {
-            result = (String)bankRemoteOffice.getIn().readObject();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-        return result;
     }
 
-    public void sendResponse(String response){
-        try {
+    @Override
+    public void sendResponse(String response) {
            response = response + PRESS_ENTER;
-           bankRemoteOffice.getOut().writeObject(response);
+        try {
+            bankRemoteOffice.getOut().writeObject(response);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
+
+    @Override
+    public String getMessageFromClient() throws IOException, ClassNotFoundException {
+        String message = null;
+        message = (String) bankRemoteOffice.getIn().readObject();
+        return null;
+    }
+
+
 }

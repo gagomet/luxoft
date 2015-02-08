@@ -14,7 +14,6 @@ import java.io.*;
  * Created by Kir Kolesnikov on 29.01.2015.
  */
 public class ClientServiceImpl implements ClientService {
-//    private static Client currentClient;
 
     private ClientServiceImpl() {
 
@@ -27,15 +26,6 @@ public class ClientServiceImpl implements ClientService {
     public static ClientServiceImpl getInstance() {
         return LazyHolder.INSTANCE;
     }
-
-/*    public Client getCurrentClient() {
-        return currentClient;
-    }
-
-    public void setCurrentClient(Client currentClient) {
-
-        this.currentClient = currentClient;
-    }*/
 
     @Override
     public void addAccount(Client client, Account account) {
@@ -57,8 +47,6 @@ public class ClientServiceImpl implements ClientService {
         try (FileOutputStream fileOutputStream = new FileOutputStream("c:\\!toBankApplicationSerialization\\object.ser")) {
             ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
             objectOutputStream.writeObject(client);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -70,11 +58,7 @@ public class ClientServiceImpl implements ClientService {
         try (FileInputStream fileInputStream = new FileInputStream("c:\\!toBankApplicationSerialization\\object.ser")) {
             ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
             result = (Client) objectInputStream.readObject();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
+        } catch (ClassNotFoundException | IOException e) {
             e.printStackTrace();
         }
         return result;

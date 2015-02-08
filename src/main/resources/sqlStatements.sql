@@ -52,23 +52,23 @@ CREATE TABLE S_ACCOUNTS(
 -- stubs data --
 INSERT INTO BANKS VALUES (1, 'MyBank')
 
-INSERT INTO CLIENTS VALUES (8, 1, 'Barbie Girl', 4000, 0, 'pinkWorld@server.mail', null, 'Springfield')
-INSERT INTO CLIENTS VALUES (7, 1, 'Master Splinter', 4000, 1, 'turtles@server.mail', null, 'Sewers')
-INSERT INTO CLIENTS VALUES (6, 1, 'Dart Waider', NULL, 1, 'imperial@server.mail', +666666666, 'DeathStar')
-INSERT INTO CLIENTS VALUES (5, 1, 'Homer Simpson', 5000, 1, 'ivan@server.mail', +3801234567, 'Springfileld')
-INSERT INTO CLIENTS VALUES (4, 1, 'Shumacher Michael', 1000, 1, 'f1@server.mail', null, 'Springfileld')
-INSERT INTO CLIENTS VALUES (3, 1, 'Sidor Sidorov', NULL, 1, 'sidor@server.mail', +3807654321, null)
-INSERT INTO CLIENTS VALUES (2, 1, 'Petra Petrova', 1500, 0, 'petrova@girl.here', null, 'Odessa')
-INSERT INTO CLIENTS VALUES (1, 1, 'Ivan Ivanov', 1000, 1, 'ivan@server.mail', +3801234567, 'Hatsapetovka')
+INSERT INTO CLIENTS VALUES (8, 1, 'Barbie Girl', 4000, 0, 'pinkWorld@server.mail', null, 'Springfield');
+INSERT INTO CLIENTS VALUES (7, 1, 'Master Splinter', 4000, 1, 'turtles@server.mail', null, 'Sewers');
+INSERT INTO CLIENTS VALUES (6, 1, 'Dart Waider', NULL, 1, 'imperial@server.mail', +666666666, 'DeathStar');
+INSERT INTO CLIENTS VALUES (5, 1, 'Homer Simpson', 5000, 1, 'ivan@server.mail', +3801234567, 'Springfileld');
+INSERT INTO CLIENTS VALUES (4, 1, 'Shumacher Michael', 1000, 1, 'f1@server.mail', null, 'Springfileld');
+INSERT INTO CLIENTS VALUES (3, 1, 'Sidor Sidorov', NULL, 1, 'sidor@server.mail', +3807654321, null);
+INSERT INTO CLIENTS VALUES (2, 1, 'Petra Petrova', 1500, 0, 'petrova@girl.here', null, 'Odessa');
+INSERT INTO CLIENTS VALUES (1, 1, 'Ivan Ivanov', 1000, 1, 'ivan@server.mail', +3801234567, 'Hatsapetovka');
 
-INSERT INTO ACCOUNTS VALUES (1, 1, 1000, -100)
-INSERT INTO ACCOUNTS VALUES (2, 2, 1500, 2450)
-INSERT INTO ACCOUNTS VALUES (3, 3, NULL, 345)
-INSERT INTO ACCOUNTS VALUES (4, 4, 1000, 35)
-INSERT INTO ACCOUNTS VALUES (5, 5, 5000, 3045)
-INSERT INTO ACCOUNTS VALUES (6, 6, NULL, -345)
-INSERT INTO ACCOUNTS VALUES (7, 7, 4000, 25468)
-INSERT INTO ACCOUNTS VALUES (8, 8, 4000, 345)
+INSERT INTO ACCOUNTS VALUES (1, 1, 1000, -100);
+INSERT INTO ACCOUNTS VALUES (2, 2, 1500, 2450);
+INSERT INTO ACCOUNTS VALUES (3, 3, NULL, 345);
+INSERT INTO ACCOUNTS VALUES (4, 4, 1000, 35);
+INSERT INTO ACCOUNTS VALUES (5, 5, 5000, 3045);
+INSERT INTO ACCOUNTS VALUES (6, 6, NULL, -345);
+INSERT INTO ACCOUNTS VALUES (7, 7, 4000, 25468);
+INSERT INTO ACCOUNTS VALUES (8, 8, 4000, 345);
 
 -- найти всех клиентов и отобразить остаток на их счетах --
 SELECT
@@ -125,7 +125,7 @@ BEGIN
   ELSE
    ROLLBACK;
   END IF;
-END$$
+END$$;
 
 
 --On H2 engine stored procedures creates using Java classes (http://www.h2database.com/html/features.html#user_defined_functions) --

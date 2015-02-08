@@ -28,76 +28,95 @@ public class AddClientCommand extends AbstractCommand {
         this.console = console;
         setManager(manager);
     }
+
     @Override
-    public void execute()  {
+    public void execute() {
         try {
 
             while (true) {
                 try {
-                    newClientsName = validateClientsName(console.consoleResponse("Enter client's name:"));
+                    console.consoleResponse("Enter client's name:");
+                    newClientsName = validateClientsName(console.getMessageFromClient());
                     break;
                 } catch (IllegalArgumentException e) {
                     System.out.println(errorsBundle.getString("wrongClientsName"));
                     console.sendResponse(errorsBundle.getString("wrongClientsName"));
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
                 }
             }
 
             while (true) {
                 try {
-                    newClientSex = validateClientsSex(console.consoleResponse("Enter client's gender:"));
+                    console.consoleResponse("Enter client's gender:");
+                    newClientSex = validateClientsSex(console.getMessageFromClient());
                     break;
                 } catch (IllegalArgumentException e) {
                     System.out.println(errorsBundle.getString("wrongGender"));
                     console.sendResponse(errorsBundle.getString("wrongGender"));
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
                 }
             }
 
             while (true) {
                 try {
-                    newClientOverdraft = validateFunds(console.consoleResponse("Enter client's overdraft (live it empty if client has no overdraft):"));
+                    console.consoleResponse("Enter client's overdraft (live it empty if client has no overdraft):");
+                    newClientOverdraft = validateFunds(console.getMessageFromClient());
                     break;
                 } catch (IllegalArgumentException e) {
                     System.out.println(errorsBundle.getString("wrongNumber"));
                     console.sendResponse(errorsBundle.getString("wrongNumber"));
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
                 }
             }
 
             while (true) {
                 try {
-                    newClientPhone = validateClientsPhone(console.consoleResponse("Enter client's phone number (live it empty if client has no phone):"));
+                    console.consoleResponse("Enter client's phone number (live it empty if client has no phone):");
+                    newClientPhone = validateClientsPhone(console.getMessageFromClient());
                     break;
 
                 } catch (IllegalArgumentException e) {
                     System.out.println(errorsBundle.getString("wrongPhone"));
                     console.sendResponse(errorsBundle.getString("wrongPhone"));
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
                 }
             }
 
 
             while (true) {
                 try {
-                    newClientEmail = validateClientsEmail(console.consoleResponse("Enter client's email (live it empty if client has no email):"));
+                    console.consoleResponse("Enter client's email (live it empty if client has no email):");
+                    newClientEmail = validateClientsEmail(console.getMessageFromClient());
                     break;
 
                 } catch (IllegalArgumentException e) {
                     System.out.println(errorsBundle.getString("wrongEmail"));
                     console.sendResponse(errorsBundle.getString("wrongEmail"));
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
                 }
             }
 
             while (true) {
                 try {
-                    newClientsCity = validateClientsCity(console.consoleResponse("Enter client's city (live it empty if city is unknown):"));
+                    console.consoleResponse("Enter client's city (live it empty if city is unknown):");
+                    newClientsCity = validateClientsCity(console.getMessageFromClient());
                     break;
                 } catch (IllegalArgumentException e) {
                     System.out.println(errorsBundle.getString("wrongClientsCity"));
                     console.sendResponse(errorsBundle.getString("wrongClientsCity"));
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
                 }
             }
 
             addClient();
         } catch (NumberFormatException e) {
-            console.sendResponse("Not valid entry :" + e.getMessage());
+                console.sendResponse("Not valid entry :" + e.getMessage());
             throw new IllegalArgumentException("Not valid entry :" + e.getMessage());
 
         } catch (ClientExceedsException | IOException e) {
@@ -142,5 +161,6 @@ public class AddClientCommand extends AbstractCommand {
         getManager().setCurrentClient(newClient);
         System.out.println(builder.toString());
         console.sendResponse(builder.toString());
+
     }
 }

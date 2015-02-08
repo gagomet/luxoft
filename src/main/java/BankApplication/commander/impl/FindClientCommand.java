@@ -3,7 +3,6 @@ package BankApplication.commander.impl;
 import BankApplication.commander.CommandsManager;
 import BankApplication.exceptions.ClientNotFoundException;
 import BankApplication.model.impl.Client;
-import BankApplication.network.ServerThread;
 import BankApplication.network.console.Console;
 import BankApplication.service.impl.ClientServiceImpl;
 import BankApplication.service.impl.ServiceFactory;
@@ -31,11 +30,14 @@ public class FindClientCommand extends AbstractCommand {
         try {
             while (true) {
                 try {
-                    clientName = validateClientsName(console.consoleResponse("Enter client's name: "));
+                    console.consoleResponse("Enter client's name: ");
+                    clientName = validateClientsName(console.getMessageFromClient());
                     break;
                 } catch (IllegalArgumentException e) {
                     System.out.println(errorsBundle.getString("wrongClientsName"));
                     console.sendResponse(errorsBundle.getString("wrongClientsName"));
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
                 }
             }
             findClientInBank(clientName);
@@ -64,7 +66,6 @@ public class FindClientCommand extends AbstractCommand {
             System.out.println(builder.toString());
             console.sendResponse(client.toString() + builder.toString());
             client.printReport();
-//            ServiceFactory.getClientService().setCurrentClient(client);
         } catch (ClientNotFoundException e) {
             e.printStackTrace();
             console.sendResponse(errorsBundle.getString("clientNotFound"));

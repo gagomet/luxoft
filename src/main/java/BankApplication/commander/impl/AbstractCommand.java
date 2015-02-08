@@ -1,6 +1,7 @@
 package BankApplication.commander.impl;
 
 import BankApplication.commander.CommandsManager;
+import BankApplication.main.BankCommander;
 import BankApplication.model.impl.Client;
 import BankApplication.network.ServerThread;
 import BankApplication.network.console.ConsoleImpl;

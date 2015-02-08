@@ -16,13 +16,11 @@ import BankApplication.model.impl.Bank;
 import BankApplication.model.impl.Client;
 import BankApplication.network.console.Console;
 import BankApplication.network.console.MultithreadServerConsoleImpl;
-import BankApplication.service.impl.ClientServiceImpl;
 import BankApplication.service.impl.ServiceFactory;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Iterator;
 import java.util.Map;
@@ -42,12 +40,11 @@ public class ServerThread implements Runnable, CommandsManager {
 
     private Map<String, Command> commandsMap = new TreeMap<>();
     private static final String FEED_FILES_FOLDER = "c:\\!toBankApplication\\";
-//    private static String bankName = "MyBank"; /*home*/
-        static String bankName = "MYBANK";  /*work*/
+    private static String bankName = "MyBank"; /*home*/
+//        static String bankName = "MYBANK";  /*work*/
 
     public ServerThread(Socket socket) {
         this.clientSocket = socket;
-        BankServerThreaded.getWaitForConnection().getAndIncrement();
     }
 
 
@@ -68,7 +65,8 @@ public class ServerThread implements Runnable, CommandsManager {
 
     @Override
     public void run() {
-        BankServerThreaded.getWaitForConnection().decrementAndGet();
+//        BankServerMultithread.getWaitForConnection().getAndDecrement();
+        BankServerMultithread.threadIsRunning();
         initialize();
         Bank bank = DAOFactory.getBankDAO().getBankByName(bankName);
         ServiceFactory.getBankService().setCurrentBank(bank);
@@ -78,19 +76,21 @@ public class ServerThread implements Runnable, CommandsManager {
             out = new ObjectOutputStream(clientSocket.getOutputStream());
             out.flush();
             in = new ObjectInputStream(clientSocket.getInputStream());
-
+            console.consoleResponse(composeUserMenu());
             do {
-                message = console.consoleResponse(composeUserMenu());
+
+                message = console.getMessageFromClient();
                 if (commandsMap.containsKey(message)) {
                     Command cmd = commandsMap.get(message);
                     cmd.execute();
+                    console.consoleResponse(composeUserMenu());
                 } else if (message.equals("0")) {
                     sendMessage("0");
                 }
                 System.out.println("Client> " + message);
             } while (!message.equals("0"));
 
-        } catch (IOException | IllegalArgumentException e) {
+        } catch (IOException | IllegalArgumentException | ClassNotFoundException e) {
             e.printStackTrace();
         } finally {
             try {
@@ -155,5 +155,9 @@ public class ServerThread implements Runnable, CommandsManager {
     @Override
     public void setCurrentClient(Client client) {
         currentClient = client;
+    }
+
+    public Console getConsole() {
+        return console;
     }
 }

@@ -30,8 +30,8 @@ public class GetAccountCommand extends AbstractCommand {
     public void execute() {
         currentClient = getManager().getCurrentClient();
         if (currentClient == null) {
-            System.out.println(errorsBundle.getString("noActiveClient"));
-            console.sendResponse(errorsBundle.getString("noActiveClient"));
+                System.out.println(errorsBundle.getString("noActiveClient"));
+                console.sendResponse(errorsBundle.getString("noActiveClient"));
         } else {
             System.out.println("*****Accounts list*****");
             if (currentClient.getAccountsList().size() == 1) {
@@ -47,11 +47,14 @@ public class GetAccountCommand extends AbstractCommand {
                 try {
                     while (true) {
                         try {
-                            clientId = validateId(console.consoleResponse("Enter an account's ID please:"));
+                            console.consoleResponse("Enter an account's ID please:");
+                            clientId = validateId(console.getMessageFromClient());
                             break;
 
                         } catch (IllegalArgumentException e) {
                             System.out.println(errorsBundle.getString("wrongNumber"));
+                        } catch (ClassNotFoundException e) {
+                            e.printStackTrace();
                         }
                     }
 
@@ -64,7 +67,7 @@ public class GetAccountCommand extends AbstractCommand {
                     builder.append(" is active now. ");
                     console.sendResponse(builder.toString());
                 } catch (IOException | AccountNotFoundException e) {
-                    console.sendResponse(e.getMessage());
+                        console.sendResponse(e.getMessage());
                     e.printStackTrace();
                 }
             }

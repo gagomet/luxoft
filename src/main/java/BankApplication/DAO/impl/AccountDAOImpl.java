@@ -1,12 +1,15 @@
 package BankApplication.DAO.impl;
 
+import BankApplication.DAO.AccountDAO;
 import BankApplication.model.Account;
 import BankApplication.model.impl.CheckingAccount;
 import BankApplication.model.impl.Client;
 import BankApplication.model.impl.SavingAccount;
-import BankApplication.DAO.AccountDAO;
 
-import java.sql.*;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,16 +38,18 @@ public class AccountDAOImpl extends BaseDAOImpl implements AccountDAO {
 
 
     @Override
-    public void save(Account account, Client client) {
+    public synchronized void save(Account account, Client client) {
         try {
-            setConnection(openConnection());
-            getConnection().setAutoCommit(false);
-            PreparedStatement preparedStatement = getConnection().prepareStatement(UPDATE_ACCOUNT_IN_DB_STMT);
-            preparedStatement.setFloat(1, account.getBalance());
-            preparedStatement.setLong(2, account.getId());
-            preparedStatement.executeUpdate();
-            getConnection().commit();
-            getConnection().setAutoCommit(true);
+
+                setConnection(openConnection());
+                getConnection().setAutoCommit(false);
+                PreparedStatement preparedStatement = getConnection().prepareStatement(UPDATE_ACCOUNT_IN_DB_STMT);
+                preparedStatement.setFloat(1, account.getBalance());
+                preparedStatement.setLong(2, account.getId());
+                preparedStatement.executeUpdate();
+                getConnection().commit();
+                getConnection().setAutoCommit(true);
+
         } catch (SQLException e) {
             try {
                 getConnection().rollback();
@@ -176,7 +181,7 @@ public class AccountDAOImpl extends BaseDAOImpl implements AccountDAO {
     @Override
     public Account getAccountById(long id) {
         Account result = null;
-        try{
+        try {
             setConnection(openConnection());
             PreparedStatement preparedStatement = getConnection().prepareStatement(GET_ACCOUNT_BY_ID_STMT);
             preparedStatement.setLong(1, id);

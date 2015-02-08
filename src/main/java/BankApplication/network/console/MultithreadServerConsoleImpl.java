@@ -8,7 +8,7 @@ import java.io.IOException;
  * Created by Padonag on 01.02.2015.
  */
 public class MultithreadServerConsoleImpl implements Console {
-    ServerThread serverThread;
+    private ServerThread serverThread;
     private static String PRESS_ENTER = "   Press Enter to continue";
 
     public MultithreadServerConsoleImpl(ServerThread serverThread) {
@@ -16,24 +16,25 @@ public class MultithreadServerConsoleImpl implements Console {
     }
 
     @Override
-    public String consoleResponse(String consoleRequest) throws IOException {
-        String result = null;
+    public void consoleResponse(String consoleRequest) throws IOException {
         serverThread.getOut().writeObject(consoleRequest);
-        try {
-            result = (String) serverThread.getIn().readObject();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-        return result;
     }
 
     @Override
     public void sendResponse(String response) {
+        response = response + PRESS_ENTER;
         try {
-            response = response + PRESS_ENTER;
             serverThread.getOut().writeObject(response);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
+
+    @Override
+    public String getMessageFromClient() throws IOException, ClassNotFoundException {
+        String message = null;
+        message = (String) serverThread.getIn().readObject();
+        return message;
+    }
+
 }

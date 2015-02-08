@@ -31,12 +31,15 @@ public class WithdrawCommand extends AbstractCommand {
             try {
                 while (true) {
                     try {
-                        amountToWithdraw = validateFunds(console.consoleResponse("How much do you want to withdraw :"));
+                        console.consoleResponse("How much do you want to withdraw :");
+                        amountToWithdraw = validateFunds(console.getMessageFromClient());
                         break;
 
                     } catch (IllegalArgumentException e) {
                         System.out.println(errorsBundle.getString("wrongNumber"));
                         console.sendResponse(errorsBundle.getString("wrongNumber"));
+                    } catch (ClassNotFoundException e) {
+                        e.printStackTrace();
                     }
                 }
 

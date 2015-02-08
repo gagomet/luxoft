@@ -1,9 +1,10 @@
 package BankApplication.service.impl;
 
 import BankApplication.DAO.impl.DAOFactory;
-import BankApplication.exceptions.*;
+import BankApplication.exceptions.AccountNotFoundException;
+import BankApplication.exceptions.ClientNotFoundException;
+import BankApplication.exceptions.NotEnoughFundsException;
 import BankApplication.model.Account;
-import BankApplication.model.impl.CheckingAccount;
 import BankApplication.model.impl.Client;
 import BankApplication.service.AccountService;
 
@@ -11,13 +12,14 @@ import java.util.List;
 import java.util.ResourceBundle;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 /**
  * Created by Kir Kolesnikov on 29.01.2015.
  */
 public class AccountServiceImpl implements AccountService {
     protected static ResourceBundle errorsBundle = ResourceBundle.getBundle("errors");
-    private final Lock reentrantLock = new ReentrantLock();
+    Lock lock = new ReentrantLock();
 
     private AccountServiceImpl() {
 
@@ -32,31 +34,28 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public void depositeFunds(Account account, float amount) throws IllegalArgumentException {
-
+    public synchronized void depositeFunds(Account account, float amount) throws IllegalArgumentException {
         try {
-            reentrantLock.lock();
             account.deposit(amount);
             Client client = DAOFactory.getClientDAO().findClientById(account.getClientId());
             DAOFactory.getAccountDAO().save(account, client);
-            reentrantLock.unlock();
         } catch (ClientNotFoundException e) {
             System.out.println(e.getMessage());
-            reentrantLock.unlock();
         }
     }
 
     @Override
     public void withdrawFunds(Account account, float amount) throws NotEnoughFundsException, IllegalArgumentException {
         try {
-            reentrantLock.lock();
-            account.withdraw(amount);
-            Client client = DAOFactory.getClientDAO().findClientById(account.getClientId());
-            DAOFactory.getAccountDAO().save(account, client);
-            reentrantLock.unlock();
+                account.withdraw(amount);
+                Client client = DAOFactory.getClientDAO().findClientById(account.getClientId());
+
+//            lock.lock();
+                DAOFactory.getAccountDAO().save(account, client);
+//            lock.unlock();
+
         } catch (ClientNotFoundException e) {
             System.out.println(e.getMessage());
-            reentrantLock.unlock();
         }
     }
 
@@ -72,7 +71,7 @@ public class AccountServiceImpl implements AccountService {
         return result;
     }
 
-    public void transferFunds(Account sender, Account recipient, float amount) {
+    public synchronized void transferFunds(Account sender, Account recipient, float amount) {
         DAOFactory.getAccountDAO().transferFunds(sender, recipient, amount);
     }
 }

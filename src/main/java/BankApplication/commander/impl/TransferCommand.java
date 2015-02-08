@@ -33,17 +33,20 @@ public class TransferCommand extends AbstractCommand {
     public void execute() {
         if (getManager().getCurrentClient() == null) {
             System.out.println(errorsBundle.getString("noActiveClient"));
-            console.sendResponse("Select active client first! Press enter to continue");
+                console.sendResponse("Select active client first! Press enter to continue");
         } else {
             try {
                 Account senderAccount = getManager().getCurrentClient().getActiveAccount();
                 while (true) {
                     try {
-                        recepientName = validateClientsName(console.consoleResponse("Enter Client-recipient name, please"));
+                        console.consoleResponse("Enter Client-recipient name, please");
+                        recepientName = validateClientsName(console.getMessageFromClient());
                         break;
                     } catch (IllegalArgumentException e) {
                         System.out.println(errorsBundle.getString("wrongClientsName"));
                         console.sendResponse(errorsBundle.getString("wrongClientsName"));
+                    } catch (ClassNotFoundException e) {
+                        e.printStackTrace();
                     }
                 }
                 Client recepient = ServiceFactory.getClientService().getClientByName(BankServiceImpl.getInstance().getCurrentBank()
@@ -54,23 +57,29 @@ public class TransferCommand extends AbstractCommand {
                 }
                 while (true) {
                     try {
-                        recepientAccountId = validateId(console.consoleResponse("Enter recipient account ID"));
+                        console.consoleResponse("Enter recipient account ID");
+                        recepientAccountId = validateId(console.getMessageFromClient());
                         break;
 
                     } catch (IllegalArgumentException e) {
                         System.out.println(errorsBundle.getString("wrongNumber"));
                         console.sendResponse(errorsBundle.getString("wrongNumber"));
+                    } catch (ClassNotFoundException e) {
+                        e.printStackTrace();
                     }
                 }
 
                 while (true) {
                     try {
-                        transferAmount = validateFunds(console.consoleResponse("How much do you want to transfer :"));
+                        console.consoleResponse("How much do you want to transfer :");
+                        transferAmount = validateFunds(console.getMessageFromClient());
                         break;
 
                     } catch (IllegalArgumentException e) {
                         System.out.println(errorsBundle.getString("wrongNumber"));
                         console.sendResponse(errorsBundle.getString("wrongNumber"));
+                    } catch (ClassNotFoundException e) {
+                        e.printStackTrace();
                     }
                 }
 
@@ -79,7 +88,7 @@ public class TransferCommand extends AbstractCommand {
 
             } catch (IOException | ClientNotFoundException | IllegalArgumentException | NotEnoughFundsException e) {
                 e.printStackTrace();
-                console.sendResponse(e.getMessage());
+                    console.sendResponse(e.getMessage());
             }
         }
 
@@ -96,6 +105,6 @@ public class TransferCommand extends AbstractCommand {
         builder.append("Transfer funds successfully completed");
         builder.append(System.getProperty("line.separator"));
         builder.append("Use info command to get detailed info");
-        console.sendResponse(builder.toString());
+            console.sendResponse(builder.toString());
     }
 }
