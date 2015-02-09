@@ -20,7 +20,7 @@ public class BankServerMultithread implements Runnable {
     protected ExecutorService threadPool = Executors.newFixedThreadPool(10);
     private static AtomicInteger waitForConnection = new AtomicInteger(0);
 
-    private static Logger logger = Logger.getLogger(BankServerMultithread.class.getName());
+    private static final Logger logger = Logger.getLogger(BankServerMultithread.class.getName());
 
     public BankServerMultithread(int port) {
         this.serverPort = port;

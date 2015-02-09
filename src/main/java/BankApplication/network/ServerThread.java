@@ -25,6 +25,8 @@ import java.net.Socket;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Created by Kir Kolesnikov on 30.01.2015.
@@ -36,7 +38,9 @@ public class ServerThread implements Runnable, CommandsManager {
     private String message;
     private Console console = new MultithreadServerConsoleImpl(this);
     private Client currentClient;
-    //TODO add commands as inner classess
+    long beginTime;
+
+    private static final Logger logger = Logger.getLogger(ServerThread.class.getName());
 
     private Map<String, Command> commandsMap = new TreeMap<>();
     private static final String FEED_FILES_FOLDER = "c:\\!toBankApplication\\";
@@ -65,6 +69,8 @@ public class ServerThread implements Runnable, CommandsManager {
 
     @Override
     public void run() {
+        logger.log(Level.INFO, "User connected to server");
+        beginTime = System.currentTimeMillis();
         BankServerMultithread.getWaitForConnection().decrementAndGet();
         initialize();
         Bank bank = DAOFactory.getBankDAO().getBankByName(bankName);
@@ -85,6 +91,7 @@ public class ServerThread implements Runnable, CommandsManager {
                     console.consoleResponse(composeUserMenu());
                 } else if (message.equals("0")) {
                     sendMessage("0");
+                    logger.log(Level.INFO, "User disconnected, session time: " + (System.currentTimeMillis() - beginTime));
                 }
                 System.out.println("Client> " + message);
             } while (!message.equals("0"));
