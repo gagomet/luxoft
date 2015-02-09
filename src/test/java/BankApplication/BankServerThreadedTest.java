@@ -92,7 +92,6 @@ public class BankServerThreadedTest {
         for (int i = 0; i < THREADS_NUMBER; i++) {
             Thread.sleep(50);
             Future<Long> future = pool.submit(new BankClientMock(bank));
-            System.out.println("Waiting " + BankServerMultithread.getWaitForConnection().get());
             clientsList.add(future);
         }
 

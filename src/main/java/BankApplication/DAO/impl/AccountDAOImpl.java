@@ -38,7 +38,7 @@ public class AccountDAOImpl extends BaseDAOImpl implements AccountDAO {
 
 
     @Override
-    public synchronized void save(Account account, Client client) {
+    public void save(Account account, Client client) {
         try {
 
             setConnection(openConnection());

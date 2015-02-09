@@ -44,7 +44,7 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public void withdrawFunds(Account account, float amount) throws NotEnoughFundsException, IllegalArgumentException {
+    public synchronized void withdrawFunds(Account account, float amount) throws NotEnoughFundsException, IllegalArgumentException {
         try {
             account.withdraw(amount);
             Client client = DAOFactory.getClientDAO().findClientById(account.getClientId());
