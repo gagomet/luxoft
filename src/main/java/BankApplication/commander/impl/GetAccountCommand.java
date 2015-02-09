@@ -5,8 +5,6 @@ import BankApplication.exceptions.AccountNotFoundException;
 import BankApplication.model.Account;
 import BankApplication.model.impl.Client;
 import BankApplication.network.console.Console;
-import BankApplication.service.impl.AccountServiceImpl;
-import BankApplication.service.impl.ClientServiceImpl;
 import BankApplication.service.impl.ServiceFactory;
 
 import java.io.IOException;
@@ -30,8 +28,8 @@ public class GetAccountCommand extends AbstractCommand {
     public void execute() {
         currentClient = getManager().getCurrentClient();
         if (currentClient == null) {
-                System.out.println(errorsBundle.getString("noActiveClient"));
-                console.sendResponse(errorsBundle.getString("noActiveClient"));
+            System.out.println(errorsBundle.getString("noActiveClient"));
+            console.sendResponse(errorsBundle.getString("noActiveClient"));
         } else {
             System.out.println("*****Accounts list*****");
             if (currentClient.getAccountsList().size() == 1) {
@@ -67,7 +65,7 @@ public class GetAccountCommand extends AbstractCommand {
                     builder.append(" is active now. ");
                     console.sendResponse(builder.toString());
                 } catch (IOException | AccountNotFoundException e) {
-                        console.sendResponse(e.getMessage());
+                    console.sendResponse(e.getMessage());
                     e.printStackTrace();
                 }
             }

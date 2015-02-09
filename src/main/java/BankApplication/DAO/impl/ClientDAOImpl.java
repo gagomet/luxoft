@@ -13,7 +13,11 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 /**
  * Created by Kir Kolesnikov on 27.01.2015.
@@ -216,7 +220,7 @@ public class ClientDAOImpl extends BaseDAOImpl implements ClientDAO {
     }
 
     private void setPreparedStatementDataForClient(PreparedStatement preparedStatement, Client client, Bank bank) throws SQLException {
-        if(client.getBankId() == 0){
+        if (client.getBankId() == 0) {
             preparedStatement.setLong(1, bank.getId());
         } else {
             preparedStatement.setLong(1, client.getBankId());

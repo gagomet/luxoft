@@ -2,11 +2,10 @@ package BankApplication.main;
 
 import BankApplication.model.ClientRegistrationListener;
 import BankApplication.model.impl.Bank;
-import BankApplication.service.impl.BankReport;
 import BankApplication.model.impl.Client;
 import BankApplication.service.BankFeedService;
 import BankApplication.service.impl.BankFeedServiceImpl;
-
+import BankApplication.service.impl.BankReport;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,7 +16,7 @@ public class BankApplication {
     static Client client1 = null;
     static Client client2 = null;
     static Client client3 = null;
-//    static AllBankServices allBankServices = new AllBankServicesImpl();
+    //    static AllBankServices allBankServices = new AllBankServicesImpl();
     private static final String FEED_FILES_FOLDER = "c:\\!toBankApplication\\";
 
     public static void main(String[] args) {
@@ -67,7 +66,6 @@ public class BankApplication {
     public static void printBankReport() {
         bank.printReport();
     }
-
 
 
     public static Bank getBank() {

@@ -2,7 +2,6 @@ package BankApplication.exceptions;
 
 
 import BankApplication.model.Account;
-import BankApplication.model.impl.AbstractAccount;
 import BankApplication.model.impl.CheckingAccount;
 
 /**

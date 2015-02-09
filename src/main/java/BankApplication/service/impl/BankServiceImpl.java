@@ -14,7 +14,7 @@ public class BankServiceImpl implements BankService {
 
     private static Bank currentBank;
 
-    private BankServiceImpl(){
+    private BankServiceImpl() {
     }
 
     private static class LazyHolder {
@@ -24,7 +24,8 @@ public class BankServiceImpl implements BankService {
     public static BankServiceImpl getInstance() {
         return LazyHolder.INSTANCE;
     }
-    public Bank getCurrentBank(){
+
+    public Bank getCurrentBank() {
         return currentBank;
     }
 

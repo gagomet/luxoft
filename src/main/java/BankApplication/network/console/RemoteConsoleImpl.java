@@ -1,16 +1,16 @@
 package BankApplication.network.console;
 
 import BankApplication.network.BankRemoteOffice;
-import BankApplication.network.ServerThread;
 
-import java.io.*;
+import java.io.IOException;
 
 /**
  * Created by Padonag on 15.01.2015.
  */
 public class RemoteConsoleImpl implements Console {
     private BankRemoteOffice bankRemoteOffice;
-    private static String PRESS_ENTER= "   Press Enter to continue";
+    private static String PRESS_ENTER = "   Press Enter to continue";
+
     public RemoteConsoleImpl(BankRemoteOffice bankRemoteOffice) {
         this.bankRemoteOffice = bankRemoteOffice;
     }
@@ -22,7 +22,7 @@ public class RemoteConsoleImpl implements Console {
 
     @Override
     public void sendResponse(String response) {
-           response = response + PRESS_ENTER;
+        response = response + PRESS_ENTER;
         try {
             bankRemoteOffice.getOut().writeObject(response);
         } catch (IOException e) {

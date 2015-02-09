@@ -2,14 +2,21 @@ package BankApplication.network;
 
 
 import BankApplication.DAO.impl.DAOFactory;
+import BankApplication.commander.Command;
 import BankApplication.commander.CommandsManager;
-import BankApplication.commander.impl.*;
+import BankApplication.commander.impl.AddClientCommand;
+import BankApplication.commander.impl.DepositCommand;
+import BankApplication.commander.impl.FindClientCommand;
+import BankApplication.commander.impl.GetAccountCommand;
+import BankApplication.commander.impl.RemoveClientCommand;
+import BankApplication.commander.impl.ReportCommand;
+import BankApplication.commander.impl.ShowHelpCommand;
+import BankApplication.commander.impl.TransferCommand;
+import BankApplication.commander.impl.WithdrawCommand;
 import BankApplication.model.impl.Bank;
 import BankApplication.model.impl.Client;
 import BankApplication.network.console.Console;
 import BankApplication.network.console.RemoteConsoleImpl;
-import BankApplication.commander.Command;
-import BankApplication.service.impl.ClientServiceImpl;
 import BankApplication.service.impl.ServiceFactory;
 
 import java.io.IOException;
@@ -35,8 +42,8 @@ public class BankRemoteOffice implements CommandsManager {
 
     private Map<String, Command> commandsMap = new TreeMap<>();
     private static final String FEED_FILES_FOLDER = "c:\\!toBankApplication\\";
-//    private static String bankName = "MyBank";
-        static String bankName = "MYBANK";
+    //    private static String bankName = "MyBank";
+    static String bankName = "MYBANK";
 
     public void initialize() {
 
@@ -68,7 +75,7 @@ public class BankRemoteOffice implements CommandsManager {
                     Command cmd = commandsMap.get(message);
                     cmd.execute();
                     console.consoleResponse(composeUserMenu());
-                }  else if (message.equals("0")) {
+                } else if (message.equals("0")) {
                     sendMessage("0");
                 }
                 System.out.println("Client> " + message);
@@ -121,7 +128,7 @@ public class BankRemoteOffice implements CommandsManager {
 
     public static void main(String[] args) {
         BankRemoteOffice remoteOffice = new BankRemoteOffice();
-        Bank bank = DAOFactory.getBankDAO().getBankByName(bankName) ;
+        Bank bank = DAOFactory.getBankDAO().getBankByName(bankName);
         ServiceFactory.getBankService().setCurrentBank(bank);
         remoteOffice.initialize();
         remoteOffice.run();

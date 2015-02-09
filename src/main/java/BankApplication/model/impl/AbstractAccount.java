@@ -1,8 +1,8 @@
 package BankApplication.model.impl;
 
 import BankApplication.annotation.NoDB;
-import BankApplication.model.Account;
 import BankApplication.exceptions.NotEnoughFundsException;
+import BankApplication.model.Account;
 import BankApplication.service.Persistable;
 
 import java.io.Serializable;
@@ -87,10 +87,10 @@ public abstract class AbstractAccount implements Account, Serializable, Persista
     }
 
     @Override
-    public int compareTo(AbstractAccount o){
-        if(balance > o.balance){
+    public int compareTo(AbstractAccount o) {
+        if (balance > o.balance) {
             return 1;
-        } else if(balance < o.balance){
+        } else if (balance < o.balance) {
             return -1;
         }
         return 0;

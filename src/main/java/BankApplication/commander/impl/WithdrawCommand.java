@@ -1,7 +1,7 @@
 package BankApplication.commander.impl;
 
 import BankApplication.commander.CommandsManager;
-import BankApplication.exceptions.*;
+import BankApplication.exceptions.NotEnoughFundsException;
 import BankApplication.model.impl.Client;
 import BankApplication.network.console.Console;
 import BankApplication.service.impl.ServiceFactory;
@@ -19,6 +19,7 @@ public class WithdrawCommand extends AbstractCommand {
         this.console = console;
         setManager(manager);
     }
+
     @Override
     public void execute() throws IllegalArgumentException {
 

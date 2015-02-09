@@ -10,7 +10,6 @@ import BankApplication.network.console.Console;
 import BankApplication.service.impl.BankServiceImpl;
 import BankApplication.service.impl.ServiceFactory;
 
-
 import java.io.IOException;
 
 /**
@@ -33,7 +32,7 @@ public class TransferCommand extends AbstractCommand {
     public void execute() {
         if (getManager().getCurrentClient() == null) {
             System.out.println(errorsBundle.getString("noActiveClient"));
-                console.sendResponse("Select active client first! Press enter to continue");
+            console.sendResponse("Select active client first! Press enter to continue");
         } else {
             try {
                 Account senderAccount = getManager().getCurrentClient().getActiveAccount();
@@ -88,7 +87,7 @@ public class TransferCommand extends AbstractCommand {
 
             } catch (IOException | ClientNotFoundException | IllegalArgumentException | NotEnoughFundsException e) {
                 e.printStackTrace();
-                    console.sendResponse(e.getMessage());
+                console.sendResponse(e.getMessage());
             }
         }
 
@@ -105,6 +104,6 @@ public class TransferCommand extends AbstractCommand {
         builder.append("Transfer funds successfully completed");
         builder.append(System.getProperty("line.separator"));
         builder.append("Use info command to get detailed info");
-            console.sendResponse(builder.toString());
+        console.sendResponse(builder.toString());
     }
 }

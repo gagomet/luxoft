@@ -65,8 +65,7 @@ public class ServerThread implements Runnable, CommandsManager {
 
     @Override
     public void run() {
-//        BankServerMultithread.getWaitForConnection().getAndDecrement();
-        BankServerMultithread.threadIsRunning();
+        BankServerMultithread.getWaitForConnection().decrementAndGet();
         initialize();
         Bank bank = DAOFactory.getBankDAO().getBankByName(bankName);
         ServiceFactory.getBankService().setCurrentBank(bank);

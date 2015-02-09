@@ -12,7 +12,6 @@ import java.util.List;
 import java.util.ResourceBundle;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 /**
  * Created by Kir Kolesnikov on 29.01.2015.
@@ -47,11 +46,11 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public void withdrawFunds(Account account, float amount) throws NotEnoughFundsException, IllegalArgumentException {
         try {
-                account.withdraw(amount);
-                Client client = DAOFactory.getClientDAO().findClientById(account.getClientId());
+            account.withdraw(amount);
+            Client client = DAOFactory.getClientDAO().findClientById(account.getClientId());
 
 //            lock.lock();
-                DAOFactory.getAccountDAO().save(account, client);
+            DAOFactory.getAccountDAO().save(account, client);
 //            lock.unlock();
 
         } catch (ClientNotFoundException e) {

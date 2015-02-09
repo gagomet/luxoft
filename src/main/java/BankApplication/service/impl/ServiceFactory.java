@@ -8,15 +8,15 @@ import BankApplication.service.ClientService;
  * Created by Padonag on 01.02.2015.
  */
 public class ServiceFactory {
-    public static AccountService getAccountService(){
+    public static AccountService getAccountService() {
         return AccountServiceImpl.getInstance();
     }
 
-    public static ClientService getClientService(){
+    public static ClientService getClientService() {
         return ClientServiceImpl.getInstance();
     }
 
-    public static BankService getBankService(){
+    public static BankService getBankService() {
         return BankServiceImpl.getInstance();
     }
 }

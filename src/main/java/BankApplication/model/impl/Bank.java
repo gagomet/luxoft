@@ -19,7 +19,7 @@ import java.util.TreeMap;
 /**
  * Created by Kir Kolesnikov on 14.01.2015.
  */
-public class Bank implements Persistable{
+public class Bank implements Persistable {
     @NoDB
     private Long id;
     private String name;
@@ -37,7 +37,7 @@ public class Bank implements Persistable{
     }
 
     public Bank(List<ClientRegistrationListener> listenerList) {
-        for (ClientRegistrationListener listener : listenerList){
+        for (ClientRegistrationListener listener : listenerList) {
             listeners.add(listener);
         }
         listeners.add(new ClientRegistrationListener() {
@@ -76,19 +76,19 @@ public class Bank implements Persistable{
         this.clientSet = clientSet;
     }
 
-    public void addListener(ClientRegistrationListener listener){
+    public void addListener(ClientRegistrationListener listener) {
         listeners.add(listener);
     }
 
-    public void removeListener(ClientRegistrationListener listener){
-        if(listeners.contains(listener)){
+    public void removeListener(ClientRegistrationListener listener) {
+        if (listeners.contains(listener)) {
             listeners.remove(listener);
         }
     }
 
     public void addClient(Client client) {
         clientSet.add(client);
-        for(ClientRegistrationListener listener : listeners){
+        for (ClientRegistrationListener listener : listeners) {
             listener.onClientAdded(client);
         }
     }

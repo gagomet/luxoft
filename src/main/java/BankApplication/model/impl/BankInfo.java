@@ -3,7 +3,6 @@ package BankApplication.model.impl;
 import BankApplication.service.impl.BankReport;
 
 import java.io.Serializable;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -15,7 +14,8 @@ public class BankInfo implements Serializable {
     int totalAccounts;
     float totalCredit;
     Map<String, List<Client>> clientsByCities;
-    public BankInfo(){
+
+    public BankInfo() {
 
     }
 
@@ -51,7 +51,7 @@ public class BankInfo implements Serializable {
         this.clientsByCities = clientsByCities;
     }
 
-    public BankInfo(Bank bank){
+    public BankInfo(Bank bank) {
         BankReport bankReport = new BankReport();
         totalClients = bankReport.getNumberOfClients(bank);
         totalAccounts = bankReport.getAccountsNumber(bank);
@@ -73,12 +73,12 @@ public class BankInfo implements Serializable {
         builder.append(System.getProperty("line.separator"));
         builder.append("Clients by cities: ");
         builder.append(System.getProperty("line.separator"));
-        for(String key : clientsByCities.keySet()){
+        for (String key : clientsByCities.keySet()) {
             builder.append("City: ");
             builder.append(key);
             builder.append(System.getProperty("line.separator"));
             List<Client> clientsFromCurrentCity = clientsByCities.get(key);
-            for(Client currentClient : clientsFromCurrentCity){
+            for (Client currentClient : clientsFromCurrentCity) {
                 builder.append("     ");
                 builder.append(currentClient.toString());
                 builder.append(System.getProperty("line.separator"));

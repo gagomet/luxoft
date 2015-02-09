@@ -8,7 +8,6 @@ import BankApplication.type.Gender;
 
 import java.io.Serializable;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
@@ -164,6 +163,7 @@ public class Client implements Report, Serializable, Persistable {
     public void setPhone(String phone) {
         this.phone = phone;
     }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

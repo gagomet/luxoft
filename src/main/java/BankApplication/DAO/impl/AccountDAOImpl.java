@@ -41,14 +41,14 @@ public class AccountDAOImpl extends BaseDAOImpl implements AccountDAO {
     public synchronized void save(Account account, Client client) {
         try {
 
-                setConnection(openConnection());
-                getConnection().setAutoCommit(false);
-                PreparedStatement preparedStatement = getConnection().prepareStatement(UPDATE_ACCOUNT_IN_DB_STMT);
-                preparedStatement.setFloat(1, account.getBalance());
-                preparedStatement.setLong(2, account.getId());
-                preparedStatement.executeUpdate();
-                getConnection().commit();
-                getConnection().setAutoCommit(true);
+            setConnection(openConnection());
+            getConnection().setAutoCommit(false);
+            PreparedStatement preparedStatement = getConnection().prepareStatement(UPDATE_ACCOUNT_IN_DB_STMT);
+            preparedStatement.setFloat(1, account.getBalance());
+            preparedStatement.setLong(2, account.getId());
+            preparedStatement.executeUpdate();
+            getConnection().commit();
+            getConnection().setAutoCommit(true);
 
         } catch (SQLException e) {
             try {

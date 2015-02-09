@@ -1,6 +1,7 @@
 package BankApplication.service;
 
-import BankApplication.exceptions.*;
+import BankApplication.exceptions.AccountNotFoundException;
+import BankApplication.exceptions.NotEnoughFundsException;
 import BankApplication.model.Account;
 import BankApplication.model.impl.Client;
 
@@ -9,7 +10,7 @@ import BankApplication.model.impl.Client;
  */
 public interface AccountService {
 
-    public void depositeFunds(Account account, float amount) ;
+    public void depositeFunds(Account account, float amount);
 
     public void withdrawFunds(Account account, float amount) throws NotEnoughFundsException;
 

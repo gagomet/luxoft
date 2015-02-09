@@ -8,6 +8,7 @@ import java.sql.Connection;
 public interface BaseDAO {
     /**
      * Opens connection with the database
+     *
      * @return
      */
     public Connection openConnection();

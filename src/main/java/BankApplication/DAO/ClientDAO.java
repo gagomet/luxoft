@@ -12,6 +12,7 @@ import java.util.List;
 public interface ClientDAO {
     /**
      * Return client by its name, initialize client accounts.
+     *
      * @param bank
      * @param name
      * @return
@@ -20,6 +21,7 @@ public interface ClientDAO {
 
     /**
      * Return client by its name, initialize client accounts.
+     *
      * @param clientId
      * @param
      * @return
@@ -29,6 +31,7 @@ public interface ClientDAO {
     /**
      * Returns the list of all clients of the Bank
      * and their accounts
+     *
      * @param bank
      * @return
      */
@@ -37,12 +40,14 @@ public interface ClientDAO {
     /**
      * Method should insert new Client (if id==null)
      * or update client in database (if id!=null)
+     *
      * @param client
      */
     Client save(Bank bank, Client client);
 
     /**
      * Method removes client from Database
+     *
      * @param client
      */
     void remove(Client client);

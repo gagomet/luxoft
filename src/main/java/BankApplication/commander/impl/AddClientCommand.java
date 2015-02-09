@@ -116,7 +116,7 @@ public class AddClientCommand extends AbstractCommand {
 
             addClient();
         } catch (NumberFormatException e) {
-                console.sendResponse("Not valid entry :" + e.getMessage());
+            console.sendResponse("Not valid entry :" + e.getMessage());
             throw new IllegalArgumentException("Not valid entry :" + e.getMessage());
 
         } catch (ClientExceedsException | IOException e) {

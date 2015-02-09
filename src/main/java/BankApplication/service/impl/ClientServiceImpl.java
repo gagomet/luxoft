@@ -8,7 +8,11 @@ import BankApplication.model.impl.Bank;
 import BankApplication.model.impl.Client;
 import BankApplication.service.ClientService;
 
-import java.io.*;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 
 /**
  * Created by Kir Kolesnikov on 29.01.2015.

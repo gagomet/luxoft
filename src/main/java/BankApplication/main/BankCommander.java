@@ -1,20 +1,29 @@
 package BankApplication.main;
 
 import BankApplication.DAO.impl.DAOFactory;
-import BankApplication.commander.CommandsManager;
-import BankApplication.commander.impl.*;
-import BankApplication.model.impl.Bank;
 import BankApplication.commander.Command;
+import BankApplication.commander.CommandsManager;
+import BankApplication.commander.impl.AddClientCommand;
+import BankApplication.commander.impl.DepositCommand;
+import BankApplication.commander.impl.FindClientCommand;
+import BankApplication.commander.impl.GetAccountCommand;
+import BankApplication.commander.impl.RemoveClientCommand;
+import BankApplication.commander.impl.ReportCommand;
+import BankApplication.commander.impl.ShowHelpCommand;
+import BankApplication.commander.impl.TransferCommand;
+import BankApplication.commander.impl.WithdrawCommand;
+import BankApplication.model.impl.Bank;
 import BankApplication.model.impl.Client;
 import BankApplication.network.console.Console;
 import BankApplication.network.console.ConsoleImpl;
-import BankApplication.service.impl.ClientServiceImpl;
 import BankApplication.service.impl.ServiceFactory;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.*;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.TreeMap;
 
 /**
  * Created by Kir Kolesnikov on 15.01.2015.
@@ -81,7 +90,7 @@ NullPointerException - if the specified key is null and this map uses natural or
 
     public static void main(String args[]) {
         BankCommander bankCommander = new BankCommander();
-        Bank bank = DAOFactory.getBankDAO().getBankByName(bankName) ;
+        Bank bank = DAOFactory.getBankDAO().getBankByName(bankName);
         ServiceFactory.getBankService().setCurrentBank(bank);
 
         while (true) {

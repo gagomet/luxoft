@@ -68,10 +68,6 @@ public class BankServerMultithread implements Runnable {
         }
     }
 
-    public static synchronized void threadIsRunning(){
-        waitForConnection.decrementAndGet();
-    }
-
     private void openServerSocket() {
         try {
             this.serverSocket = new ServerSocket(this.serverPort);

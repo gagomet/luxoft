@@ -6,10 +6,9 @@ package BankApplication.network;
 public class BankServerMonitor implements Runnable {
 
 
-
     @Override
     public void run() {
-        while(true){
+        while (true) {
             try {
                 System.out.println("Now waiting to connect: " + BankServerMultithread.getWaitForConnection().toString());
                 Thread.sleep(10000);

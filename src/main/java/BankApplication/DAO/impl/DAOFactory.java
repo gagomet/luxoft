@@ -11,20 +11,21 @@ import java.sql.Connection;
  */
 public class DAOFactory {
     private static Connection connection;
-    static{
+
+    static {
         BaseDAOImpl baseDAO = new BaseDAOImpl();
         connection = baseDAO.openConnection();
     }
 
-    public static BankDAO getBankDAO(){
+    public static BankDAO getBankDAO() {
         return BankDAOImpl.getInstance();
     }
 
-    public static ClientDAO getClientDAO(){
+    public static ClientDAO getClientDAO() {
         return ClientDAOImpl.getInstance();
     }
 
-    public static AccountDAO getAccountDAO(){
+    public static AccountDAO getAccountDAO() {
         return AccountDAOImpl.getInstance();
     }
 }

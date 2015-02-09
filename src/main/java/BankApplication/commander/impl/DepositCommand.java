@@ -24,8 +24,8 @@ public class DepositCommand extends AbstractCommand {
     public void execute() {
         float amountToDeposit;
         if (getManager().getCurrentClient() == null) {
-                console.sendResponse(errorsBundle.getString("noActiveClient"));
-                System.out.println(errorsBundle.getString("noActiveClient"));
+            console.sendResponse(errorsBundle.getString("noActiveClient"));
+            System.out.println(errorsBundle.getString("noActiveClient"));
         } else {
             try {
                 while (true) {

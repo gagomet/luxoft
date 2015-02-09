@@ -19,6 +19,7 @@ public class BankReport {
     public int getNumberOfClients(Bank bank) {
         return bank.getClientSet().size();
     }
+
     public int getAccountsNumber(Bank bank) {
         int result = 0;
         for (Client client : bank.getClientSet()) {

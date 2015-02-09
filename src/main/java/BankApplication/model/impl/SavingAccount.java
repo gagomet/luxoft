@@ -1,6 +1,6 @@
 package BankApplication.model.impl;
 
-import BankApplication.exceptions.*;
+import BankApplication.exceptions.NotEnoughFundsException;
 
 import java.util.Map;
 
@@ -13,7 +13,7 @@ public class SavingAccount extends AbstractAccount {
         super();
     }
 
-    public void parseFeed(Map<String, String> feedMap){
+    public void parseFeed(Map<String, String> feedMap) {
         Float balance = Float.parseFloat(feedMap.get("balance"));
         setBalance(balance);
     }
@@ -21,7 +21,7 @@ public class SavingAccount extends AbstractAccount {
     @Override
     public synchronized void withdraw(float amount) throws NotEnoughFundsException {
         {
-            if(amount<0){
+            if (amount < 0) {
                 throw new IllegalArgumentException(errorsBundle.getString("notNegative"));
             }
             if (balance >= amount) {

@@ -1,13 +1,10 @@
 package BankApplication.commander.impl;
 
+import BankApplication.commander.Command;
 import BankApplication.commander.CommandsManager;
-import BankApplication.main.BankCommander;
-import BankApplication.model.impl.Client;
-import BankApplication.network.ServerThread;
+import BankApplication.network.console.Console;
 import BankApplication.network.console.ConsoleImpl;
 import BankApplication.type.Gender;
-import BankApplication.commander.Command;
-import BankApplication.network.console.Console;
 
 import java.util.ResourceBundle;
 
@@ -21,7 +18,7 @@ public abstract class AbstractCommand implements Command {
     private CommandsManager manager;
 
     @Override
-    public void printCommandInfo(){
+    public void printCommandInfo() {
         System.out.println(toString());
     }
 

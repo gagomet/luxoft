@@ -10,6 +10,7 @@ public interface BankDAO {
     /**
      * Finds Bank by its name.
      * Do not load the list of the clients.
+     *
      * @param name
      * @return
      */
