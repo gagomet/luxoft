@@ -6,12 +6,17 @@ import BankApplication.model.impl.CheckingAccount;
 import BankApplication.model.impl.Client;
 import BankApplication.model.impl.SavingAccount;
 
+import java.io.IOException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.FileHandler;
+import java.util.logging.Handler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Created by Kir Kolesnikov on 27.01.2015.
@@ -25,14 +30,16 @@ public class AccountDAOImpl extends BaseDAOImpl implements AccountDAO {
     private static final String UPDATE_ACCOUNT_IN_DB_STMT = "UPDATE ACCOUNTS " +
             "SET BALANCE=? WHERE ID=?";
 
+    private static final Logger logger = Logger.getLogger(AccountDAOImpl.class.getName());
+
     private AccountDAOImpl() {
     }
 
     private static class LazyHolder {
-        private static final AccountDAOImpl INSTANCE = new AccountDAOImpl();
+        private static final AccountDAO INSTANCE = new AccountDAOImpl();
     }
 
-    public static AccountDAOImpl getInstance() {
+    public static AccountDAO getInstance() {
         return LazyHolder.INSTANCE;
     }
 
@@ -70,6 +77,7 @@ public class AccountDAOImpl extends BaseDAOImpl implements AccountDAO {
             preparedStatement.executeUpdate();
             getConnection().commit();
             getConnection().setAutoCommit(true);
+            logger.log(Level.FINE, "Account removed from DB accountId: " + id);
         } catch (SQLException e) {
             try {
                 getConnection().rollback();

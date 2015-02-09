@@ -71,6 +71,9 @@ public class CheckingAccount extends AbstractAccount {
         if (!(o instanceof CheckingAccount)) return false;
 
         CheckingAccount that = (CheckingAccount) o;
+        if (super.clientId != that.clientId){
+          return false;
+        }
         if (Float.compare(that.overdraft, this.overdraft) != 0) return false;
         if (Float.compare(that.balance, this.balance) != 0) return false;
         return true;

@@ -7,12 +7,16 @@ import BankApplication.model.impl.BankInfo;
 import BankApplication.model.impl.Client;
 import BankApplication.service.impl.BankReport;
 
+import java.io.IOException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.HashSet;
 import java.util.List;
+import java.util.logging.FileHandler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Created by Kir Kolesnikov on 27.01.2015.
@@ -25,15 +29,16 @@ public class BankDAOImpl extends BaseDAOImpl implements BankDAO {
     private static final String INSERT_NEW_BANK = "INSERT INTO BANKS(NAME) VALUES (?)";
     private static final String UPDATE_BANK_STMT = "UPDATE BANKS SET BANKS.NAME=? WHERE BANKS.ID=?";
 
+    private static final Logger logger = Logger.getLogger(BankDAOImpl.class.getName());
     private BankDAOImpl() {
 
     }
 
     private static class LazyHolder {
-        private static final BankDAOImpl INSTANCE = new BankDAOImpl();
+        private static final BankDAO INSTANCE = new BankDAOImpl();
     }
 
-    public static BankDAOImpl getInstance() {
+    public static BankDAO getInstance() {
         return LazyHolder.INSTANCE;
     }
 
@@ -61,6 +66,7 @@ public class BankDAOImpl extends BaseDAOImpl implements BankDAO {
         } finally {
             closeConnection(getConnection());
         }
+        logger.log(Level.FINE, "Bank loaded from DB (greed) " + result.toString());
         return result;
     }
 
@@ -121,6 +127,7 @@ public class BankDAOImpl extends BaseDAOImpl implements BankDAO {
             }
             closeConnection(getConnection());
         }
+        logger.log(Level.FINE, "Bank loaded from DB (lazy) " + resultBank.toString());
         return resultBank;
     }
 

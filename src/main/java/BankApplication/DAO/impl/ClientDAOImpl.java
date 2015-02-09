@@ -9,6 +9,7 @@ import BankApplication.model.impl.Client;
 import BankApplication.model.impl.SavingAccount;
 import BankApplication.type.Gender;
 
+import java.io.IOException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -18,6 +19,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.logging.FileHandler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Created by Kir Kolesnikov on 27.01.2015.
@@ -32,14 +36,16 @@ public class ClientDAOImpl extends BaseDAOImpl implements ClientDAO {
     private static final String UPDATE_CLIENT_IN_DB = "UPDATE CLIENTS SET " +
             "BANK_ID=?, NAME=?, OVERDRAFT=?, GENDER=?, EMAIL=?, CITY=?, PHONE=? WHERE ID=? ";
 
+    private static final Logger logger = Logger.getLogger(ClientDAOImpl.class.getName());
+
     private ClientDAOImpl() {
     }
 
     private static class LazyHolder {
-        private static final ClientDAOImpl INSTANCE = new ClientDAOImpl();
+        private static final ClientDAO INSTANCE = new ClientDAOImpl();
     }
 
-    public static ClientDAOImpl getInstance() {
+    public static ClientDAO getInstance() {
         return LazyHolder.INSTANCE;
     }
 
@@ -65,6 +71,7 @@ public class ClientDAOImpl extends BaseDAOImpl implements ClientDAO {
         } finally {
             closeConnection(getConnection());
         }
+        logger.log(Level.FINE, "Client loaded from DB " + resultClient.toString());
         return resultClient;
     }
 
@@ -96,6 +103,7 @@ public class ClientDAOImpl extends BaseDAOImpl implements ClientDAO {
             }
             closeConnection(getConnection());
         }
+        logger.log(Level.FINE, "Client loaded from DB " + resultClient.toString());
         return resultClient;
     }
 
@@ -159,6 +167,7 @@ public class ClientDAOImpl extends BaseDAOImpl implements ClientDAO {
                 preparedStatement.setLong(8, client.getId());
             } else {
                 preparedStatement = getConnection().prepareStatement(INSERT_CLIENT_INTO_DB);
+                logger.log(Level.FINE, "New client adding to DB");
                 setPreparedStatementDataForClient(preparedStatement, currentClient, bank);
             }
 
@@ -184,7 +193,7 @@ public class ClientDAOImpl extends BaseDAOImpl implements ClientDAO {
             }
             currentClient.addAccount(newAccount);
         } catch (SQLException | ClientNotFoundException e) {
-            e.getMessage();
+            logger.log(Level.SEVERE, e.getMessage());
             try {
                 getConnection().rollback();
             } catch (SQLException e1) {
@@ -207,6 +216,7 @@ public class ClientDAOImpl extends BaseDAOImpl implements ClientDAO {
             preparedStatement.executeUpdate();
             getConnection().commit();
             getConnection().setAutoCommit(true);
+            logger.log(Level.FINE, "Client was removed from DB " + client.toString());
         } catch (SQLException e) {
             try {
                 getConnection().rollback();
