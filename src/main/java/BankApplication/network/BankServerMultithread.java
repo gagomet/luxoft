@@ -6,8 +6,6 @@ import java.net.Socket;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.logging.FileHandler;
-import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -22,14 +20,7 @@ public class BankServerMultithread implements Runnable {
     protected ExecutorService threadPool = Executors.newFixedThreadPool(10);
     private static AtomicInteger waitForConnection = new AtomicInteger(0);
 
-    private static final Logger logger = Logger.getLogger(BankServerMultithread.class.getName());
-    static {
-        try {
-            logger.addHandler(new FileHandler());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+    private static Logger logger = Logger.getLogger(BankServerMultithread.class.getName());
 
     public BankServerMultithread(int port) {
         this.serverPort = port;
@@ -100,4 +91,6 @@ public class BankServerMultithread implements Runnable {
         Thread serverThread = new Thread(bankServerMultithread);
         serverThread.start();
     }
+
+    //TestLine to tech commit
 }
