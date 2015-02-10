@@ -8,6 +8,8 @@ import BankApplication.network.console.Console;
 import BankApplication.service.impl.ServiceFactory;
 
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Created by Kir Kolesnikov on 15.01.2015.
@@ -15,6 +17,7 @@ import java.io.IOException;
 public class GetAccountCommand extends AbstractCommand {
     Client currentClient = null;
     Long clientId;
+    private static final Logger logger = Logger.getLogger(GetAccountCommand.class.getName());
 
     public GetAccountCommand() {
     }
@@ -50,9 +53,10 @@ public class GetAccountCommand extends AbstractCommand {
                             break;
 
                         } catch (IllegalArgumentException e) {
+                            logger.log(Level.SEVERE, errorsBundle.getString("wrongNumber"), e );
                             System.out.println(errorsBundle.getString("wrongNumber"));
                         } catch (ClassNotFoundException e) {
-                            e.printStackTrace();
+                            logger.log(Level.SEVERE, "ClassNotFound", e);
                         }
                     }
 
@@ -66,7 +70,7 @@ public class GetAccountCommand extends AbstractCommand {
                     console.sendResponse(builder.toString());
                 } catch (IOException | AccountNotFoundException e) {
                     console.sendResponse(e.getMessage());
-                    e.printStackTrace();
+                    logger.log(Level.SEVERE, "Get account command exception", e);
                 }
             }
 

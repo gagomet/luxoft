@@ -27,6 +27,8 @@ import java.net.Socket;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Created by Kir Kolesnikov on 20.01.2015.
@@ -39,6 +41,8 @@ public class BankRemoteOffice implements CommandsManager {
     private String message;
     private Console console = new RemoteConsoleImpl(this);
     private Client currentClient;
+
+    private static final Logger logger = Logger.getLogger(BankRemoteOffice.class.getName());
 
     private Map<String, Command> commandsMap = new TreeMap<>();
     private static final String FEED_FILES_FOLDER = "c:\\!toBankApplication\\";
@@ -64,7 +68,7 @@ public class BankRemoteOffice implements CommandsManager {
             providerSocket = new ServerSocket(15555, 10);
             System.out.println("Waiting for clientSocket");
             clientSocket = providerSocket.accept();
-            System.out.println("Connection received from " + clientSocket.getInetAddress().getHostName());
+            logger.log(Level.INFO, "Connection received from " + clientSocket.getInetAddress().getHostName());
             out = new ObjectOutputStream(clientSocket.getOutputStream());
             out.flush();
             in = new ObjectInputStream(clientSocket.getInputStream());
@@ -76,6 +80,7 @@ public class BankRemoteOffice implements CommandsManager {
                     cmd.execute();
                     console.consoleResponse(composeUserMenu());
                 } else if (message.equals("0")) {
+                    logger.log(Level.INFO, "Client was disconnected");
                     sendMessage("0");
                 }
                 System.out.println("Client> " + message);
@@ -102,18 +107,6 @@ public class BankRemoteOffice implements CommandsManager {
 
     public ObjectInputStream getIn() {
         return in;
-    }
-
-    public String receiveMessage() {
-        String result = null;
-        try {
-            result = (String) in.readObject();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            System.err.println("Data received in unknown format");
-        }
-        return result;
     }
 
     void sendMessage(final String msg) {

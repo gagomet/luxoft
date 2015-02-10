@@ -11,6 +11,8 @@ import BankApplication.service.impl.BankServiceImpl;
 import BankApplication.service.impl.ServiceFactory;
 
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Created by Kir Kolesnikov on 15.01.2015.
@@ -19,6 +21,7 @@ public class TransferCommand extends AbstractCommand {
     Float transferAmount;
     long recepientAccountId;
     String recepientName;
+    private static final Logger logger = Logger.getLogger(TransferCommand.class.getName());
 
     public TransferCommand() {
     }
@@ -42,10 +45,10 @@ public class TransferCommand extends AbstractCommand {
                         recepientName = validateClientsName(console.getMessageFromClient());
                         break;
                     } catch (IllegalArgumentException e) {
-                        System.out.println(errorsBundle.getString("wrongClientsName"));
+                        logger.log(Level.INFO, errorsBundle.getString("wrongClientsName"), e);
                         console.sendResponse(errorsBundle.getString("wrongClientsName"));
                     } catch (ClassNotFoundException e) {
-                        e.printStackTrace();
+                        logger.log(Level.SEVERE, "Class not found at TransferCommand", e);
                     }
                 }
                 Client recepient = ServiceFactory.getClientService().getClientByName(BankServiceImpl.getInstance().getCurrentBank()
@@ -61,10 +64,10 @@ public class TransferCommand extends AbstractCommand {
                         break;
 
                     } catch (IllegalArgumentException e) {
-                        System.out.println(errorsBundle.getString("wrongNumber"));
+                        logger.log(Level.INFO, errorsBundle.getString("wrongNumber"), e);
                         console.sendResponse(errorsBundle.getString("wrongNumber"));
                     } catch (ClassNotFoundException e) {
-                        e.printStackTrace();
+                        logger.log(Level.SEVERE, "Class not found at TransferCommand", e);
                     }
                 }
 
@@ -75,10 +78,10 @@ public class TransferCommand extends AbstractCommand {
                         break;
 
                     } catch (IllegalArgumentException e) {
-                        System.out.println(errorsBundle.getString("wrongNumber"));
+                        logger.log(Level.INFO, errorsBundle.getString("wrongNumber"), e);
                         console.sendResponse(errorsBundle.getString("wrongNumber"));
                     } catch (ClassNotFoundException e) {
-                        e.printStackTrace();
+                        logger.log(Level.SEVERE, "Class not found at TransferCommand", e);
                     }
                 }
 
@@ -86,7 +89,7 @@ public class TransferCommand extends AbstractCommand {
                 recepient.printReport();
 
             } catch (IOException | ClientNotFoundException | IllegalArgumentException | NotEnoughFundsException e) {
-                e.printStackTrace();
+                logger.log(Level.SEVERE, "Exception in TransferCommand ", e);
                 console.sendResponse(e.getMessage());
             }
         }

@@ -9,17 +9,20 @@ import BankApplication.service.impl.ServiceFactory;
 import BankApplication.type.Gender;
 
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Created by Kir Kolesnikov on 15.01.2015.
  */
 public class AddClientCommand extends AbstractCommand {
-    String newClientsName;
-    Gender newClientSex;
-    Float newClientOverdraft;
-    String newClientPhone;
-    String newClientEmail;
-    String newClientsCity;
+    private String newClientsName;
+    private Gender newClientSex;
+    private Float newClientOverdraft;
+    private String newClientPhone;
+    private String newClientEmail;
+    private String newClientsCity;
+    private static final Logger logger = Logger.getLogger(AbstractCommand.class.getName());
 
     public AddClientCommand() {
     }
@@ -39,10 +42,10 @@ public class AddClientCommand extends AbstractCommand {
                     newClientsName = validateClientsName(console.getMessageFromClient());
                     break;
                 } catch (IllegalArgumentException e) {
-                    System.out.println(errorsBundle.getString("wrongClientsName"));
+                    logger.log(Level.INFO, "Not valid client's name was entered by user" );
                     console.sendResponse(errorsBundle.getString("wrongClientsName"));
                 } catch (ClassNotFoundException e) {
-                    e.printStackTrace();
+                    logger.log(Level.SEVERE, "ClassNotFound", e);
                 }
             }
 
@@ -52,10 +55,10 @@ public class AddClientCommand extends AbstractCommand {
                     newClientSex = validateClientsSex(console.getMessageFromClient());
                     break;
                 } catch (IllegalArgumentException e) {
-                    System.out.println(errorsBundle.getString("wrongGender"));
+                    logger.log(Level.INFO, "Not valid client's gender was entered by user" );
                     console.sendResponse(errorsBundle.getString("wrongGender"));
                 } catch (ClassNotFoundException e) {
-                    e.printStackTrace();
+                    logger.log(Level.SEVERE, "ClassNotFound", e);
                 }
             }
 
@@ -65,10 +68,10 @@ public class AddClientCommand extends AbstractCommand {
                     newClientOverdraft = validateFunds(console.getMessageFromClient());
                     break;
                 } catch (IllegalArgumentException e) {
-                    System.out.println(errorsBundle.getString("wrongNumber"));
+                    logger.log(Level.INFO, "Not valid client's overdraft was entered by user" );
                     console.sendResponse(errorsBundle.getString("wrongNumber"));
                 } catch (ClassNotFoundException e) {
-                    e.printStackTrace();
+                    logger.log(Level.SEVERE, "ClassNotFound", e);
                 }
             }
 
@@ -79,10 +82,10 @@ public class AddClientCommand extends AbstractCommand {
                     break;
 
                 } catch (IllegalArgumentException e) {
-                    System.out.println(errorsBundle.getString("wrongPhone"));
+                    logger.log(Level.INFO, "Not valid client's phone number was entered by user" );
                     console.sendResponse(errorsBundle.getString("wrongPhone"));
                 } catch (ClassNotFoundException e) {
-                    e.printStackTrace();
+                    logger.log(Level.SEVERE, "ClassNotFound", e);
                 }
             }
 
@@ -94,10 +97,10 @@ public class AddClientCommand extends AbstractCommand {
                     break;
 
                 } catch (IllegalArgumentException e) {
-                    System.out.println(errorsBundle.getString("wrongEmail"));
+                    logger.log(Level.INFO, "Not valid client's email was entered by user" );
                     console.sendResponse(errorsBundle.getString("wrongEmail"));
                 } catch (ClassNotFoundException e) {
-                    e.printStackTrace();
+                    logger.log(Level.SEVERE, "ClassNotFound", e);
                 }
             }
 
@@ -107,10 +110,10 @@ public class AddClientCommand extends AbstractCommand {
                     newClientsCity = validateClientsCity(console.getMessageFromClient());
                     break;
                 } catch (IllegalArgumentException e) {
-                    System.out.println(errorsBundle.getString("wrongClientsCity"));
+                    logger.log(Level.INFO, "Not valid client's city was entered by user" );
                     console.sendResponse(errorsBundle.getString("wrongClientsCity"));
                 } catch (ClassNotFoundException e) {
-                    e.printStackTrace();
+                    logger.log(Level.SEVERE, "ClassNotFound", e);
                 }
             }
 
@@ -120,8 +123,9 @@ public class AddClientCommand extends AbstractCommand {
             throw new IllegalArgumentException("Not valid entry :" + e.getMessage());
 
         } catch (ClientExceedsException | IOException e) {
+            logger.log(Level.INFO, "Client already exist. Can't add same client!" );
             console.sendResponse(errorsBundle.getString("clientAlreadyExceeds"));
-            e.printStackTrace();
+            logger.log(Level.SEVERE, "ClassNotFound", e);
         }
     }
 

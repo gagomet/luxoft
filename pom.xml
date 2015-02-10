@@ -21,6 +21,7 @@
             <version>4.11</version>
             <scope>test</scope>
         </dependency>
+
         <!--H2 dependency-->
         <dependency>
             <groupId>com.h2database</groupId>
@@ -33,6 +34,14 @@
             <artifactId>ibatis-sqlmap</artifactId>
             <version>2.3.4.726</version>
         </dependency>
+
+        <!--jQuery-->
+        <dependency>
+            <groupId>com.efsavage.jquery</groupId>
+            <artifactId>jquery-maven</artifactId>
+            <version>1.8.2</version>
+        </dependency>
+
 
     </dependencies>
 </project>

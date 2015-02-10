@@ -1,0 +1,27 @@
+body {
+    background-color: #4dde49;
+}
+h1{
+    color:#ffffff;
+    text-align:center;
+}
+.menu{
+    left:auto;
+    top:auto;
+    line-height:50px;
+}
+.leftElement {
+    padding-left:100px;
+    float:left;
+    text-decoration-color:#ffffff;
+    text-align:left;
+    line-height:100px;
+}
+
+.rightElement {
+    padding-right:100px;
+    float:right;
+    text-decoration-color:#ffffff;
+    text-align:right;
+    line-height:100px;
+}

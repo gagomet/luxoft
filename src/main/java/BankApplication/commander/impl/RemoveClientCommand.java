@@ -8,16 +8,18 @@ import BankApplication.service.impl.BankServiceImpl;
 import BankApplication.service.impl.ServiceFactory;
 
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Created by Kir Kolesnikov on 21.01.2015.
  */
 public class RemoveClientCommand extends AbstractCommand {
+    private static final Logger logger = Logger.getLogger(RemoveClientCommand.class.getName());
 
     public RemoveClientCommand() {
     }
 
-    //TODO continue from here. Don't forget exceptions handling
     public RemoveClientCommand(Console console, CommandsManager manager) {
         this.console = console;
         setManager(manager);
@@ -33,17 +35,17 @@ public class RemoveClientCommand extends AbstractCommand {
                     clientName = validateClientsName(console.getMessageFromClient());
                     break;
                 } catch (IllegalArgumentException e) {
-                    System.out.println(errorsBundle.getString("wrongClientsName"));
+                    logger.log(Level.INFO, errorsBundle.getString("wrongClientsName"), e);
                     console.sendResponse(errorsBundle.getString("wrongClientsName"));
                 } catch (ClassNotFoundException e) {
-                    e.printStackTrace();
+                    logger.log(Level.SEVERE, "Class not found in RemoveClient command", e);
                 }
             }
 
             removeClientFromBank(clientName);
 
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.log(Level.SEVERE, "I/0 exception in RemoveClient command", e);
             console.sendResponse(e.getMessage());
         }
     }
@@ -60,7 +62,7 @@ public class RemoveClientCommand extends AbstractCommand {
             console.sendResponse(client.toString() + " was removed. Current client set to null");
             getManager().setCurrentClient(null);
         } catch (ClientNotFoundException e) {
-            e.printStackTrace();
+            logger.log(Level.SEVERE, errorsBundle.getString("clientNotFound"));
             console.sendResponse(errorsBundle.getString("clientNotFound"));
         }
     }

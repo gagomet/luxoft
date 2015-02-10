@@ -7,6 +7,8 @@ import BankApplication.network.console.ConsoleImpl;
 import BankApplication.type.Gender;
 
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Created by Kir Kolesnikov on 15.01.2015.
@@ -16,6 +18,7 @@ public abstract class AbstractCommand implements Command {
     protected ResourceBundle errorsBundle = ResourceBundle.getBundle("errors");
     private final String EMPTY_STRING = "";
     private CommandsManager manager;
+    private static final Logger logger = Logger.getLogger(AbstractCommand.class.getName());
 
     @Override
     public void printCommandInfo() {
@@ -40,6 +43,7 @@ public abstract class AbstractCommand implements Command {
         } else if (input.equalsIgnoreCase("F")) {
             return Gender.FEMALE;
         } else {
+            logger.log(Level.SEVERE, "Not valid gender");
             throw new IllegalArgumentException("Not valid gender");
         }
     }
@@ -48,6 +52,7 @@ public abstract class AbstractCommand implements Command {
         if (isName(input)) {
             return input;
         } else {
+            logger.log(Level.SEVERE, "Not valid name");
             throw new IllegalArgumentException("Not valid name");
         }
     }
@@ -58,6 +63,7 @@ public abstract class AbstractCommand implements Command {
         } else if (EMPTY_STRING.equals(input)) {
             return null;
         } else {
+            logger.log(Level.SEVERE, "Not valid city");
             throw new IllegalArgumentException("Not valid city");
         }
     }
@@ -68,6 +74,7 @@ public abstract class AbstractCommand implements Command {
         } else if (EMPTY_STRING.equals(input)) {
             return null;
         } else {
+            logger.log(Level.SEVERE, "Not valid email");
             throw new IllegalArgumentException("Not valid email");
         }
     }
@@ -79,6 +86,7 @@ public abstract class AbstractCommand implements Command {
         } else if (EMPTY_STRING.equals(input)) {
             return null;
         } else {
+            logger.log(Level.SEVERE, "Not valid phone");
             throw new IllegalArgumentException("Not valid phone");
         }
     }
@@ -89,11 +97,13 @@ public abstract class AbstractCommand implements Command {
             if (result > 0) {
                 return result;
             } else {
+                logger.log(Level.SEVERE, "Not valid funds");
                 throw new IllegalArgumentException("Not valid funds");
             }
         } else if (EMPTY_STRING.equals(input)) {
             return null;
         } else {
+            logger.log(Level.SEVERE, "Not valid funds");
             throw new IllegalArgumentException("Not valid funds");
         }
     }
@@ -104,10 +114,12 @@ public abstract class AbstractCommand implements Command {
             if (result > 0) {
                 return result;
             } else {
-                throw new IllegalArgumentException("Not valid funds");
+                logger.log(Level.SEVERE, "Not valid ID");
+                throw new IllegalArgumentException("Not valid ID");
             }
         } else {
-            throw new IllegalArgumentException("Not valid funds");
+            logger.log(Level.SEVERE, "Not valid ID");
+            throw new IllegalArgumentException("Not valid ID");
         }
     }
 

@@ -7,11 +7,14 @@ import BankApplication.network.console.Console;
 import BankApplication.service.impl.ServiceFactory;
 
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Created by Kir Kolesnikov on 15.01.2015.
  */
 public class WithdrawCommand extends AbstractCommand {
+    private static final Logger logger = Logger.getLogger(WithdrawCommand.class.getName());
     public WithdrawCommand() {
     }
 
@@ -37,17 +40,17 @@ public class WithdrawCommand extends AbstractCommand {
                         break;
 
                     } catch (IllegalArgumentException e) {
-                        System.out.println(errorsBundle.getString("wrongNumber"));
+                        logger.log(Level.INFO, errorsBundle.getString("wrongNumber"));
                         console.sendResponse(errorsBundle.getString("wrongNumber"));
                     } catch (ClassNotFoundException e) {
-                        e.printStackTrace();
+                        logger.log(Level.SEVERE, "ClassNotFound in WithdrawCommand ", e);
                     }
                 }
 
                 withdrawFunds(currentClient, amountToWithdraw);
 
             } catch (IOException e) {
-                e.printStackTrace();
+                logger.log(Level.SEVERE, "I/O in WithdrawCommand ", e);
             }
         }
 
@@ -71,7 +74,7 @@ public class WithdrawCommand extends AbstractCommand {
             builder.append(client.getActiveAccount().toString());
             console.sendResponse(builder.toString());
         } catch (NotEnoughFundsException e) {
-            System.out.println(e.getMessage());
+            logger.log(Level.SEVERE, e.getMessage());
         }
     }
 }

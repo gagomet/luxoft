@@ -1,0 +1,30 @@
+.centered {
+    position:absolute;
+    top: 50%;
+    left: 50%;
+}
+.field {
+    clear:both;
+    text-align:right;
+    line-height:25px;
+}
+.button {
+    clear:both;
+    text-align:center;
+    line-height:25px;
+}
+
+h2{
+    color:#206022
+}
+
+input{
+    width:150px;
+}
+label {
+    float:left;
+    padding-right:10px;
+}
+.login {
+    float:left
+}

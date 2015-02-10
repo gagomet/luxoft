@@ -44,8 +44,8 @@ public class ServerThread implements Runnable, CommandsManager {
 
     private Map<String, Command> commandsMap = new TreeMap<>();
     private static final String FEED_FILES_FOLDER = "c:\\!toBankApplication\\";
-    private static String bankName = "MyBank"; /*home*/
-//        static String bankName = "MYBANK";  /*work*/
+//    private static String bankName = "MyBank"; /*home*/
+        static String bankName = "MYBANK";  /*work*/
 
     public ServerThread(Socket socket) {
         this.clientSocket = socket;

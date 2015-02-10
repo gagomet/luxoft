@@ -12,13 +12,16 @@ import java.util.List;
 import java.util.ResourceBundle;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Created by Kir Kolesnikov on 29.01.2015.
  */
 public class AccountServiceImpl implements AccountService {
     protected static ResourceBundle errorsBundle = ResourceBundle.getBundle("errors");
-    Lock lock = new ReentrantLock();
+//    Lock lock = new ReentrantLock();
+    private static final Logger logger = Logger.getLogger(AccountServiceImpl.class.getName());
 
     private AccountServiceImpl() {
 
@@ -38,8 +41,9 @@ public class AccountServiceImpl implements AccountService {
             account.deposit(amount);
             Client client = DAOFactory.getClientDAO().findClientById(account.getClientId());
             DAOFactory.getAccountDAO().save(account, client);
+            logger.log(Level.INFO, "Account: " + account.getId() + "was refilled " + amount);
         } catch (ClientNotFoundException e) {
-            System.out.println(e.getMessage());
+            logger.log(Level.SEVERE, e.getMessage(), e);
         }
     }
 
@@ -51,6 +55,7 @@ public class AccountServiceImpl implements AccountService {
 
 //            lock.lock();
             DAOFactory.getAccountDAO().save(account, client);
+            logger.log(Level.INFO, "Account: " + account.getId() + "was redused " + amount);
 //            lock.unlock();
 
         } catch (ClientNotFoundException e) {
@@ -72,5 +77,6 @@ public class AccountServiceImpl implements AccountService {
 
     public synchronized void transferFunds(Account sender, Account recipient, float amount) {
         DAOFactory.getAccountDAO().transferFunds(sender, recipient, amount);
+        logger.log(Level.INFO, amount + " funds transfered from account id:" + sender.getId() + " to account id: " + recipient.getId());
     }
 }

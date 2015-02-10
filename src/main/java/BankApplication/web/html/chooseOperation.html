@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Choose an operation</title>
+    <link rel="stylesheet" href="menuStyle.css">
+    <script src="http://code.jquery.com/jquery-latest.min.js" type="text/javascript"></script>
+    <script type ="text/javascript" src="validator.js"> </script>
+</head>
+<body>
+<h1>Bank-o-matic menu</h1>
+
+<div class="menu">
+    <div class="leftElement">
+        <form action="deposit.html" onsubmit="return validateFunds();" method="get">   <!--here must be an actual action-->
+            <input id="deposit" type="submit" value="Deposit"/>
+            <input id="amountToDeposit" type="text" value="Amount to deposit"/>
+        </form>
+        <form action="withdraw.html" onsubmit="return validateFunds();" method="get">   <!--here must be an actual action-->
+            <input id="withdraw" type="submit" value="Withdraw"/>
+            <input id="amountToWithdraw" type="text" value="Amount to withdraw"/>
+
+        </form>
+    </div>
+    <div class="rightElement">
+        <form action="checkFunds.html">
+            <label for="check">Check your account state</label>
+            <input id="check" type="submit" value="Check">
+        </form>
+        <form action="login.html">
+            <label for="exit">Logout</label>
+            <input id="exit" type="submit" value="Exit"/>
+        </form>
+    </div>
+</div>
+
+</body>
+</html>

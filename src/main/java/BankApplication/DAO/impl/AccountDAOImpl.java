@@ -173,7 +173,6 @@ public class AccountDAOImpl extends BaseDAOImpl implements AccountDAO {
             preparedStatement.executeUpdate();
             getConnection().commit();
             getConnection().setAutoCommit(true);
-            logger.log(Level.FINE, amount + " funds transfered from account id:" + sender.getId() + " to account id: " + recipient.getId());
         } catch (SQLException e) {
             try {
                 getConnection().rollback();

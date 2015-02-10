@@ -8,11 +8,15 @@ import BankApplication.service.impl.ClientServiceImpl;
 import BankApplication.service.impl.ServiceFactory;
 
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Created by Kir Kolesnikov on 15.01.2015.
  */
 public class FindClientCommand extends AbstractCommand {
+
+    private static final Logger logger = Logger.getLogger(FindClientCommand.class.getName());
 
     public FindClientCommand() {
 
@@ -34,7 +38,7 @@ public class FindClientCommand extends AbstractCommand {
                     clientName = validateClientsName(console.getMessageFromClient());
                     break;
                 } catch (IllegalArgumentException e) {
-                    System.out.println(errorsBundle.getString("wrongClientsName"));
+                    logger.log(Level.INFO, errorsBundle.getString("wrongClientsName"), e);
                     console.sendResponse(errorsBundle.getString("wrongClientsName"));
                 } catch (ClassNotFoundException e) {
                     e.printStackTrace();
@@ -42,7 +46,7 @@ public class FindClientCommand extends AbstractCommand {
             }
             findClientInBank(clientName);
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.log(Level.SEVERE, "IO exception", e);
             console.sendResponse(e.getMessage());
         }
 
@@ -67,7 +71,7 @@ public class FindClientCommand extends AbstractCommand {
             console.sendResponse(client.toString() + builder.toString());
             client.printReport();
         } catch (ClientNotFoundException e) {
-            e.printStackTrace();
+            logger.log(Level.INFO, errorsBundle.getString("clientNotFound"));
             console.sendResponse(errorsBundle.getString("clientNotFound"));
         }
     }

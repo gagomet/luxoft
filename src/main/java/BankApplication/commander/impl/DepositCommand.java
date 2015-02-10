@@ -6,11 +6,15 @@ import BankApplication.network.console.Console;
 import BankApplication.service.impl.ServiceFactory;
 
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Created by Kir Kolesnikov on 15.01.2015.
  */
 public class DepositCommand extends AbstractCommand {
+
+    private static final Logger logger = Logger.getLogger(DepositCommand.class.getName());
 
     public DepositCommand() {
     }
@@ -36,7 +40,7 @@ public class DepositCommand extends AbstractCommand {
                 depositFunds(getManager().getCurrentClient(), amountToDeposit);
 
             } catch (IOException | ClassNotFoundException e) {
-                e.printStackTrace();
+                logger.log(Level.SEVERE, "Exception in DepositCommand", e);
             }
         }
 
@@ -60,7 +64,7 @@ public class DepositCommand extends AbstractCommand {
             builder.append(client.getActiveAccount().toString());
             console.sendResponse(builder.toString());
         } catch (IllegalArgumentException e) {
-            e.printStackTrace();
+            logger.log(Level.SEVERE, "Runtime exception illegal argument", e);
         }
     }
 }
