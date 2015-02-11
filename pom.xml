@@ -35,6 +35,14 @@
             <version>2.3.4.726</version>
         </dependency>
 
+        <!--Logging-->
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-core</artifactId>
+            <version>2.1</version>
+        </dependency>
+
+
         <!--jQuery-->
         <dependency>
             <groupId>com.efsavage.jquery</groupId>

@@ -5,10 +5,12 @@ h1{
     color:#ffffff;
     text-align:center;
 }
-.menu{
+#menu{
     left:auto;
     top:auto;
     line-height:50px;
+    border:solid #000000;
+   border-top: 4px solid #000000;
 }
 .leftElement {
     padding-left:100px;
