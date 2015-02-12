@@ -13,11 +13,11 @@
 
 <div id="menu">
     <div class="leftElement">
-        <form action="complete.html" method="get">   <!--here must be an actual action-->
+        <form >   <!--here must be an actual action-->
             <input class="button" id="green-button" type="submit" value="Deposit"/>
             <!--<input class="operation" id="amountToDeposit" type="text" value="Amount to deposit"/>-->
         </form>
-        <form action="complete.html" method="get">
+        <form >
             <!--here must be an actual action-->
             <input class="button" id="orange-button" type="submit" value="Withdraw"/>
             <!--<input class="operation" id="amountToWithdraw" type="text" value="Amount to withdraw"/>-->
@@ -33,8 +33,8 @@
     </div>
 </div>
 
-<div id="modal_form"><!-- Само окно -->
-    <span id="modal_close">X</span> <!-- Кнопка закрыть -->
+<div id="modal_form">
+    <span id="modal_close">X</span>
     <h3 id="variable" align="center"></h3>
     <div align="center">
         <form action="complete.html" onsubmit="return validateFunds();">
@@ -44,7 +44,6 @@
     </div>
 </div>
 <div id="overlay"></div>
-<!-- Подложка -->
 
 </body>
 </html>

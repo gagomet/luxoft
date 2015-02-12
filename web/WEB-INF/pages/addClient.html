@@ -1,41 +1,68 @@
 <!DOCTYPE html>
-<html>
+<html xmlns="http://www.w3.org/1999/html">
 <head lang="en">
     <meta charset="UTF-8">
     <link rel="stylesheet" type="text/css" href="../resources/style/menuStyle.css">
     <link rel="stylesheet" type="text/css" href="../resources/style/addClientFormStyle.css">
+    <link rel="stylesheet" type="text/css" href="../resources/style/resultTableStyle.css">
+    <script src="http://code.jquery.com/jquery-latest.min.js" type="text/javascript"></script>
     <script type="text/javascript" src="../resources/script/validator.js"></script>
     <title>Add client</title>
 </head>
 <body>
-<div align="center" class="clientForm">
+<div class="clientForm">
     <h1>Add client to system</h1>
-    <div class="formUnit">
-        <label>Full Name</label>
-        <input type="text" id="fullname">
+    <table class="tg">
+        <tr>
+            <td class="key">Full name</td>
+            <td class="value"><input type="text" id="fullname"></td>
+            <td class="error" id="wrongName"></td>
+        </tr>
+        <tr>
+            <td class="key">City</td>
+            <td class="value"><input type="text" id="city"></td>
+            <td class="error" id="wrongCity"></td>
+        </tr>
+        <tr>
+            <td class="key">Phone number</td>
+            <td class="value"><input type="text" id="phone"></td>
+            <td class="error" id="wrongPhone"></td>
+        </tr>
+        <tr>
+            <td class="key">Email</td>
+            <td class="value"><input type="text" id="email"></td>
+            <td class="error" id="wrongEmail"></td>
+        </tr>
+        <tr>
+            <td class="key">Gender</td>
+            <td class="value">
+                <div align="right">
+                    <input type="radio" name="sex" value="Male" checked="checked">Male</input>
+                    <input type="radio" name="sex" value="Female">Female</input>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td class="key">Checked account</td>
+            <td class="value"><input style="float: right;" type="checkbox" name="overdraft">Open<br></td>
+        </tr>
+        <tr>
+            <td class="key">Start balance</td>
+            <td class="value"><input type="text" id="startBalance"></td>
+            <td class="error" id="wrongBalance"></td>
+        </tr>
+    </table>
+
+    <div>
+        <form align="center"">
+            <input class="backButton" id="green-button" type="submit" onclick="return validateNewClient();" value="Add client"/>
+        </form>
     </div>
-    <div class="formUnit">
-        <label>City</label>
-        <input type="text" id="city">
-    </div>
-    <div class="formUnit">
-        <label>Gender</label>
-        <label>Male</label>
-        <input type="radio" name="sex" value="Male" checked="checked"/>
-        <label>Female</label>
-        <input type="radio" name="sex" value="Female"/>
-    </div>
-    <div class="formUnit">
-        <label>Email</label>
-        <input type="text" id="email">
-    </div>
-    <div class="formUnit">
-        <label>Checked Account</label>
-        <input type="checkbox" name="overdraft">Open<br>
-    </div>
-    <div class="formUnit">
-        <label>Start Balance</label>
-        <input type="text" id="startBalance">
+
+    <div>
+        <form align="center" action="menu.html">
+            <input class="backButton" id="red-button" type="submit" value="Back to main menu"/>
+        </form>
     </div>
 
 </div>

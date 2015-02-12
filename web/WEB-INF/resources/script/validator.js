@@ -21,11 +21,48 @@ function validateFunds() {
     if (operation.match(numbers)) {
         if (operation > 0) {
             return true;
-        } else{
+        } else {
             alert("Amount can't be negative");
             return false;
         }
     }
-        alert("Amount must be a number");
+    alert("Amount must be a number");
+    return false;
+}
+
+function validateNewClient() {
+    $(".error").html("");
+
+    var isName = /^[A-Za-z]+( [A-Za-z]+)*$/;
+    var isEmail = /^[A-Za-z\.-0-9]{2,}@[A-Za-z\.-0-9]{2,}\.[A-Za-z]{2,3}$/;
+    var isPhone = /[+0-9]{4,15}/;
+    var isFunds = /^[0-9]{1,7}([,.][0-9]{1,2})?$/;
+
+    var name = $("#fullname").val();
+    var city = $("#city").val();
+    var phone = $("#phone").val();
+    var email = $("#email").val();
+    var balance = $("#startBalance").val();
+
+    if (!name.match(isName)) {
+        $("#wrongName").html("Wrong name or surname");
         return false;
+    }
+    if (!city.match(isName)) {
+        $("#wrongCity").html("Wrong city");
+        return false;
+    }
+    if (!phone.match(isPhone)) {
+        $("#wrongPhone").html("Wrong phone number");
+        return false;
+    }
+    if (!email.match(isEmail)) {
+        $("#wrongEmail").html("Wrong email");
+        return false;
+    }
+    if (!balance.match(isFunds)) {
+        $("#wrongBalance").html("Wrong start balance");
+        return false;
+    }
+    return true;
 }

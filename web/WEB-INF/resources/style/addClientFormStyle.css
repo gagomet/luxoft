@@ -1,14 +1,7 @@
 .clientForm{
+    margin-left: 33%;
     width: 500px;
-}
-.formUnit{
-    margin-top: 20px;
+    vertical-align: middle;
 }
 
-.formUnit label{
-    text-align: left;
-}
 
-.formUnit input{
-     text-align: right;
- }

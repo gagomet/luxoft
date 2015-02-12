@@ -3,8 +3,8 @@
  */
 
 $(document).ready(function () { // вся магия после загрузки страницы
-    var dbutton = $('#deposit-button');
-    var wbutton = $('#withdraw-button');
+    var dbutton = $('#green-button');
+    var wbutton = $('#orange-button');
 
     dbutton.click(function (event) {
         event.preventDefault(); // выключаем стандартную роль элемента
