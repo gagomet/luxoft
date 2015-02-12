@@ -17,7 +17,7 @@ function validateLoginForm() {
 }
 function validateFunds() {
     var operation = $(".operation").val();
-    var numbers = /^[0-9]+$/;
+    var numbers = /^[0-9]+([,.][0-9]{1,2})?$/;
     if (operation.match(numbers)) {
         if (operation > 0) {
             return true;

@@ -1,0 +1,8 @@
+.container{
+    white-space: nowrap;
+
+}
+.container div{
+    margin-left: 50px;
+    display: inline-block;
+}
