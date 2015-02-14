@@ -14,7 +14,6 @@ public class SessionListener implements HttpSessionListener {
 
     @Override
     public void sessionCreated(HttpSessionEvent httpSessionEvent) {
-        logger.log(Level.INFO, "Session created");
         final ServletContext servletContext = httpSessionEvent.getSession().getServletContext();
         synchronized (SessionListener.class) {
             Integer clientsConnected = (Integer) servletContext.getAttribute("clientsConnected");
@@ -29,7 +28,6 @@ public class SessionListener implements HttpSessionListener {
 
     @Override
     public void sessionDestroyed(HttpSessionEvent httpSessionEvent) {
-        logger.log(Level.INFO, "Session destroyed");
         final ServletContext servletContext = httpSessionEvent.getSession().getServletContext();
         synchronized (SessionListener.class) {
             Integer clientsConnected = (Integer) servletContext.getAttribute("clientsConnected");

@@ -9,7 +9,6 @@ import BankApplication.model.impl.Client;
 import BankApplication.model.impl.SavingAccount;
 import BankApplication.type.Gender;
 
-import java.io.IOException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -19,7 +18,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
-import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -59,6 +57,9 @@ public class ClientDAOImpl extends BaseDAOImpl implements ClientDAO {
             preparedStatement.setLong(1, bank.getId());
             preparedStatement.setString(2, name);
             resultSet = preparedStatement.executeQuery();
+            if (!resultSet.first()) {
+                throw new ClientNotFoundException("Client not found in DB");
+            }
             resultClient = parseResultSetToGetOneClient(resultSet);
             List<Account> accountList = DAOFactory.getAccountDAO().getClientAccounts(resultClient.getId());
             if (accountList.size() == 1) {

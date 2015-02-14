@@ -6,15 +6,12 @@ import BankApplication.model.impl.Bank;
 import BankApplication.model.impl.BankInfo;
 import BankApplication.model.impl.Client;
 import BankApplication.service.impl.BankReport;
-
-import java.io.IOException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.HashSet;
 import java.util.List;
-import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -127,7 +124,6 @@ public class BankDAOImpl extends BaseDAOImpl implements BankDAO {
             }
             closeConnection(getConnection());
         }
-        logger.log(Level.FINE, "Bank loaded from DB (lazy) " + resultBank.toString());
         return resultBank;
     }
 

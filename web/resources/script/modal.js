@@ -9,6 +9,7 @@ $(document).ready(function () { // вся магия после загрузки
     dbutton.click(function (event) {
         event.preventDefault(); // выключаем стандартную роль элемента
         document.getElementById("variable").innerHTML = dbutton.val() + " funds";
+        document.getElementById("Id").value = "deposit";
         $('#overlay').fadeIn(400, // сначала плавно показываем темную подложку
             function () { // после выполнения предъидущей анимации
                 $('#modal_form')
@@ -20,6 +21,7 @@ $(document).ready(function () { // вся магия после загрузки
     wbutton.click(function (event) {
         event.preventDefault(); // выключаем стандартную роль элемента
         document.getElementById("variable").innerHTML = wbutton.val() + " funds";
+        document.getElementById("Id").value = "withdraw";
         $('#overlay').fadeIn(400, // сначала плавно показываем темную подложку
             function () { // после выполнения предъидущей анимации
                 $('#modal_form')

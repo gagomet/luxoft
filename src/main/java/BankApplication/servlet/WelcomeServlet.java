@@ -15,7 +15,8 @@ public class WelcomeServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("text/html");
         ServletOutputStream servletOutputStream = resp.getOutputStream();
-        servletOutputStream.println("<h1>ATM</h1>");
-        servletOutputStream.println("<a href=\"/pages/login.html\">Login</a>");
+        servletOutputStream.println();
+        servletOutputStream.println("<h1 style=\"align:center\">ATM</h1>");
+        servletOutputStream.println("<h1><a style=\"align:center\" href=\"/pages/login.html\">Login</a></h1>");
     }
 }

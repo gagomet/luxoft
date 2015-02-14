@@ -12,6 +12,8 @@ public interface BankService {
 
     public void addClient(Bank bank, Client client) throws ClientExceedsException;
 
+    public Bank getBankByName(String bankName);
+
     public void removeClient(Bank bank, Client client);
 
     public BankInfo getBankInfo(Bank bank);

@@ -2,6 +2,11 @@ body {
     background-color: #4dde49;
 }
 
+.message{
+    text-align: center;
+    color: #ffffff;
+}
+
 .resultTable {
     margin: 100px;
     padding: 0px;

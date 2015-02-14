@@ -40,6 +40,11 @@ public class BankServiceImpl implements BankService {
     } //Update
 
     @Override
+    public Bank getBankByName(String bankName) {
+        return DAOFactory.getBankDAO().getBankByName(bankName);
+    }
+
+    @Override
     public void removeClient(Bank bank, Client client) {
         DAOFactory.getClientDAO().remove(client);
     } //Update

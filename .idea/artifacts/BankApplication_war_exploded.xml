@@ -1,0 +1,21 @@
+<component name="ArtifactManager">
+  <artifact type="exploded-war" build-on-make="true" name="BankApplication:war exploded">
+    <output-path>$PROJECT_DIR$/classes/artifacts/BankApplication_war_exploded</output-path>
+    <root id="root">
+      <element id="directory" name="WEB-INF">
+        <element id="directory" name="classes">
+          <element id="module-output" name="BankApplication" />
+        </element>
+        <element id="directory" name="lib">
+          <element id="library" level="project" name="Maven: javax.servlet:jstl:1.2" />
+          <element id="library" level="project" name="Maven: com.h2database:h2:1.4.185" />
+          <element id="library" level="project" name="Maven: org.apache.ibatis:ibatis-sqlmap:2.3.4.726" />
+          <element id="library" level="project" name="Maven: org.apache.logging.log4j:log4j-core:2.1" />
+          <element id="library" level="project" name="Maven: org.apache.logging.log4j:log4j-api:2.1" />
+          <element id="library" level="project" name="Maven: com.efsavage.jquery:jquery-maven:1.8.2" />
+        </element>
+      </element>
+      <element id="javaee-facet-resources" facet="BankApplication/web/Web" />
+    </root>
+  </artifact>
+</component>

@@ -15,16 +15,14 @@
     <div class="leftElement">
         <form >   <!--here must be an actual action-->
             <input class="button" id="green-button" type="submit" value="Deposit"/>
-            <!--<input class="operation" id="amountToDeposit" type="text" value="Amount to deposit"/>-->
         </form>
         <form >
             <!--here must be an actual action-->
             <input class="button" id="orange-button" type="submit" value="Withdraw"/>
-            <!--<input class="operation" id="amountToWithdraw" type="text" value="Amount to withdraw"/>-->
         </form>
     </div>
     <div class="rightElement">
-        <form action="checkBalance.html">
+        <form action="/balance">
             <input class="button" id="blue-button" type="submit" value="Check Account">
         </form>
         <form action="login.html">
@@ -37,9 +35,10 @@
     <span id="modal_close">X</span>
     <h3 id="variable" align="center"></h3>
     <div align="center">
-        <form action="complete.html" onsubmit="return validateFunds();">
-            <input class="operation" id="input-data" type="text" value="Enter amount here"/>
+        <form action="/getOperation" onsubmit="return validateFunds();">
+            <input class="operation" name="amount" id="input-data" type="text" value="Enter amount here"/>
             <input class="button" align="center" id="button-submit" type="submit" value="Submit"/>
+            <input id="Id" name="operationId" type="hidden" value="">
         </form>
     </div>
 </div>

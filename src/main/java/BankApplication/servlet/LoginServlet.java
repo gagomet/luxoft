@@ -20,7 +20,8 @@ public class LoginServlet extends HttpServlet {
         final String clientName = req.getParameter("client");
         if (clientName == null) {
             logger.log(Level.INFO, "Client not found");
-            throw new ServletException("Client not specified");
+            req.setAttribute("error", "Client not determine");
+            req.getRequestDispatcher("/pages/error.jsp").forward(req,resp);
         }
         req.getSession().setAttribute("clientName", clientName);
         logger.log(Level.INFO, "Client " + clientName + " logged into ATM");

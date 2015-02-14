@@ -12,25 +12,25 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * Created by Kir Kolesnikov on 13.02.2015.
+ * Created by Padonag on 14.02.2015.
  */
-public class BalanceServlet extends HttpServlet {
-//    private static final String BANK_NAME = "MYBANK";
+public class DepositServlet extends HttpServlet {
+    //    private static final String BANK_NAME = "MYBANK";
     private static final String BANK_NAME = "MyBank";
-
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String clientName = (String) req.getSession().getAttribute("clientName");
         Bank bank = ServiceFactory.getBankService().getBankByName(BANK_NAME);
-        Client client = null;
+        Client activeClient = null;
         try {
-            client = ServiceFactory.getClientService().getClientByName(bank, clientName);
+            activeClient = ServiceFactory.getClientService().getClientByName(bank, clientName);
         } catch (ClientNotFoundException e) {
-            req.setAttribute("error", "Client not found in DB");
-            req.getRequestDispatcher("/pages/error.jsp").forward(req,resp);
-            return;
+            e.printStackTrace();
         }
-        req.setAttribute("clientFromDb", client);
-        req.getRequestDispatcher("/pages/checkBalance.jsp").forward(req, resp);
+        Float amount = Float.parseFloat(req.getParameter("amount"));
+        req.setAttribute("amount", amount);
+        ServiceFactory.getAccountService().depositeFunds(activeClient.getActiveAccount(), amount);
+        req.setAttribute("success", "Account was successfully refilled");
+        req.getRequestDispatcher("/balance").forward(req,resp);
     }
 }
