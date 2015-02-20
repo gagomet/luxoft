@@ -65,4 +65,19 @@ function validateNewClient() {
         return false;
     }
     return true;
+
+    function validateSearchClients() {
+        $(".error").html("");
+        var isName = /^[A-Za-z]+( [A-Za-z]+)*$/;
+
+        if (!name.match(isName)) {
+            $("#name").html("Wrong name or surname");
+            return false;
+        }
+        if (!city.match(isName)) {
+            $("#city").html("Wrong city");
+            return false;
+        }
+        return true;
+    }
 }

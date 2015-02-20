@@ -67,6 +67,16 @@
         <url-pattern>/getOperation</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>FindClientsServlet</servlet-name>
+        <servlet-class>BankApplication.servlet.FindClientsServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>FindClientsServlet</servlet-name>
+        <url-pattern>/findclients</url-pattern>
+    </servlet-mapping>
+
+
     <filter>
         <filter-name>CheckLoggedFilter</filter-name>
         <filter-class>BankApplication.servlet.CheckLoggedFilter</filter-class>

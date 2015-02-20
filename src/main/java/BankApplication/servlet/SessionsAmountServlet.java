@@ -20,4 +20,8 @@ public class SessionsAmountServlet extends HttpServlet {
         ServletOutputStream servletOutputStream = resp.getOutputStream();
         servletOutputStream.println("<h1>Clients connected: " + clientsConnected + "</h1>");
     }
+
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    }
 }

@@ -30,4 +30,8 @@ public class OperationIdServlet extends HttpServlet {
             req.getRequestDispatcher("/pages/error.jsp").forward(req,resp);
         }
     }
+
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    }
 }

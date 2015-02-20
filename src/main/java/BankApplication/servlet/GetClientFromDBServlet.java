@@ -12,9 +12,9 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * Created by Kir Kolesnikov on 13.02.2015.
+ * Created by Kir Kolesnikov on 20.02.2015.
  */
-public class BalanceServlet extends HttpServlet {
+public class GetClientFromDBServlet extends HttpServlet {
     private static final String BANK_NAME = "MYBANK";
 //    private static final String BANK_NAME = "MyBank";
 
@@ -31,6 +31,7 @@ public class BalanceServlet extends HttpServlet {
             return;
         }
         req.setAttribute("clientFromDb", client);
+        //TODO change jsp view to another
         req.getRequestDispatcher("/pages/checkBalance.jsp").forward(req, resp);
     }
 

@@ -13,6 +13,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.List;
 
 /**
  * Created by Kir Kolesnikov on 29.01.2015.
@@ -46,6 +47,12 @@ public class ClientServiceImpl implements ClientService {
         return DAOFactory.getClientDAO().findClientByName(bank, clientsName);
     }
 
+
+    @Override
+    public List<Client> getClientsByNameAndCity(String clientsName, String city) {
+        return DAOFactory.getClientDAO().getClientsByNameAndCity(clientsName, city);
+    }
+
     @Override
     public void saveClientToFeedFile(Client client) {
         try (FileOutputStream fileOutputStream = new FileOutputStream("c:\\!toBankApplicationSerialization\\object.ser")) {
@@ -67,4 +74,5 @@ public class ClientServiceImpl implements ClientService {
         }
         return result;
     }
+
 }

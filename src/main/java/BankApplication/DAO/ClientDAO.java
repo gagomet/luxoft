@@ -51,4 +51,6 @@ public interface ClientDAO {
      * @param client
      */
     void remove(Client client);
+
+    List<Client> getClientsByNameAndCity(String name, String city);
 }

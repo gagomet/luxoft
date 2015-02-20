@@ -26,6 +26,7 @@ import java.util.logging.Logger;
  */
 public class ClientDAOImpl extends BaseDAOImpl implements ClientDAO {
     private static final String FIND_CLIENT_BY_NAME_STMT = "SELECT * FROM CLIENTS WHERE CLIENTS.BANK_ID=? AND CLIENTS.NAME=?";
+    public static final String FIND_CLIENTS_BY_NAME_AND_CITY = "SELECT * FROM CLIENTS WHERE CLIENTS.NAME=? AND CLIENTS.CITY=?";
     private static final String FIND_CLIENT_BY_ID_STMT = "SELECT * FROM CLIENTS WHERE CLIENTS.ID=?";
     private static final String GET_ALL_CLIENTS = "SELECT * FROM CLIENTS WHERE CLIENTS.BANK_ID=?";
     private static final String REMOVE_CLIENT_FROM_DB = "DELETE FROM CLIENTS WHERE ID=?";
@@ -57,9 +58,9 @@ public class ClientDAOImpl extends BaseDAOImpl implements ClientDAO {
             preparedStatement.setLong(1, bank.getId());
             preparedStatement.setString(2, name);
             resultSet = preparedStatement.executeQuery();
-            if (!resultSet.first()) {
-                throw new ClientNotFoundException("Client not found in DB");
-            }
+//            if (!resultSet.first()) {
+//                throw new ClientNotFoundException("Client not found in DB");
+//            }
             resultClient = parseResultSetToGetOneClient(resultSet);
             List<Account> accountList = DAOFactory.getAccountDAO().getClientAccounts(resultClient.getId());
             if (accountList.size() == 1) {
@@ -228,6 +229,52 @@ public class ClientDAOImpl extends BaseDAOImpl implements ClientDAO {
         } finally {
             closeConnection(getConnection());
         }
+    }
+
+    @Override
+    public List<Client> getClientsByNameAndCity(String name, String city) {
+        List<Client> resultList = new ArrayList<>();
+        ResultSet resultSet = null;
+        try {
+            setConnection(openConnection());
+            PreparedStatement preparedStatement = getConnection().prepareStatement(FIND_CLIENTS_BY_NAME_AND_CITY);
+            preparedStatement.setString(1, name);
+            preparedStatement.setString(2, city);
+            resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                Client tempClient = new Client();
+                tempClient.setId(resultSet.getLong("ID"));
+                tempClient.setName(resultSet.getString("NAME"));
+                tempClient.setBankId(resultSet.getLong("BANK_ID"));
+                tempClient.setInitialOverdraft(resultSet.getFloat("OVERDRAFT"));
+                if (resultSet.getInt("GENDER") == 0) {
+                    tempClient.setSex(Gender.FEMALE);
+                } else {
+                    tempClient.setSex(Gender.MALE);
+                }
+                tempClient.setEmail(resultSet.getString("EMAIL"));
+                tempClient.setPhone(resultSet.getString("PHONE"));
+                tempClient.setCity(resultSet.getString("CITY"));
+                List<Account> accountList = DAOFactory.getAccountDAO().getClientAccounts(tempClient.getId());
+                if (accountList.size() == 1) {
+                    tempClient.setActiveAccount(accountList.get(0));
+                }
+                Set<Account> accountSet = new TreeSet<Account>(accountList);
+                tempClient.setAccountsList(accountSet);
+                resultList.add(tempClient);
+            }
+        } catch (SQLException e) {
+            handleSQLException(e);
+        } finally {
+            assert resultSet != null;
+            try {
+                resultSet.close();
+            } catch (SQLException e) {
+                handleSQLException(e);
+            }
+            closeConnection(getConnection());
+        }
+        return resultList;
     }
 
     private void setPreparedStatementDataForClient(PreparedStatement preparedStatement, Client client, Bank bank) throws SQLException {

@@ -130,6 +130,8 @@ public class Client implements Report, Serializable, Persistable {
         builder.append("Client name: ");
         if (sex != null) {
             builder.append(sex.getGenderPrefix());
+        } else{
+            builder.append("Smth. ");
         }
         builder.append(getName());
         builder.append(" ");

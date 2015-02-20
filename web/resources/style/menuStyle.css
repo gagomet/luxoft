@@ -38,6 +38,10 @@ h1{
     background: rgb(66, 184, 221);
 }
 
+#violet-button {
+    background: rgb(184, 32, 221);
+}
+
 .leftElement {
     padding-left:100px;
     float:left;

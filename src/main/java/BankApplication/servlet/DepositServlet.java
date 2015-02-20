@@ -15,8 +15,8 @@ import java.io.IOException;
  * Created by Padonag on 14.02.2015.
  */
 public class DepositServlet extends HttpServlet {
-    //    private static final String BANK_NAME = "MYBANK";
-    private static final String BANK_NAME = "MyBank";
+        private static final String BANK_NAME = "MYBANK"; //office
+//    private static final String BANK_NAME = "MyBank";
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String clientName = (String) req.getSession().getAttribute("clientName");
@@ -32,5 +32,9 @@ public class DepositServlet extends HttpServlet {
         ServiceFactory.getAccountService().depositeFunds(activeClient.getActiveAccount(), amount);
         req.setAttribute("success", "Account was successfully refilled");
         req.getRequestDispatcher("/balance").forward(req,resp);
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
     }
 }
