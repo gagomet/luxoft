@@ -2,6 +2,7 @@ package BankApplication.DAO.impl;
 
 import BankApplication.DAO.BaseDAO;
 import BankApplication.exceptions.DAOException;
+import org.h2.jdbcx.JdbcConnectionPool;
 
 import java.io.IOException;
 import java.sql.Connection;
@@ -19,6 +20,7 @@ import java.util.logging.Logger;
 public class BaseDAOImpl implements BaseDAO {
     private ResourceBundle dbBundle = ResourceBundle.getBundle("db");
     private static Connection connection;
+    private JdbcConnectionPool pool;
 
     private static final Logger logger = Logger.getLogger(BaseDAOImpl.class.getName());
 
@@ -35,19 +37,21 @@ public class BaseDAOImpl implements BaseDAO {
     }
 
     public BaseDAOImpl() {
+        pool = JdbcConnectionPool.create(dbBundle.getString("jdbcURL"), "sa", "");
     }
 
     @Override
     public Connection openConnection() {
+
         try {
-            Connection connection;
-            Class.forName(dbBundle.getString("driverClass")); // this is driver for H2
-            connection = DriverManager.getConnection(dbBundle.getString("jdbcURL"),
-                    "sa", // login
-                    "" // password
-            );
-            return connection;
-        } catch (ClassNotFoundException | SQLException e) {
+//            Connection connection;
+//            Class.forName(dbBundle.getString("driverClass")); // this is driver for H2
+//            connection = DriverManager.getConnection(dbBundle.getString("jdbcURL"),
+//                    "sa", // login
+//                    "" // password
+//            );
+            return pool.getConnection();
+        } catch (SQLException e) {
             logger.log(Level.SEVERE, e.getMessage());
         }
         throw new DAOException("Can't reach the connection to DB");

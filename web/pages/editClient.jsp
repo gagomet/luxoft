@@ -11,20 +11,40 @@
     <link rel="stylesheet" href="../resources/style/resultTableStyle.css">
 </head>
 <body>
-<c:set var="client" value="${requestScope.clientFromDb}" scope="page"/>
-<form action="ADD ACTION HERE">
-    <label>Name: </label>
-    <input class="clientField" type="text" name="clientsName" value="${client.name}">
-    <label>City: </label>
-    <input class="clientField" type="text" name="clientsCity" value="${client.city}">
-    <label>Gender: </label>
-    <input type="radio" name="gender" ${client.gender=="MALE"?"checked":""}/>Male
-    <input type="radio" name="gender" ${client.gender=="FEMALE"?"checked":""}/>Female
-    <label>e-mail: </label>
-    <input class="clientField" type="text" name="clientsEmail" value="${client.email}">
-    <label>e-mail: </label>
-    <input class="clientField" type="text" name="clientsBalance" value="${client.activeAccount.balance}">
-    <input class="submitButton" type="submit" name="edit" value="Edit">
+<form action="/edit" method="post">
+    <table>
+        <tr>
+            <td><input class="clientField" type="hidden" name="clientsID" value="${param.id}"></td>
+        </tr>
+        <tr>
+            <td><label>Name: </label>
+            <input class="clientField" type="text" name="clientsName" value="${param.name}"><br>
+        </tr>
+        <tr>
+            <label>City: </label>
+            <input class="clientField" type="text" name="clientsCity" value="${param.city}"><br>
+        </tr>
+        <tr>
+            <label>Gender: </label>
+            <input type="radio" name="gender" ${param.gender=="MALE"?"checked":""}/>Male
+            <input type="radio" name="gender" ${param.gender=="FEMALE"?"checked":""}/>Female<br>
+        </tr>
+        <tr>
+            <label>e-mail: </label>
+            <input class="clientField" type="text" name="clientsEmail" value="${param.email}"><br>
+        </tr>
+        <tr>
+            <label>Active account ID: </label>
+            <input class="clientField" type="text" name="clientsActiveAccountId" value="${param.accountID}"><br>
+        </tr>
+        <tr>
+            <label>Balance: </label>
+            <input class="clientField" type="text" name="clientsBalance" value="${param.balance}"><br>
+        </tr>
+        <tr>
+            <input class="submitButton" id="green-button" type="submit" name="edit" value="Edit"><br>
+        </tr>
+    </table>
 </form>
 </body>
 </html>

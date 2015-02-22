@@ -47,10 +47,20 @@ public class ClientServiceImpl implements ClientService {
         return DAOFactory.getClientDAO().findClientByName(bank, clientsName);
     }
 
+    @Override
+    public Client saveClient(Bank bank, Client client) {
+        return DAOFactory.getClientDAO().save(bank, client);
+    }
+
 
     @Override
     public List<Client> getClientsByNameAndCity(String clientsName, String city) {
         return DAOFactory.getClientDAO().getClientsByNameAndCity(clientsName, city);
+    }
+
+    @Override
+    public Client getClientById(long id) throws ClientNotFoundException {
+        return DAOFactory.getClientDAO().findClientById(id);
     }
 
     @Override

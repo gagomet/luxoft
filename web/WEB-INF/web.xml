@@ -76,6 +76,15 @@
         <url-pattern>/findclients</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>EditClientServlet</servlet-name>
+        <servlet-class>BankApplication.servlet.EditClientServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>EditClientServlet</servlet-name>
+        <url-pattern>/edit</url-pattern>
+    </servlet-mapping>
+
 
     <filter>
         <filter-name>CheckLoggedFilter</filter-name>

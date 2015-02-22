@@ -18,11 +18,15 @@ public interface ClientService {
 
     public Client getClientByName(Bank bank, String clientsName) throws ClientNotFoundException;
 
+    public Client saveClient(Bank bank, Client client);
+
     public void saveClientToFeedFile(Client client);
 
     public Client loadClientFromFeedFile();
 
     public List<Client> getClientsByNameAndCity(String clientsName, String city);
+
+    public Client getClientById(long id) throws ClientNotFoundException;
 
 /*    public Client getCurrentClient();
 

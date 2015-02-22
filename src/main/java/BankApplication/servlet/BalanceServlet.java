@@ -15,8 +15,8 @@ import java.io.IOException;
  * Created by Kir Kolesnikov on 13.02.2015.
  */
 public class BalanceServlet extends HttpServlet {
-    private static final String BANK_NAME = "MYBANK";
-//    private static final String BANK_NAME = "MyBank";
+//    private static final String BANK_NAME = "MYBANK";
+    private static final String BANK_NAME = "MyBank";
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

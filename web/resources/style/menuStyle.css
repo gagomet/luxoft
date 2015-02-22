@@ -54,6 +54,10 @@ h1{
     line-height:100px;
 }
 
+.clientField{
+    line-height: 50px;
+}
+
 #modal_form {
     width: 300px;
     height: 200px;
