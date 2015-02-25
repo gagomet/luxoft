@@ -4,6 +4,7 @@ import BankApplication.commander.Command;
 import BankApplication.commander.CommandsManager;
 import BankApplication.network.console.Console;
 import BankApplication.network.console.ConsoleImpl;
+import BankApplication.service.impl.FullBankService;
 import BankApplication.type.Gender;
 
 import java.util.ResourceBundle;
@@ -19,6 +20,10 @@ public abstract class AbstractCommand implements Command {
     private final String EMPTY_STRING = "";
     private CommandsManager manager;
     private static final Logger logger = Logger.getLogger(AbstractCommand.class.getName());
+
+    private FullBankService fullBankService;
+
+
 
     @Override
     public void printCommandInfo() {
@@ -143,5 +148,8 @@ public abstract class AbstractCommand implements Command {
 
     protected boolean isFunds(String funds) {
         return funds.matches("^[0-9]{1,7}([,.][0-9]{1,2})?$");
+    }
+
+    public void setFullBankService(FullBankService fullBankService) {
     }
 }

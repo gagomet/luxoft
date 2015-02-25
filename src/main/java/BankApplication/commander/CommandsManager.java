@@ -7,6 +7,5 @@ import BankApplication.model.impl.Client;
  */
 public interface CommandsManager {
     public Client getCurrentClient();
-
     public void setCurrentClient(Client client);
 }

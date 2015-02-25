@@ -25,11 +25,12 @@ public class BankServiceImpl implements BankService {
         return LazyHolder.INSTANCE;
     }
 
+    @Override
     public Bank getCurrentBank() {
         return currentBank;
     }
 
-
+    @Override
     public void setCurrentBank(Bank currentBank) {
         this.currentBank = currentBank;
     }

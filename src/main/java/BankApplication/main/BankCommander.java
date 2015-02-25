@@ -1,107 +1,33 @@
 package BankApplication.main;
 
-import BankApplication.DAO.impl.DAOFactory;
 import BankApplication.commander.Command;
 import BankApplication.commander.CommandsManager;
-import BankApplication.commander.impl.AddClientCommand;
-import BankApplication.commander.impl.DepositCommand;
-import BankApplication.commander.impl.FindClientCommand;
-import BankApplication.commander.impl.GetAccountCommand;
-import BankApplication.commander.impl.RemoveClientCommand;
-import BankApplication.commander.impl.ReportCommand;
-import BankApplication.commander.impl.ShowHelpCommand;
-import BankApplication.commander.impl.TransferCommand;
-import BankApplication.commander.impl.WithdrawCommand;
-import BankApplication.model.impl.Bank;
 import BankApplication.model.impl.Client;
-import BankApplication.network.console.Console;
-import BankApplication.network.console.ConsoleImpl;
-import BankApplication.service.impl.ServiceFactory;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Iterator;
 import java.util.Map;
-import java.util.TreeMap;
 
 /**
  * Created by Kir Kolesnikov on 15.01.2015.
  */
-@Deprecated
+
 public class BankCommander implements CommandsManager {
+    private static Map<Integer, Command> commandsMap;
     private static Client currentClient;
-    public static Map<String, Command> commandsMap = new TreeMap<>();
-    private static final String FEED_FILES_FOLDER = "c:\\!toBankApplication\\";
-    static String bankName = "MyBank";
-    static Console console = new ConsoleImpl();
-//      static String bankName = "MYBANK";
 
-
-    static
-    Command[] commands = {
-            new FindClientCommand(), // 1
-            new GetAccountCommand(), // 2
-            new WithdrawCommand(), //3
-            new DepositCommand(), //4
-            new TransferCommand(), //5
-            new AddClientCommand(), //6
-            new RemoveClientCommand(),
-            new ReportCommand(),
-            new ShowHelpCommand(), //7
-            new Command() {
-                public void execute() {
-                    System.exit(0);
-                }
-
-                public void printCommandInfo() {
-                    System.out.println("Exit");
-                }
-            }
-    };
-
-
-    public BankCommander() {
-        composeMapOfCommands();
-    }
-
-    public void registerCommand(String name, Command command) {
-        commandsMap.put(name, command);
-    }
-
-    public void removeCommand(String name) {
-        commandsMap.remove(name);
-/*remove
-public V remove(Object key)
-Removes the mapping for this key from this TreeMap if present.
-Throws:
-ClassCastException - if the specified key cannot be compared with the keys currently in the map
-NullPointerException - if the specified key is null and this map uses natural ordering, or its comparator does not permit null keys*/
-    }
-
-    public void composeMapOfCommands() {
-        Integer i = 0;
-        for (Command command : commands) {
-            commandsMap.put(i.toString(), command);
-            i++;
-        }
-    }
-
-
-    public static void main(String args[]) {
-        BankCommander bankCommander = new BankCommander();
-        Bank bank = DAOFactory.getBankDAO().getBankByName(bankName);
-        ServiceFactory.getBankService().setCurrentBank(bank);
+    public static void main(String[] args) {
+        ApplicationContext context =
+                new ClassPathXmlApplicationContext("application-context.xml");
+        BankCommander bankCommander = context.getBean(BankCommander.class);
 
         while (true) {
-            Iterator iterator = commandsMap.entrySet().iterator();
-            while (iterator.hasNext()) {
-                Map.Entry<String, Command> entry = (Map.Entry<String, Command>) iterator.next();
-                StringBuilder builder = new StringBuilder();
-                builder.append(entry.getKey());
-                builder.append("   -->    ");
-                System.out.print(builder.toString());
-                entry.getValue().printCommandInfo();
+            for (Integer i = 0; i < bankCommander.getCommandsMap().size(); i++) {
+                System.out.print((i) + ") ");
+                commandsMap.get(i.toString()).printCommandInfo();
             }
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
             try {
@@ -123,7 +49,14 @@ NullPointerException - if the specified key is null and this map uses natural or
                 System.out.println(e.getMessage());
             }
         }
+    }
 
+    public Map<Integer, Command> getCommandsMap() {
+        return commandsMap;
+    }
+
+    public void setCommandsMap(Map<Integer, Command> commandsMap) {
+        this.commandsMap = commandsMap;
     }
 
     @Override
@@ -133,6 +66,6 @@ NullPointerException - if the specified key is null and this map uses natural or
 
     @Override
     public void setCurrentClient(Client client) {
-        currentClient = client;
+         currentClient = client;
     }
 }

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="bankDAO" class="BankApplication.DAO.impl.BankDAOImpl">
+    </bean>
+    <bean id="accountDAO" class="BankApplication.DAO.impl.AccountDAOImpl">
+    </bean>
+    <bean id="clientDAO" class="BankApplication.DAO.impl.ClientDAOImpl">
+    </bean>
+
+    <bean class="BankApplication.service.impl.FullBankService" id="fullBankService">
+        <property name="bankDAO" ref="bankDAO"/>
+        <property name="clientDAO" ref="clientDAO"/>
+        <property name="accountDAO" ref="accountDAO"/>
+    </bean>
+
+    <bean abstract="true" id="abstractCommand" class="BankApplication.commander.impl.AbstractCommand">
+        <property name="fullBankService" ref="fullBankService"/>
+    </bean>
+
+    <bean class="BankApplication.main.BankCommander" id="bankCommander">
+        <property name="commandsMap">
+            <map>
+                <entry key="1">
+                    <bean class="BankApplication.commander.impl.FindClientCommand" parent="abstractCommand" autowire="byType"/>
+                </entry>
+                <entry key="2">
+                    <bean class="BankApplication.commander.impl.GetAccountCommand" parent="abstractCommand" autowire="byType"/>
+                </entry>
+                <entry key="3">
+                    <bean class="BankApplication.commander.impl.DepositCommand" parent="abstractCommand" autowire="byType"/>
+                </entry>
+                <entry key="4">
+                    <bean class="BankApplication.commander.impl.WithdrawCommand" parent="abstractCommand" autowire="byType"/>
+                </entry>
+                <entry key="5">
+                    <bean class="BankApplication.commander.impl.TransferCommand" parent="abstractCommand" autowire="byType"/>
+                </entry>
+                <entry key="6">
+                    <bean class="BankApplication.commander.impl.AddClientCommand" parent="abstractCommand" autowire="byType"/>
+                </entry>
+                <entry key="7">
+                    <bean class="BankApplication.commander.impl.RemoveClientCommand" parent="abstractCommand" autowire="byType"/>
+                </entry>
+                <entry key="8">
+                    <bean class="BankApplication.commander.impl.ReportCommand" parent="abstractCommand" autowire="byType"/>
+                </entry>
+                <entry key="9">
+                    <bean class="BankApplication.commander.impl.ShowHelpCommand" parent="abstractCommand" autowire="byType"/>
+                </entry>
+                <entry key="10">
+                    <bean class="BankApplication.commander.impl.ExitCommand" parent="abstractCommand" autowire="byType"/>
+                </entry>
+            </map>
+        </property>
+        
+    </bean>
+
+</beans>
