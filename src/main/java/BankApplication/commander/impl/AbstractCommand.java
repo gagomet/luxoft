@@ -21,9 +21,6 @@ public abstract class AbstractCommand implements Command {
     private CommandsManager manager;
     private static final Logger logger = Logger.getLogger(AbstractCommand.class.getName());
 
-    private FullBankService fullBankService;
-
-
 
     @Override
     public void printCommandInfo() {
@@ -150,6 +147,4 @@ public abstract class AbstractCommand implements Command {
         return funds.matches("^[0-9]{1,7}([,.][0-9]{1,2})?$");
     }
 
-    public void setFullBankService(FullBankService fullBankService) {
-    }
 }

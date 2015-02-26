@@ -16,32 +16,33 @@ import java.util.Map;
  */
 
 public class BankCommander implements CommandsManager {
-    private static Map<Integer, Command> commandsMap;
-    private static Client currentClient;
+    private Map<Integer, Command> commandsMap;
+    private Client currentClient;
 
     public static void main(String[] args) {
         ApplicationContext context =
                 new ClassPathXmlApplicationContext("application-context.xml");
-        BankCommander bankCommander = context.getBean(BankCommander.class);
+        BankCommander bankCommander = (BankCommander)context.getBean("bankCommander");
 
         while (true) {
             for (Integer i = 0; i < bankCommander.getCommandsMap().size(); i++) {
                 System.out.print((i) + ") ");
-                commandsMap.get(i.toString()).printCommandInfo();
+                System.out.println(bankCommander.getCommandsMap().get(1).toString());
+                bankCommander.getCommandsMap().get(i).printCommandInfo();
             }
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
             try {
                 System.out.println("Active client now is: ");
-                if (currentClient == null) {
+                if (bankCommander.getCurrentClient() == null) {
                     System.out.println("N/A");
                 } else {
-                    System.out.println(currentClient.getName());
+                    System.out.println(bankCommander.getCurrentClient().getName());
                 }
                 System.out.println("Enter number of your choice: ");
 
                 String commandString = bufferedReader.readLine();
-                if (commandsMap.containsKey(commandString)) {
-                    commandsMap.get(commandString).execute();
+                if (bankCommander.getCommandsMap().containsKey(commandString)) {
+                    bankCommander.getCommandsMap().get(commandString).execute();
                 } else {
                     System.out.println("It's not a command! Try again!");
                 }

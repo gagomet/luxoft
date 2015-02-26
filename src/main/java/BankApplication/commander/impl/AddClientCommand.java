@@ -4,7 +4,9 @@ import BankApplication.commander.CommandsManager;
 import BankApplication.exceptions.ClientExceedsException;
 import BankApplication.model.impl.Client;
 import BankApplication.network.console.Console;
+import BankApplication.network.console.ConsoleImpl;
 import BankApplication.service.impl.BankServiceImpl;
+import BankApplication.service.impl.FullBankService;
 import BankApplication.service.impl.ServiceFactory;
 import BankApplication.type.Gender;
 
@@ -24,7 +26,7 @@ public class AddClientCommand extends AbstractCommand {
     private String newClientsCity;
     private static final Logger logger = Logger.getLogger(AbstractCommand.class.getName());
 
-    public AddClientCommand() {
+    public AddClientCommand(ConsoleImpl console, FullBankService fullBankService) {
     }
 
     public AddClientCommand(Console console, CommandsManager manager) {

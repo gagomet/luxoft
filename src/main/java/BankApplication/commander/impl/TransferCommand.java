@@ -7,7 +7,9 @@ import BankApplication.exceptions.NotEnoughFundsException;
 import BankApplication.model.Account;
 import BankApplication.model.impl.Client;
 import BankApplication.network.console.Console;
+import BankApplication.network.console.ConsoleImpl;
 import BankApplication.service.impl.BankServiceImpl;
+import BankApplication.service.impl.FullBankService;
 import BankApplication.service.impl.ServiceFactory;
 
 import java.io.IOException;
@@ -23,7 +25,7 @@ public class TransferCommand extends AbstractCommand {
     String recepientName;
     private static final Logger logger = Logger.getLogger(TransferCommand.class.getName());
 
-    public TransferCommand() {
+    public TransferCommand(ConsoleImpl console, FullBankService fullBankService) {
     }
 
     public TransferCommand(Console console, CommandsManager manager) {

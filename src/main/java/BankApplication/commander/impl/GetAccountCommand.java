@@ -5,6 +5,8 @@ import BankApplication.exceptions.AccountNotFoundException;
 import BankApplication.model.Account;
 import BankApplication.model.impl.Client;
 import BankApplication.network.console.Console;
+import BankApplication.network.console.ConsoleImpl;
+import BankApplication.service.impl.FullBankService;
 import BankApplication.service.impl.ServiceFactory;
 
 import java.io.IOException;
@@ -19,7 +21,7 @@ public class GetAccountCommand extends AbstractCommand {
     Long clientId;
     private static final Logger logger = Logger.getLogger(GetAccountCommand.class.getName());
 
-    public GetAccountCommand() {
+    public GetAccountCommand(ConsoleImpl console, FullBankService fullBankService) {
     }
 
     public GetAccountCommand(Console console, CommandsManager manager) {

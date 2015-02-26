@@ -2,6 +2,8 @@ package BankApplication.commander.impl;
 
 import BankApplication.commander.CommandsManager;
 import BankApplication.network.console.Console;
+import BankApplication.network.console.ConsoleImpl;
+import BankApplication.service.impl.FullBankService;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -22,7 +24,7 @@ import java.io.InputStreamReader;
  */
 public class ShowHelpCommand extends AbstractCommand {
 
-    public ShowHelpCommand() {
+    public ShowHelpCommand(ConsoleImpl console, FullBankService fullBankService) {
     }
 
     public ShowHelpCommand(Console console, CommandsManager manager) {

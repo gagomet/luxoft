@@ -4,6 +4,8 @@ import BankApplication.commander.CommandsManager;
 import BankApplication.exceptions.NotEnoughFundsException;
 import BankApplication.model.impl.Client;
 import BankApplication.network.console.Console;
+import BankApplication.network.console.ConsoleImpl;
+import BankApplication.service.impl.FullBankService;
 import BankApplication.service.impl.ServiceFactory;
 
 import java.io.IOException;
@@ -15,7 +17,7 @@ import java.util.logging.Logger;
  */
 public class WithdrawCommand extends AbstractCommand {
     private static final Logger logger = Logger.getLogger(WithdrawCommand.class.getName());
-    public WithdrawCommand() {
+    public WithdrawCommand(ConsoleImpl console, FullBankService fullBankService) {
     }
 
     public WithdrawCommand(Console console, CommandsManager manager) {
