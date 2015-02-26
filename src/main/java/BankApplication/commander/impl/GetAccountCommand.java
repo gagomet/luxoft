@@ -6,7 +6,6 @@ import BankApplication.model.Account;
 import BankApplication.model.impl.Client;
 import BankApplication.network.console.Console;
 import BankApplication.network.console.ConsoleImpl;
-import BankApplication.service.impl.FullBankService;
 import BankApplication.service.impl.ServiceFactory;
 
 import java.io.IOException;
@@ -21,7 +20,7 @@ public class GetAccountCommand extends AbstractCommand {
     Long clientId;
     private static final Logger logger = Logger.getLogger(GetAccountCommand.class.getName());
 
-    public GetAccountCommand(ConsoleImpl console, FullBankService fullBankService) {
+    public GetAccountCommand() {
     }
 
     public GetAccountCommand(Console console, CommandsManager manager) {
@@ -62,7 +61,7 @@ public class GetAccountCommand extends AbstractCommand {
                         }
                     }
 
-                    Account account = ServiceFactory.getAccountService().getAccountById(currentClient, clientId);
+                    Account account = getAccountService().getAccountById(currentClient, clientId);
                     getManager().getCurrentClient().setActiveAccount(account);
                     StringBuilder builder = new StringBuilder();
                     builder.append(account.toString());

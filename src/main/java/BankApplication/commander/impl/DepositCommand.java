@@ -3,9 +3,6 @@ package BankApplication.commander.impl;
 import BankApplication.commander.CommandsManager;
 import BankApplication.model.impl.Client;
 import BankApplication.network.console.Console;
-import BankApplication.network.console.ConsoleImpl;
-import BankApplication.service.impl.FullBankService;
-import BankApplication.service.impl.ServiceFactory;
 
 import java.io.IOException;
 import java.util.logging.Level;
@@ -18,7 +15,7 @@ public class DepositCommand extends AbstractCommand {
 
     private static final Logger logger = Logger.getLogger(DepositCommand.class.getName());
 
-    public DepositCommand(ConsoleImpl console, FullBankService fullBankService) {
+    public DepositCommand() {
     }
 
     public DepositCommand(Console console, CommandsManager manager) {
@@ -60,7 +57,7 @@ public class DepositCommand extends AbstractCommand {
             builder.append(System.getProperty("line.separator"));
             builder.append(client.getActiveAccount().toString());
             builder.append(System.getProperty("line.separator"));
-            ServiceFactory.getAccountService().depositeFunds(client.getActiveAccount(), amountToDeposit);
+            getAccountService().depositeFunds(client.getActiveAccount(), amountToDeposit);
             builder.append("Account was successfully refilled");
             builder.append(System.getProperty("line.separator"));
             builder.append(client.getActiveAccount().toString());

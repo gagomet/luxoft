@@ -1,6 +1,9 @@
 package BankApplication.service.impl;
 
+import BankApplication.DAO.BankDAO;
+import BankApplication.DAO.ClientDAO;
 import BankApplication.DAO.impl.DAOFactory;
+import BankApplication.commander.BankHolder;
 import BankApplication.exceptions.ClientExceedsException;
 import BankApplication.model.impl.Bank;
 import BankApplication.model.impl.BankInfo;
@@ -13,12 +16,39 @@ import BankApplication.service.BankService;
 public class BankServiceImpl implements BankService {
 
     private static Bank currentBank;
+    private BankHolder holder;
+    private BankDAO bankDAO;
+    private ClientDAO clientDAO;
 
     private BankServiceImpl() {
     }
 
     private static class LazyHolder {
         private static final BankServiceImpl INSTANCE = new BankServiceImpl();
+    }
+
+    public BankDAO getBankDAO() {
+        return bankDAO;
+    }
+
+    public void setBankDAO(BankDAO bankDAO) {
+        this.bankDAO = bankDAO;
+    }
+
+    public ClientDAO getClientDAO() {
+        return clientDAO;
+    }
+
+    public void setClientDAO(ClientDAO clientDAO) {
+        this.clientDAO = clientDAO;
+    }
+
+    public BankHolder getHolder() {
+        return holder;
+    }
+
+    public void setHolder(BankHolder holder) {
+        this.holder = holder;
     }
 
     public static BankServiceImpl getInstance() {
@@ -37,22 +67,22 @@ public class BankServiceImpl implements BankService {
 
     @Override
     public void addClient(Bank bank, Client client) throws ClientExceedsException {
-        DAOFactory.getClientDAO().save(bank, client);
+        clientDAO.save(bank, client);
     } //Update
 
     @Override
     public Bank getBankByName(String bankName) {
-        return DAOFactory.getBankDAO().getBankByName(bankName);
+        return bankDAO.getBankByName(bankName);
     }
 
     @Override
     public void removeClient(Bank bank, Client client) {
-        DAOFactory.getClientDAO().remove(client);
+        clientDAO.remove(client);
     } //Update
 
     @Override
     public BankInfo getBankInfo(Bank bank) {
-        return DAOFactory.getBankDAO().getBankInfo(bank);
+        return bankDAO.getBankInfo(bank);
     }
 
 }

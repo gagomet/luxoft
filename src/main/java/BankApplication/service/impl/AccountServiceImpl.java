@@ -1,6 +1,9 @@
 package BankApplication.service.impl;
 
+import BankApplication.DAO.AccountDAO;
+import BankApplication.DAO.ClientDAO;
 import BankApplication.DAO.impl.DAOFactory;
+import BankApplication.commander.BankHolder;
 import BankApplication.exceptions.AccountNotFoundException;
 import BankApplication.exceptions.ClientNotFoundException;
 import BankApplication.exceptions.NotEnoughFundsException;
@@ -23,8 +26,36 @@ public class AccountServiceImpl implements AccountService {
 //    Lock lock = new ReentrantLock();
     private static final Logger logger = Logger.getLogger(AccountServiceImpl.class.getName());
 
+    private AccountDAO accountDAO;
+    private ClientDAO clientDAO;
+    private BankHolder holder;
+
     private AccountServiceImpl() {
 
+    }
+
+    public AccountDAO getAccountDAO() {
+        return accountDAO;
+    }
+
+    public void setAccountDAO(AccountDAO accountDAO) {
+        this.accountDAO = accountDAO;
+    }
+
+    public ClientDAO getClientDAO() {
+        return clientDAO;
+    }
+
+    public void setClientDAO(ClientDAO clientDAO) {
+        this.clientDAO = clientDAO;
+    }
+
+    public BankHolder getHolder() {
+        return holder;
+    }
+
+    public void setHolder(BankHolder holder) {
+        this.holder = holder;
     }
 
     private static class LazyHolder {
@@ -40,7 +71,7 @@ public class AccountServiceImpl implements AccountService {
         try {
             account.deposit(amount);
             Client client = DAOFactory.getClientDAO().findClientById(account.getClientId());
-            DAOFactory.getAccountDAO().save(account, client);
+            accountDAO.save(account, client);
             logger.log(Level.INFO, "Account: " + account.getId() + "was refilled " + amount);
         } catch (ClientNotFoundException e) {
             logger.log(Level.SEVERE, e.getMessage(), e);
@@ -51,7 +82,7 @@ public class AccountServiceImpl implements AccountService {
     public synchronized void withdrawFunds(Account account, float amount) throws NotEnoughFundsException, IllegalArgumentException {
         try {
             account.withdraw(amount);
-            Client client = DAOFactory.getClientDAO().findClientById(account.getClientId());
+            Client client = clientDAO.findClientById(account.getClientId());
 
 //            lock.lock();
             DAOFactory.getAccountDAO().save(account, client);
@@ -65,7 +96,7 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public Account getAccountById(Client client, Long id) throws AccountNotFoundException {
-        List<Account> accountList = DAOFactory.getAccountDAO().getClientAccounts(client.getId());
+        List<Account> accountList = accountDAO.getClientAccounts(client.getId());
         Account result = null;
         for (Account account : accountList) {
             if (account.getId() == id) {
@@ -76,7 +107,7 @@ public class AccountServiceImpl implements AccountService {
     }
 
     public synchronized void transferFunds(Account sender, Account recipient, float amount) {
-        DAOFactory.getAccountDAO().transferFunds(sender, recipient, amount);
+        accountDAO.transferFunds(sender, recipient, amount);
         logger.log(Level.INFO, amount + " funds transfered from account id:" + sender.getId() + " to account id: " + recipient.getId());
     }
 }

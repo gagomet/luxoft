@@ -4,10 +4,6 @@ import BankApplication.commander.CommandsManager;
 import BankApplication.exceptions.ClientNotFoundException;
 import BankApplication.model.impl.Client;
 import BankApplication.network.console.Console;
-import BankApplication.network.console.ConsoleImpl;
-import BankApplication.service.impl.ClientServiceImpl;
-import BankApplication.service.impl.FullBankService;
-import BankApplication.service.impl.ServiceFactory;
 
 import java.io.IOException;
 import java.util.logging.Level;
@@ -20,15 +16,13 @@ public class FindClientCommand extends AbstractCommand {
 
     private static final Logger logger = Logger.getLogger(FindClientCommand.class.getName());
 
-    public FindClientCommand(ConsoleImpl console, FullBankService fullBankService) {
-
+    public FindClientCommand() {
     }
 
     public FindClientCommand(Console console, CommandsManager manager) {
         this.console = console;
         setManager(manager);
     }
-
 
     @Override
     public void execute() {
@@ -62,7 +56,7 @@ public class FindClientCommand extends AbstractCommand {
 
     private void findClientInBank(String clientName) {
         try {
-            Client client = ClientServiceImpl.getInstance().getClientByName(ServiceFactory.getBankService().getCurrentBank(), clientName);
+            Client client = getClientService().getClientByName(bankHolder.getBank(), clientName);
             StringBuilder builder = new StringBuilder();
             builder.append("Client ");
             builder.append(client.getName());

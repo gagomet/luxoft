@@ -1,8 +1,12 @@
 package BankApplication.servlet;
 
 import BankApplication.model.impl.Client;
+import BankApplication.service.AccountService;
+import BankApplication.service.BankService;
+import BankApplication.service.ClientService;
 import BankApplication.service.impl.ServiceFactory;
 
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -18,7 +22,9 @@ public class FindClientsServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String nameToSearch = req.getParameter("nameToSearch");
         String cityToSearch = req.getParameter("cityToSearch");
-        List<Client> findedClientsList = ServiceFactory.getClientService().getClientsByNameAndCity(nameToSearch, cityToSearch);
+        ServletContext context = getServletContext();
+        ClientService clientService = (ClientService)context.getAttribute("clientService");
+        List<Client> findedClientsList = clientService.getClientsByNameAndCity(nameToSearch, cityToSearch);
         req.setAttribute("clientsList", findedClientsList);
         req.getRequestDispatcher("/pages/clientsFromDBView.jsp").forward(req, resp);
     }

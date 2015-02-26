@@ -10,78 +10,64 @@
     <bean id="clientDAO" class="BankApplication.DAO.impl.ClientDAOImpl">
     </bean>
 
-    <bean class="BankApplication.service.impl.FullBankService" id="fullBankService">
-        <property name="bankDAO" ref="bankDAO"/>
-        <property name="clientDAO" ref="clientDAO"/>
-        <property name="accountDAO" ref="accountDAO"/>
-    </bean>
+    <bean class="BankApplication.service.impl.AccountServiceImpl" id="accountService" autowire="byType"/>
+
+    <bean class="BankApplication.service.impl.ClientServiceImpl" id="clientService" autowire="byType"/>
+
+    <bean class="BankApplication.service.impl.BankServiceImpl" id="bankService" autowire="byType"/>
 
     <bean id="console" class="BankApplication.network.console.ConsoleImpl">
     </bean>
 
+    <bean id="bankHolder" class="BankApplication.commander.BankHolder" autowire="byType"/>
 
-    <bean class="BankApplication.main.BankCommander" id="bankCommander">
+
+    <bean class="BankApplication.main.BankCommander" id="bankCommander" autowire="byType">
+        <property name="holder" ref="bankHolder"/>
+        <property name="bankService" ref="bankService"/>
+        <property name="clientService" ref="clientService"/>
+        <property name="accountService" ref="accountService"/>
         <property name="commandsMap">
             <map>
                 <entry key="1">
                     <bean class="BankApplication.commander.impl.FindClientCommand"  autowire="byType">
-                        <constructor-arg ref="console"/>
-                        <constructor-arg ref="fullBankService"/>
                     </bean>
 
                 </entry>
                 <entry key="2">
                     <bean class="BankApplication.commander.impl.GetAccountCommand"  autowire="byType">
-                        <constructor-arg ref="console"/>
-                        <constructor-arg ref="fullBankService"/>
                     </bean>
                 </entry>
                 <entry key="3">
                     <bean class="BankApplication.commander.impl.DepositCommand"  autowire="byType">
-                        <constructor-arg ref="console"/>
-                        <constructor-arg ref="fullBankService"/>
                     </bean>
                 </entry>
                 <entry key="4">
                     <bean class="BankApplication.commander.impl.WithdrawCommand"  autowire="byType">
-                        <constructor-arg ref="console"/>
-                        <constructor-arg ref="fullBankService"/>
                     </bean>
                 </entry>
                 <entry key="5">
                     <bean class="BankApplication.commander.impl.TransferCommand"  autowire="byType">
-                        <constructor-arg ref="console"/>
-                        <constructor-arg ref="fullBankService"/>
                     </bean>
                 </entry>
                 <entry key="6">
                     <bean class="BankApplication.commander.impl.AddClientCommand"  autowire="byType">
-                        <constructor-arg ref="console"/>
-                        <constructor-arg ref="fullBankService"/>
                     </bean>
                 </entry>
                 <entry key="7">
                     <bean class="BankApplication.commander.impl.RemoveClientCommand"  autowire="byType">
-                        <constructor-arg ref="console"/>
-                        <constructor-arg ref="fullBankService"/>
                     </bean>
                 </entry>
                 <entry key="8">
                     <bean class="BankApplication.commander.impl.ReportCommand"  autowire="byType">
-                        <constructor-arg ref="console"/>
-                        <constructor-arg ref="fullBankService"/>
                     </bean>
                 </entry>
                 <entry key="9">
                     <bean class="BankApplication.commander.impl.ShowHelpCommand"  autowire="byType">
-                        <constructor-arg ref="console"/>
-                        <constructor-arg ref="fullBankService"/>
                     </bean>
                 </entry>
                 <entry key="10">
                     <bean class="BankApplication.commander.impl.ExitCommand"  autowire="byType">
-                        <constructor-arg ref="console"/>
-                        <constructor-arg ref="fullBankService"/>
                     </bean>
                 </entry>
             </map>

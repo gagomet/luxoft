@@ -1,6 +1,7 @@
 package BankApplication.DAO.impl;
 
 import BankApplication.DAO.BankDAO;
+import BankApplication.commander.BankHolder;
 import BankApplication.exceptions.DAOException;
 import BankApplication.model.impl.Bank;
 import BankApplication.model.impl.BankInfo;
@@ -27,6 +28,7 @@ public class BankDAOImpl extends BaseDAOImpl implements BankDAO {
     private static final String UPDATE_BANK_STMT = "UPDATE BANKS SET BANKS.NAME=? WHERE BANKS.ID=?";
 
     private static final Logger logger = Logger.getLogger(BankDAOImpl.class.getName());
+
     private BankDAOImpl() {
 
     }
@@ -154,5 +156,7 @@ public class BankDAOImpl extends BaseDAOImpl implements BankDAO {
         }
         return result;
     }
+
+
 
 }

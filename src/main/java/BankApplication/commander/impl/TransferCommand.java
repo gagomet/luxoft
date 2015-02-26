@@ -9,7 +9,6 @@ import BankApplication.model.impl.Client;
 import BankApplication.network.console.Console;
 import BankApplication.network.console.ConsoleImpl;
 import BankApplication.service.impl.BankServiceImpl;
-import BankApplication.service.impl.FullBankService;
 import BankApplication.service.impl.ServiceFactory;
 
 import java.io.IOException;
@@ -25,7 +24,7 @@ public class TransferCommand extends AbstractCommand {
     String recepientName;
     private static final Logger logger = Logger.getLogger(TransferCommand.class.getName());
 
-    public TransferCommand(ConsoleImpl console, FullBankService fullBankService) {
+    public TransferCommand() {
     }
 
     public TransferCommand(Console console, CommandsManager manager) {
@@ -53,8 +52,7 @@ public class TransferCommand extends AbstractCommand {
                         logger.log(Level.SEVERE, "Class not found at TransferCommand", e);
                     }
                 }
-                Client recepient = ServiceFactory.getClientService().getClientByName(BankServiceImpl.getInstance().getCurrentBank()
-                        , recepientName);
+                Client recepient = getClientService().getClientByName(bankHolder.getBank(), recepientName);
                 System.out.println("Recepient: " + recepient.getName() + " accounts ID ");
                 for (Account account : recepient.getAccountsList()) {
                     System.out.println(account.getId());
@@ -104,7 +102,7 @@ public class TransferCommand extends AbstractCommand {
     }
 
     public void transferFunds(Account sender, Account recepient, Float amount) throws NotEnoughFundsException, IllegalArgumentException {
-        ServiceFactory.getAccountService().transferFunds(sender, recepient, amount);
+        getAccountService().transferFunds(sender, recepient, amount);
         StringBuilder builder = new StringBuilder();
         builder.append("Transfer funds successfully completed");
         builder.append(System.getProperty("line.separator"));

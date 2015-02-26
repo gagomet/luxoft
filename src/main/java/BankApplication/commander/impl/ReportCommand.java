@@ -3,8 +3,6 @@ package BankApplication.commander.impl;
 import BankApplication.commander.CommandsManager;
 import BankApplication.model.impl.BankInfo;
 import BankApplication.network.console.Console;
-import BankApplication.network.console.ConsoleImpl;
-import BankApplication.service.impl.FullBankService;
 import BankApplication.service.impl.ServiceFactory;
 
 import java.util.logging.Level;
@@ -17,7 +15,7 @@ public class ReportCommand extends AbstractCommand {
 
     private static final Logger logger = Logger.getLogger(ReportCommand.class.getName());
 
-    public ReportCommand(ConsoleImpl console, FullBankService fullBankService) {
+    public ReportCommand() {
     }
 
     public ReportCommand(Console console, CommandsManager manager) {

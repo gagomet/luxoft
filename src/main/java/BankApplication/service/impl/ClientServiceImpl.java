@@ -1,7 +1,10 @@
 package BankApplication.service.impl;
 
 
+import BankApplication.DAO.AccountDAO;
+import BankApplication.DAO.ClientDAO;
 import BankApplication.DAO.impl.DAOFactory;
+import BankApplication.commander.BankHolder;
 import BankApplication.exceptions.ClientNotFoundException;
 import BankApplication.model.Account;
 import BankApplication.model.impl.Bank;
@@ -20,6 +23,10 @@ import java.util.List;
  */
 public class ClientServiceImpl implements ClientService {
 
+    private AccountDAO accountDAO;
+    private ClientDAO clientDAO;
+    private BankHolder holder;
+
     private ClientServiceImpl() {
 
     }
@@ -28,13 +35,37 @@ public class ClientServiceImpl implements ClientService {
         private static final ClientServiceImpl INSTANCE = new ClientServiceImpl();
     }
 
+    public AccountDAO getAccountDAO() {
+        return accountDAO;
+    }
+
+    public void setAccountDAO(AccountDAO accountDAO) {
+        this.accountDAO = accountDAO;
+    }
+
+    public ClientDAO getClientDAO() {
+        return clientDAO;
+    }
+
+    public void setClientDAO(ClientDAO clientDAO) {
+        this.clientDAO = clientDAO;
+    }
+
+    public BankHolder getHolder() {
+        return holder;
+    }
+
+    public void setHolder(BankHolder holder) {
+        this.holder = holder;
+    }
+
     public static ClientServiceImpl getInstance() {
         return LazyHolder.INSTANCE;
     }
 
     @Override
     public void addAccount(Client client, Account account) {
-        DAOFactory.getAccountDAO().save(account, client);
+        accountDAO.save(account, client);
     }
 
     @Override
@@ -44,23 +75,23 @@ public class ClientServiceImpl implements ClientService {
 
     @Override
     public Client getClientByName(Bank bank, String clientsName) throws ClientNotFoundException {
-        return DAOFactory.getClientDAO().findClientByName(bank, clientsName);
+        return clientDAO.findClientByName(bank, clientsName);
     }
 
     @Override
     public Client saveClient(Bank bank, Client client) {
-        return DAOFactory.getClientDAO().save(bank, client);
+        return clientDAO.save(bank, client);
     }
 
 
     @Override
     public List<Client> getClientsByNameAndCity(String clientsName, String city) {
-        return DAOFactory.getClientDAO().getClientsByNameAndCity(clientsName, city);
+        return clientDAO.getClientsByNameAndCity(clientsName, city);
     }
 
     @Override
     public Client getClientById(long id) throws ClientNotFoundException {
-        return DAOFactory.getClientDAO().findClientById(id);
+        return clientDAO.findClientById(id);
     }
 
     @Override

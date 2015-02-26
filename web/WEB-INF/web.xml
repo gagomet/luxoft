@@ -99,6 +99,10 @@
     <listener>
         <listener-class>BankApplication.servlet.SessionListener</listener-class>
     </listener>
+    
+    <listener>
+        <listener-class>BankApplication.servlet.ApplicationListener</listener-class>
+    </listener>
 
     <welcome-file-list>
         <welcome-file>welcome</welcome-file>

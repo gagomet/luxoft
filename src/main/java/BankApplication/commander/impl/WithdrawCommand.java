@@ -5,7 +5,6 @@ import BankApplication.exceptions.NotEnoughFundsException;
 import BankApplication.model.impl.Client;
 import BankApplication.network.console.Console;
 import BankApplication.network.console.ConsoleImpl;
-import BankApplication.service.impl.FullBankService;
 import BankApplication.service.impl.ServiceFactory;
 
 import java.io.IOException;
@@ -17,7 +16,8 @@ import java.util.logging.Logger;
  */
 public class WithdrawCommand extends AbstractCommand {
     private static final Logger logger = Logger.getLogger(WithdrawCommand.class.getName());
-    public WithdrawCommand(ConsoleImpl console, FullBankService fullBankService) {
+
+    public WithdrawCommand() {
     }
 
     public WithdrawCommand(Console console, CommandsManager manager) {
@@ -70,7 +70,7 @@ public class WithdrawCommand extends AbstractCommand {
             builder.append(System.getProperty("line.separator"));
             builder.append(client.getActiveAccount().toString());
             builder.append(System.getProperty("line.separator"));
-            ServiceFactory.getAccountService().withdrawFunds(client.getActiveAccount(), amountToWithdraw);
+            getAccountService().withdrawFunds(client.getActiveAccount(), amountToWithdraw);
             builder.append("Account was successfully reduced");
             builder.append(System.getProperty("line.separator"));
             builder.append(client.getActiveAccount().toString());

@@ -4,10 +4,7 @@ import BankApplication.commander.CommandsManager;
 import BankApplication.exceptions.ClientNotFoundException;
 import BankApplication.model.impl.Client;
 import BankApplication.network.console.Console;
-import BankApplication.network.console.ConsoleImpl;
-import BankApplication.service.impl.BankServiceImpl;
-import BankApplication.service.impl.FullBankService;
-import BankApplication.service.impl.ServiceFactory;
+
 
 import java.io.IOException;
 import java.util.logging.Level;
@@ -19,7 +16,7 @@ import java.util.logging.Logger;
 public class RemoveClientCommand extends AbstractCommand {
     private static final Logger logger = Logger.getLogger(RemoveClientCommand.class.getName());
 
-    public RemoveClientCommand(ConsoleImpl console, FullBankService fullBankService) {
+    public RemoveClientCommand() {
     }
 
     public RemoveClientCommand(Console console, CommandsManager manager) {
@@ -59,8 +56,8 @@ public class RemoveClientCommand extends AbstractCommand {
 
     private void removeClientFromBank(String clientName) {
         try {
-            Client client = ServiceFactory.getClientService().getClientByName(BankServiceImpl.getInstance().getCurrentBank(), clientName);
-            ServiceFactory.getBankService().removeClient(BankServiceImpl.getInstance().getCurrentBank(), client);
+            Client client = getClientService().getClientByName(bankHolder.getBank(), clientName);
+            getBankService().removeClient(bankHolder.getBank(), client);
             console.sendResponse(client.toString() + " was removed. Current client set to null");
             getManager().setCurrentClient(null);
         } catch (ClientNotFoundException e) {
